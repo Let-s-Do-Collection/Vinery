@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vinery:loam_stairs"
+    ]
+  },
+  "criteria": {
+    "loam": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "vinery:loam"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vinery:loam_stairs"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "loam",
+      "has_the_recipe"
+    ]
+  ]
+}

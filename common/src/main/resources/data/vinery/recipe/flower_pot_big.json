@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "flower_pot",
+    "pattern": [
+        "# #",
+        "# #",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:brick"
+        }
+    },
+    "result": {
+        "id": "vinery:flower_pot_big"
+    }
+}
