@@ -193,8 +193,8 @@ public class VineryForgeConfig {
                         "vinery:window|12|1|2|true",
                         "vinery:dark_cherry_beam|6|4|2|true",
                         "vinery:grapevine_pot|6|1|2|true",
-                        "vinery:taiga_red_grape_seeds|2|1|2|true",
-                        "vinery:taiga_white_grape_seeds|2|1|2|true"
+                        "vinery:taiga_grape_seeds_red|2|1|2|true",
+                        "vinery:taiga_grape_seeds_white|2|1|2|true"
                 ), obj -> obj instanceof String);
 
         LEVEL5_TRADES = commonBuilder

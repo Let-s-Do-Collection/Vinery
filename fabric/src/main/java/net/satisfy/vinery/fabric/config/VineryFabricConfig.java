@@ -142,8 +142,8 @@ public class VineryFabricConfig implements ConfigData {
                     trades.add(new TradeEntry("vinery:window", TradeType.SELL, 12, 1, 2, 10));
                     trades.add(new TradeEntry("vinery:dark_cherry_beam", TradeType.SELL, 6, 4, 2, 10));
                     trades.add(new TradeEntry("vinery:grapevine_pot", TradeType.SELL, 6, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:taiga_red_grape_seeds", TradeType.SELL, 2, 1, 2, 5));
-                    trades.add(new TradeEntry("vinery:taiga_white_grape_seeds", TradeType.SELL, 2, 1, 2, 5));
+                    trades.add(new TradeEntry("vinery:taiga_grape_seeds_red", TradeType.SELL, 2, 1, 2, 5));
+                    trades.add(new TradeEntry("vinery:taiga_grape_seeds_white", TradeType.SELL, 2, 1, 2, 5));
                 } else if (level == 5) {
                     trades.add(new TradeEntry("vinery:wine_box", TradeType.SELL, 10, 1, 2, 10));
                     trades.add(new TradeEntry("vinery:lilitu_wine", TradeType.SELL, 4, 1, 2, 10));
