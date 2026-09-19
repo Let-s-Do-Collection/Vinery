@@ -18,9 +18,6 @@ public class GrapeTypeRegistry {
     public static final GrapeType JUNGLE_RED = registerGrapeType("jungle_red", true, true);
     public static final GrapeType JUNGLE_WHITE = registerGrapeType("jungle_white", true, false);
 
-    public static void register() {
-    }
-
     public static void addGrapeAttributes() {
         RED.setItems(ObjectRegistry.RED_GRAPE, ObjectRegistry.RED_GRAPE_SEEDS, ObjectRegistry.RED_GRAPEJUICE);
         WHITE.setItems(ObjectRegistry.WHITE_GRAPE, ObjectRegistry.WHITE_GRAPE_SEEDS, ObjectRegistry.WHITE_GRAPEJUICE);

@@ -10,7 +10,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.satisfy.vinery.core.Vinery;
 import net.satisfy.vinery.core.registry.CompostableRegistry;
-import net.satisfy.vinery.core.util.PreInit;
 import net.satisfy.vinery.neoforge.core.config.VineryForgeConfig;
 import net.satisfy.vinery.neoforge.core.datagen.ModAdvancementGen;
 import net.satisfy.vinery.neoforge.core.registry.VineryNeoForgeVillagers;
@@ -23,7 +22,6 @@ import java.util.List;
 public class VineryForge {
     public VineryForge(IEventBus modEventBus, ModContainer modContainer) {
         PlatformHelperImpl.ENTITY_TYPES.register();
-        PreInit.preInit();
         Vinery.init();
 
         modContainer.registerConfig(ModConfig.Type.COMMON, VineryForgeConfig.COMMON_CONFIG, "vinery.toml");
