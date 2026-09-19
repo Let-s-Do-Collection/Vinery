@@ -7,6 +7,7 @@
 * Config option to disable the automatic leaf canopy that Red/White Grapevine stems grow over time
 
 **Changed**
+* Shearing a Red/White Grapevine stem all the way back to bare now resets its growth cycle, so a pending or already-grown leaf canopy from before is no longer tied to it (replanting starts a fresh cycle)
 
 **Fixed**
 * Fixed the teleport effect of Chorus Wine, resolving a bug where drinking it could teleport players tens of thousands of blocks away or even out of the world (thanks to 鸢银子)
