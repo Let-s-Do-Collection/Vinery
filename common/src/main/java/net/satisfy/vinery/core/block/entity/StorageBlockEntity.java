@@ -48,9 +48,9 @@ public class StorageBlockEntity extends BlockEntity implements Clearable {
 
     @Override
     public void setChanged() {
-        if (level != null && !level.isClientSide()) {
+        if (level instanceof ServerLevel serverLevel) {
             Packet<ClientGamePacketListener> updatePacket = getUpdatePacket();
-            for (ServerPlayer player : GeneralUtil.tracking((ServerLevel) level, getBlockPos())) {
+            for (ServerPlayer player : GeneralUtil.tracking(serverLevel, getBlockPos())) {
                 player.connection.send(updatePacket);
             }
         }

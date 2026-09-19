@@ -29,6 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.satisfy.vinery.core.item.GrapeBushSeedItem;
 import net.satisfy.vinery.core.registry.GrapeTypeRegistry;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
+import net.satisfy.vinery.platform.PlatformHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3i;
@@ -88,14 +89,18 @@ public class PaleStemBlock extends StemBlock {
                 dropGrapes(world, state, pos, hit.getDirection());
             }
             dropGrapeSeeds(world, state, pos, hit.getDirection());
-            world.setBlock(pos, withAge(state, Math.max(0, age - 1), state.getValue(GRAPE)), 3);
+            BlockState sheared = withAge(state, Math.max(0, age - 1), state.getValue(GRAPE));
+            if (sheared.getValue(AGE) == 0) {
+                sheared = sheared.setValue(LEAVES_PENDING, false).setValue(LEAVES_DONE, false);
+            }
+            world.setBlock(pos, sheared, 3);
             world.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_BREAK, SoundSource.AMBIENT, 1.0F, 1.0F);
             return ItemInteractionResult.sidedSuccess(world.isClientSide);
         }
         if (stack.getItem() instanceof GrapeBushSeedItem seed && hasTrunk(world, pos)) {
             if (age == 0) {
                 if (!seed.getType().isLattice()) {
-                    boolean schedule = seed.getType() == GrapeTypeRegistry.WHITE || seed.getType() == GrapeTypeRegistry.RED;
+                    boolean schedule = (seed.getType() == GrapeTypeRegistry.WHITE || seed.getType() == GrapeTypeRegistry.RED) && PlatformHelper.shouldGrapevineLeavesGrow();
                     BlockState ns = withAge(state, 1, seed.getType());
                     if (schedule && !state.getValue(LEAVES_PENDING) && !state.getValue(LEAVES_DONE)) {
                         ns = ns.setValue(LEAVES_PENDING, true);
@@ -117,7 +122,7 @@ public class PaleStemBlock extends StemBlock {
     @Override
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onPlace(state, world, pos, oldState, moved);
-        if (!world.isClientSide && (state.getValue(GRAPE) == GrapeTypeRegistry.WHITE || state.getValue(GRAPE) == GrapeTypeRegistry.RED) && !state.getValue(LEAVES_PENDING) && !state.getValue(LEAVES_DONE)) {
+        if (!world.isClientSide && (state.getValue(GRAPE) == GrapeTypeRegistry.WHITE || state.getValue(GRAPE) == GrapeTypeRegistry.RED) && !state.getValue(LEAVES_PENDING) && !state.getValue(LEAVES_DONE) && PlatformHelper.shouldGrapevineLeavesGrow()) {
             world.setBlock(pos, state.setValue(LEAVES_PENDING, true), 3);
             int delay = 4800 + world.random.nextInt(4801);
             world.scheduleTick(pos, this, delay);

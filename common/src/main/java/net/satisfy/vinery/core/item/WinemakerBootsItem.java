@@ -30,7 +30,7 @@ public class WinemakerBootsItem extends ArmorItem {
 
     @Override
     public @NotNull EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.FEET;
+        return this.type.getSlot();
     }
 
     @Override

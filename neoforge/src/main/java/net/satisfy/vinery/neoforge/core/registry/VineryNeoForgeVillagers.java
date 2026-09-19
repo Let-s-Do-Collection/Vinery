@@ -20,7 +20,7 @@ public class VineryNeoForgeVillagers {
     public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS = DeferredRegister.create(Registries.VILLAGER_PROFESSION,Vinery.MOD_ID);
 
     public static final Supplier<PoiType> WINEMAKER_POI = POI_TYPES.register("winemaker_poi", () ->
-            new PoiType(ImmutableSet.copyOf(ObjectRegistry.FERMENTATION_BARREL.get().getStateDefinition().getPossibleStates()), 1, 1));
+            new PoiType(ImmutableSet.copyOf(ObjectRegistry.FERMENTATION_BARREL.get().getStateDefinition().getPossibleStates()), 1, 12));
 
     public static final Supplier<VillagerProfession> WINEMAKER = VILLAGER_PROFESSIONS.register("winemaker", () ->
             new VillagerProfession("winemaker", x -> x.value() == WINEMAKER_POI.get(), x -> x.value() == WINEMAKER_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_FARMER));

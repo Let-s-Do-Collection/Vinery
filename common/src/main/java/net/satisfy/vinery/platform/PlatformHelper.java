@@ -51,6 +51,11 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
+    public static boolean shouldGrapevineLeavesGrow() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static int getWineMaxLevel() {
         throw new AssertionError();
     }

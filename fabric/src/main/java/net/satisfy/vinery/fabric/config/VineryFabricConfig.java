@@ -50,6 +50,8 @@ public class VineryFabricConfig implements ConfigData {
 
         @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
         public double grapeGrowthMultiplier = 1.0;
+
+        public boolean grapevineLeavesEnabled = true;
     }
 
     public static class ItemsSettings {

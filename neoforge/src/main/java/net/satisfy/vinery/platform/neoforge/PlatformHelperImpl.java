@@ -52,6 +52,10 @@ public class PlatformHelperImpl extends PlatformHelper {
         return VineryForgeConfig.grapeGrowthMultiplierCache;
     }
 
+    public static boolean shouldGrapevineLeavesGrow() {
+        return VineryForgeConfig.grapevineLeavesEnabledCache;
+    }
+
     public static int getWineMaxLevel() {
         return VineryForgeConfig.maxLevelCache;
     }

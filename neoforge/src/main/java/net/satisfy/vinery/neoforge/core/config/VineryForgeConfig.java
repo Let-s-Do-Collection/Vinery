@@ -18,6 +18,7 @@ public class VineryForgeConfig {
     public static final ModConfigSpec.DoubleValue APPLE_GROWTH_CHANCE;
     public static final ModConfigSpec.DoubleValue GRAPE_GROWTH_CHANCE;
     public static final ModConfigSpec.DoubleValue GRAPE_GROWTH_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue GRAPEVINE_LEAVES_ENABLED;
     public static final ModConfigSpec.IntValue MAX_LEVEL;
     public static final ModConfigSpec.IntValue START_DURATION;
     public static final ModConfigSpec.IntValue DURATION_PER_YEAR;
@@ -50,6 +51,7 @@ public class VineryForgeConfig {
     public static double appleGrowthChanceCache;
     public static double grapeGrowthChanceCache;
     public static double grapeGrowthMultiplierCache;
+    public static boolean grapevineLeavesEnabledCache;
     public static int maxLevelCache;
     public static int startDurationCache;
     public static int durationPerYearCache;
@@ -101,6 +103,10 @@ public class VineryForgeConfig {
         GRAPE_GROWTH_MULTIPLIER = commonBuilder
                 .comment("Multiplier for grape growth speed")
                 .defineInRange("grapeGrowthMultiplier", 1.0, 0.0, 10.0);
+
+        GRAPEVINE_LEAVES_ENABLED = commonBuilder
+                .comment("Whether Red/White Grapevine stems grow a canopy of leaves around them after some time")
+                .define("grapevineLeavesEnabled", true);
 
         commonBuilder.pop();
 
@@ -223,6 +229,7 @@ public class VineryForgeConfig {
         appleGrowthChanceCache = 0.4;
         grapeGrowthChanceCache = 0.5;
         grapeGrowthMultiplierCache = 1.0;
+        grapevineLeavesEnabledCache = true;
         maxLevelCache = 5;
         startDurationCache = 1800;
         durationPerYearCache = 200;
@@ -259,8 +266,8 @@ public class VineryForgeConfig {
                 "vinery:window|12|1|2|true",
                 "vinery:dark_cherry_beam|6|4|2|true",
                 "vinery:grapevine_pot|6|1|2|true",
-                "vinery:taiga_red_grape_seeds|2|1|2|true",
-                "vinery:taiga_white_grape_seeds|2|1|2|true"
+                "vinery:taiga_grape_seeds_red|2|1|2|true",
+                "vinery:taiga_grape_seeds_white|2|1|2|true"
         );
 
         level5TradesCache = List.of(
@@ -290,6 +297,7 @@ public class VineryForgeConfig {
         cherryGrowthChanceCache = CHERRY_GROWTH_CHANCE.get();
         appleGrowthChanceCache = APPLE_GROWTH_CHANCE.get();
         grapeGrowthChanceCache = GRAPE_GROWTH_CHANCE.get();
+        grapevineLeavesEnabledCache = GRAPEVINE_LEAVES_ENABLED.get();
         grapeGrowthMultiplierCache = GRAPE_GROWTH_MULTIPLIER.get();
         maxLevelCache = MAX_LEVEL.get();
         startDurationCache = START_DURATION.get();

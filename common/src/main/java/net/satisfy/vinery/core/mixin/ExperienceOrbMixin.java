@@ -15,6 +15,7 @@ public abstract class ExperienceOrbMixin {
 
     @Inject(method = "playerTouch", at = @At("HEAD"))
     public void onPlayerTouch(Player player, CallbackInfo ci) {
+        if (player.level().isClientSide) return;
         if (player.hasEffect(MobEffectRegistry.getHolder(MobEffectRegistry.EXPERIENCE_EFFECT))) {
             int amplifier = Objects.requireNonNull(player.getEffect(MobEffectRegistry.getHolder(MobEffectRegistry.EXPERIENCE_EFFECT))).getAmplifier();
 

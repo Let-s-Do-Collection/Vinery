@@ -90,7 +90,7 @@ public class GrapevinePotBlock extends Block {
     }
     private boolean canTakeWine(int storage) {
         return switch (storage) {
-            case 3, 6, 9 -> true;
+            case 3, 6 -> true;
             default -> false;
         };
     }
@@ -119,7 +119,7 @@ public class GrapevinePotBlock extends Block {
             final int newStage = newState.getValue(STAGE);
             final int newStorage = newState.getValue(STORAGE);
             switch (newStorage) {
-                case 3, 6, 9 -> {
+                case 3, 6 -> {
                     if (newStage < 3) {
                         world.setBlock(pos, newState.setValue(STAGE, newStage + 1), Block.UPDATE_ALL);
                     }

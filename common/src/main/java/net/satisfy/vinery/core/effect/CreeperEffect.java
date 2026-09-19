@@ -31,7 +31,7 @@ public class CreeperEffect extends InstantenousMobEffect {
             double x = serverPlayer.getX();
             double y = serverPlayer.getY();
             double z = serverPlayer.getZ();
-            world.explode(null, x, y, z, (float) (amplifier), Level.ExplosionInteraction.TNT);
+            world.explode(null, x, y, z, (float) (amplifier + 1), Level.ExplosionInteraction.TNT);
 
             serverPlayer.hurt(serverPlayer.level().damageSources().explosion(null), 50.0F);
         }

@@ -28,11 +28,13 @@ public class BurningBlockRegistry {
     }
 
     public static int getIgniteOdd(Block block) {
-        return (Integer)((Pair)INSTANCE.get(block)).getSecond();
+        Pair<Integer, Integer> odds = INSTANCE.get(block);
+        return odds == null ? 0 : odds.getSecond();
     }
 
     public static int getBurnOdd(Block block) {
-        return (Integer)((Pair)INSTANCE.get(block)).getFirst();
+        Pair<Integer, Integer> odds = INSTANCE.get(block);
+        return odds == null ? 0 : odds.getFirst();
     }
 }
 

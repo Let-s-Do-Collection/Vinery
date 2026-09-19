@@ -50,7 +50,6 @@ public abstract class FoxEntityEatSweetBerriesGoalMixin extends MoveToBlockGoal 
     @Unique
     private void pickGrapes(BlockState state, GrapeType type) {
         final int age = state.getValue(GrapeBush.AGE);
-        state.setValue(GrapeBush.AGE, 1);
         int j = 1 + field_17975.level().random.nextInt(2) + (age == 3 ? 1 : 0);
         ItemStack itemStack = field_17975.getItemBySlot(EquipmentSlot.MAINHAND);
         ItemStack grape = getGrapeFor(type);

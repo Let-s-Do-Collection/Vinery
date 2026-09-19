@@ -65,6 +65,11 @@ public class PlatformHelperImpl extends PlatformHelper {
         return config.blocks.grapeGrowthMultiplier;
     }
 
+    public static boolean shouldGrapevineLeavesGrow() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.blocks.grapevineLeavesEnabled;
+    }
+
     public static int getWineMaxLevel() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
         return config.items.wine.maxLevel;

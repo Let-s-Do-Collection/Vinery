@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 public class BasketItem extends BlockItem {
     public BasketItem(Block block, Properties settings) {
-        super(block, new Properties().stacksTo(1));
+        super(block, settings.stacksTo(1));
     }
 
     private static Stream<ItemStack> getContents(ItemStack itemStack, HolderLookup.Provider provider) {

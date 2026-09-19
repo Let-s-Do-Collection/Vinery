@@ -55,12 +55,23 @@ public class WineYears {
     public static int getEffectDuration(ItemStack wine, Level world) {
         WineYearComponent component = wine.get(DataComponentRegistry.WINE_YEAR.get());
         if (component == null) {
-            return 0;
+            return getDefaultEffectDuration();
         }
         int ageYears = getWineAgeYears(wine, world);
         long duration = (long) component.startDuration() + (long) component.durationPerYear() * (long) ageYears;
         int clamped = (int) Math.min(Integer.MAX_VALUE, Math.max(0L, duration));
         return Math.min(component.maxDuration(), clamped);
+    }
+
+    /**
+     * A freshly bottled wine (age 0) would get this duration once {@link #setWineYear} runs -
+     * used as the tooltip/preview value before that has happened yet (e.g. right after crafting,
+     * looting or trading, before the bottle has ticked once in an inventory).
+     */
+    public static int getDefaultEffectDuration() {
+        int startDuration = Math.max(0, PlatformHelper.getWineStartDuration());
+        int maxDuration = Math.max(0, PlatformHelper.getWineMaxDuration());
+        return Math.min(maxDuration, startDuration);
     }
 
     public static void setWineYear(ItemStack wine, Level world) {

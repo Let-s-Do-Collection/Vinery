@@ -9,7 +9,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class TeleportEffect extends InstantenousMobEffect {
@@ -60,11 +59,5 @@ public class TeleportEffect extends InstantenousMobEffect {
 
     private static boolean fullBlockAt(Level world, BlockPos target){
         return Block.isShapeFullBlock(world.getBlockState(target).getCollisionShape(world, target));
-    }
-
-    private void oldTeleport(Player player) {
-        Vec3 lookVec = player.getLookAngle();
-        Vec3 teleportPos = player.position().add(lookVec.x * 30, lookVec.y * 30, lookVec.z * 30);
-        player.teleportRelative(teleportPos.x, teleportPos.y, teleportPos.z);
     }
 }

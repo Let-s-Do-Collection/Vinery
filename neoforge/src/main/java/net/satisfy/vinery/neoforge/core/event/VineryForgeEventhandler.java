@@ -60,7 +60,7 @@ public class VineryForgeEventhandler {
             boolean isSelling = Boolean.parseBoolean(parts[4]);
 
             Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName));
-            if (item != null) {
+            if (item != null && item != Items.AIR) {
                 VillagerTrades.ItemListing listing;
                 if (isSelling) {
                     listing = new VillagerUtil.SellItemFactory(item, price, quantity, maxUses);

@@ -49,7 +49,8 @@ public class LatticeBlockEntity extends BlockEntity {
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag,provider);
         this.age = tag.getInt("Age");
-        this.grape = GrapeType.fromString(tag.getString("Grape"));
+        GrapeType loadedGrape = GrapeType.fromString(tag.getString("Grape"));
+        this.grape = loadedGrape != null ? loadedGrape : GrapeTypeRegistry.NONE;
         this.showHanging = tag.getBoolean("ShowHanging");
         this.initialized = true;
     }

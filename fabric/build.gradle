@@ -1,7 +1,7 @@
 plugins {
     id "com.github.johnrengelman.shadow"
     id "com.modrinth.minotaur" version "2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "net.darkhax.curseforgegradle" version "1.1.25"
 }
 
 architectury {
@@ -128,23 +128,19 @@ modrinth {
     }
 }
 
-curseforge {
-    apiKey = System.getenv("CURSEFORGE_API_KEY")
-    project {
-        id = "704465"
-        releaseType = "beta"
-        addGameVersion rootProject.minecraft_version
-        addGameVersion "Fabric"
-        mainArtifact(remapJar) {
-            displayName = "Vinery - ${rootProject.mod_version} - FABRIC - ${rootProject.minecraft_version}"
-            changelog = changelogText
-            changelogType = "markdown"
-        }
+tasks.register("curseforge704465", net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_API_KEY")
+    disableVersionDetection()
 
-        relations {
-            requiredDependency "architectury-api"
-        }
-    }
+    def mainFile = upload("704465", remapJar)
+    mainFile.releaseType = "release"
+    mainFile.changelog = changelogText
+    mainFile.changelogType = "markdown"
+    mainFile.displayName = "Vinery - ${rootProject.mod_version} - FABRIC - ${rootProject.minecraft_version}"
+    mainFile.addGameVersion(rootProject.minecraft_version)
+    mainFile.addModLoader("Fabric")
+    mainFile.addEnvironment("Client", "Server")
+    mainFile.addRequirement("architectury-api")
 }
 
 def escapeJson = { String s ->

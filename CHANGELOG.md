@@ -1,3 +1,33 @@
+[1.5.4]
+
+**Added**
+* Traditional Chinese translation (thanks to CherryPuff)
+* Bulgarian translation (thanks to OmegaSleepy)
+* Brazilian Portuguese translation (thanks to Patrik)
+* Config option to disable the automatic leaf canopy that Red/White Grapevine stems grow over time
+
+**Changed**
+
+**Fixed**
+* Fixed the teleport effect of Chorus Wine, resolving a bug where drinking it could teleport players tens of thousands of blocks away or even out of the world (thanks to 鸢银子)
+* Fixed incorrect compostable ids for Vinery items in the datamap
+* `GrapeBush` no longer fails to generate during worldgen due to a light check, resolving a ScalableLux compatibility issue (thanks to Gardel)
+* `StorageBlockEntity` now implements `Clearable`, fixing compatibility with Sable (thanks to Clem76)
+* Fixed incorrect item ids for Taiga Grape Seed trades, which could crash on NeoForge (thanks to James)
+* Fixed and updated the Italian translation, including a Chorus Wine text fix (thanks to Serena)
+* Fixed wrong `tags/items` directory names preventing several item tags from working correctly (thanks to Ninjdai)
+* Fixed the Winemaker Trade crash on NeoForge for good: a second overlooked Taiga Grape Seed trade id was corrected, and the underlying cause was fixed - an unknown item id now resolves to `null` on NeoForge instead of `AIR`, matching Fabric's behavior
+* Fixed a crash with Create's Schematicannon/`SchematicLevel` caused by an unsafe cast in `StorageBlockEntity`
+* Fixed the Trader Mule's hitbox floating above its saddle by correcting its height to match the model
+* Fixed wine tooltips showing "0:00" effect duration for freshly obtained bottles (crafted, looted, traded) before their aging data had synced, even though drinking them already applied the correct duration
+* Fixed the Winemaker villager profession being nearly impossible to get on NeoForge, since its workstation detection range was far smaller there than on Fabric
+* Fixed a potential world save crash for Lattice blocks with missing or old grape data
+* Fixed a client-side exploit/desync where the XP bonus effect could apply extra experience without server authorization
+* Fixed the Wandering Winemaker selling Jungle White Grapes instead of Jungle White Grape Seeds
+* Fixed the Creeper effect at level I not dealing any block damage on explosion
+
+***
+
 [1.5.3]
 
 **Fixed**

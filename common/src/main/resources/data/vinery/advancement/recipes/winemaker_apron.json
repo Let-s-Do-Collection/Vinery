@@ -2,17 +2,17 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vinery:vinemaker_boots"
+      "vinery:winemaker_apron"
     ]
   },
   "criteria": {
-    "has_brown_wool": {
+    "has_red_wool": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:brown_wool"
+              "minecraft:red_wool"
             ]
           }
         ]
@@ -21,13 +21,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vinery:vinemaker_boots"
+        "recipe": "vinery:winemaker_apron"
       }
     }
   },
   "requirements": [
     [
-      "has_brown_wool",
+      "has_red_wool",
       "has_the_recipe"
     ]
   ]
