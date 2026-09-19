@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -114,7 +115,13 @@ public class GrapeBush extends BushBlock implements BonemealableBlock {
 
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader world, BlockPos blockPos) {
-        return canGrowPlace(world, blockPos, blockState) && this.mayPlaceOn(world.getBlockState(blockPos.below()), world, blockPos);
+        boolean soilValid = this.mayPlaceOn(world.getBlockState(blockPos.below()), world, blockPos);
+        if (!soilValid) return false;
+
+        if (world.getChunk(blockPos).getPersistedStatus().getIndex() < ChunkStatus.FULL.getIndex()) {
+            return true;
+        }
+        return canGrowPlace(world, blockPos, blockState);
     }
 
     @Override
