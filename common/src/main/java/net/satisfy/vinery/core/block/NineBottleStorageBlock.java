@@ -1,5 +1,8 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.vinery.core.registry.EntityTypeRegistry;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.satisfy.foundation.storage.StorageBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -20,6 +23,11 @@ public class NineBottleStorageBlock extends StorageBlock {
     public NineBottleStorageBlock(Properties settings) {
         super(settings);
     }
+    @Override
+    public BlockEntityType<?> blockEntityType() {
+        return EntityTypeRegistry.STORAGE_ENTITY.get();
+    }
+
     @Override
     public int size(){
         return 9;

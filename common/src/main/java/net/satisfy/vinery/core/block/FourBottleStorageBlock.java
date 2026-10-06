@@ -1,5 +1,8 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.vinery.core.registry.EntityTypeRegistry;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.satisfy.foundation.storage.StorageBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -23,6 +26,11 @@ public class FourBottleStorageBlock extends StorageBlock {
     @Override
     public boolean canInsertStack(ItemStack stack) {
         return stack.is(TagRegistry.SMALL_BOTTLE);
+    }
+
+    @Override
+    public BlockEntityType<?> blockEntityType() {
+        return EntityTypeRegistry.STORAGE_ENTITY.get();
     }
 
     @Override

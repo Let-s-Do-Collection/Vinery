@@ -1,5 +1,7 @@
 package net.satisfy.vinery.client.gui.handler;
 
+import net.satisfy.foundation.menu.ExtendedSlot;
+import net.satisfy.foundation.menu.OutputSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,8 +12,6 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.satisfy.vinery.client.gui.handler.slot.ExtendedSlot;
-import net.satisfy.vinery.client.gui.handler.slot.FermentationBarrelOutputSlot;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
 import net.satisfy.vinery.core.registry.RecipeTypesRegistry;
 import net.satisfy.vinery.core.registry.ScreenhandlerTypeRegistry;
@@ -48,7 +48,7 @@ public class FermentationBarrelGuiHandler extends AbstractContainerMenu {
         this.addSlot(new ExtendedSlot(inventory, 2, 85, 58, this::isIngredient));
         this.addSlot(new ExtendedSlot(inventory, 3, 103, 58, this::isIngredient));
         this.addSlot(new ExtendedSlot(inventory, WINE_BOTTLE_SLOT, 123, 58, stack -> stack.is(ObjectRegistry.WINE_BOTTLE.get())));
-        this.addSlot(new FermentationBarrelOutputSlot(playerInventory.player, inventory, OUTPUT_SLOT_GENERAL, 103, 17));
+        this.addSlot(new OutputSlot(playerInventory.player, inventory, OUTPUT_SLOT_GENERAL, 103, 17));
     }
 
     private boolean canAddJuice(ItemStack stack) {

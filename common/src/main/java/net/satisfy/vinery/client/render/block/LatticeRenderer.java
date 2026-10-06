@@ -1,5 +1,6 @@
 package net.satisfy.vinery.client.render.block;
 
+import net.satisfy.foundation.block.LineConnectingType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -21,7 +22,6 @@ import net.satisfy.vinery.core.Vinery;
 import net.satisfy.vinery.core.block.LatticeBlock;
 import net.satisfy.vinery.core.block.entity.LatticeBlockEntity;
 import net.satisfy.vinery.core.registry.GrapeTypeRegistry;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import net.satisfy.vinery.core.util.GrapeType;
 
 import java.util.HashMap;
@@ -163,7 +163,7 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
         Direction direction = state.getValue(LatticeBlock.FACING);
         boolean support = state.getValue(LatticeBlock.SUPPORT);
         boolean bottom = state.getValue(LatticeBlock.BOTTOM);
-        GeneralUtil.LineConnectingType type = state.getValue(LatticeBlock.TYPE);
+        LineConnectingType type = state.getValue(LatticeBlock.TYPE);
 
         int age = state.getValue(LatticeBlock.AGE);
         GrapeType grapeType = state.getValue(LatticeBlock.GRAPE);
@@ -193,14 +193,14 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
         } else {
             mesh.render(poseStack, consumer, packedLight, packedOverlay);
 
-            if (type != GeneralUtil.LineConnectingType.MIDDLE && type != GeneralUtil.LineConnectingType.LEFT) {
+            if (type != LineConnectingType.MIDDLE && type != LineConnectingType.LEFT) {
                 support_right.render(poseStack, consumer, packedLight, packedOverlay);
                 if (support) {
                     corner_braces_right.render(poseStack, consumer, packedLight, packedOverlay);
                 }
             }
 
-            if (type != GeneralUtil.LineConnectingType.MIDDLE && type != GeneralUtil.LineConnectingType.RIGHT) {
+            if (type != LineConnectingType.MIDDLE && type != LineConnectingType.RIGHT) {
                 support_left.render(poseStack, consumer, packedLight, packedOverlay);
                 if (support) {
                     corner_braces_left.render(poseStack, consumer, packedLight, packedOverlay);

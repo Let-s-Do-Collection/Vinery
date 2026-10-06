@@ -1,5 +1,7 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.foundation.block.LineConnectingType;
+import net.satisfy.foundation.block.LineConnectingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -33,7 +35,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.satisfy.vinery.core.block.entity.LatticeBlockEntity;
 import net.satisfy.vinery.core.item.GrapeBushSeedItem;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import net.satisfy.vinery.core.util.GrapeType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
     public static final BooleanProperty SUPPORT = BooleanProperty.create("support");
     public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final EnumProperty<GeneralUtil.LineConnectingType> TYPE = GeneralUtil.LINE_CONNECTING_TYPE;
+    public static final EnumProperty<LineConnectingType> TYPE = LineConnectingBlock.TYPE;
 
     protected static final VoxelShape EAST = box(0.0D, 0.0D, 0.0D, 2.0D, 16.0D, 16.0D);
     protected static final VoxelShape WEST = box(14.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -62,7 +63,7 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
                 .setValue(FACING, Direction.NORTH)
                 .setValue(SUPPORT, true)
                 .setValue(BOTTOM, false)
-                .setValue(TYPE, GeneralUtil.LineConnectingType.NONE));
+                .setValue(TYPE, LineConnectingType.NONE));
     }
 
     @Nullable
@@ -217,10 +218,10 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
                 && stateR.getValue(FACING) == facing
                 && stateR.getValue(BOTTOM) == bottom;
 
-        GeneralUtil.LineConnectingType type = sideL && sideR ? GeneralUtil.LineConnectingType.MIDDLE
-                : (sideR ? GeneralUtil.LineConnectingType.LEFT
-                : (sideL ? GeneralUtil.LineConnectingType.RIGHT
-                : GeneralUtil.LineConnectingType.NONE));
+        LineConnectingType type = sideL && sideR ? LineConnectingType.MIDDLE
+                : (sideR ? LineConnectingType.LEFT
+                : (sideL ? LineConnectingType.RIGHT
+                : LineConnectingType.NONE));
 
         return state.setValue(TYPE, type);
     }

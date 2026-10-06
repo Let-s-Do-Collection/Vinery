@@ -1,5 +1,6 @@
 package net.satisfy.vinery.core.item;
 
+import net.satisfy.foundation.util.LibUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -25,10 +26,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.satisfy.vinery.core.block.entity.StorageBlockEntity;
+import net.satisfy.foundation.storage.StorageBlockEntity;
 import net.satisfy.vinery.core.registry.DataComponentRegistry;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import net.satisfy.vinery.core.util.WineYears;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -148,7 +148,7 @@ public class DrinkBlockItem extends BlockItem {
             livingEntity.addEffect(new MobEffectInstance(registryHolder, duration, amplifier));
         }
         itemStack.shrink(1);
-        return GeneralUtil.convertStackAfterFinishUsing(livingEntity, itemStack, ObjectRegistry.WINE_BOTTLE.get(), this);
+        return LibUtil.convertStackAfterFinishUsing(livingEntity, itemStack, ObjectRegistry.WINE_BOTTLE.get(), this);
     }
 
     private String formatDuration(int ticks) {

@@ -1,5 +1,6 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.foundation.util.LibUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.satisfy.vinery.core.registry.GrapeTypeRegistry;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import net.satisfy.vinery.core.block.state.properties.GrapeProperty;
 import net.satisfy.vinery.core.util.GrapeType;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public abstract class StemBlock extends Block implements BonemealableBlock {
         ItemStack stack = new ItemStack(grape, x + bonus);
 
         if (direction == null) popResource(world, pos, stack);
-        else GeneralUtil.popResourceFromFace(world, pos, direction, stack);
+        else LibUtil.popResourceFromFace(world, pos, direction, stack);
 
         world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
     }
@@ -52,7 +52,7 @@ public abstract class StemBlock extends Block implements BonemealableBlock {
         ItemStack stack = new ItemStack(grape);
 
         if (direction == null) popResource(world, pos, stack);
-        else GeneralUtil.popResourceFromFace(world, pos, direction, stack);
+        else LibUtil.popResourceFromFace(world, pos, direction, stack);
     }
 
     @Override

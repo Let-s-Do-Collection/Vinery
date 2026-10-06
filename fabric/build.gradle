@@ -43,6 +43,7 @@ repositories {
 
 
 dependencies {
+    include(modImplementation("net.satisfy.foundation:foundation-fabric:${rootProject.foundation_version}") { transitive = false })
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
     modImplementation "com.terraformersmc:modmenu:${rootProject.mod_menu_version}"
@@ -143,11 +144,6 @@ tasks.register("curseforge704465", net.darkhax.curseforgegradle.TaskPublishCurse
     mainFile.addRequirement("architectury-api")
 }
 
-def escapeJson = { String s ->
-    if (s == null) return ""
-    s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n")
-}
-
 tasks.register("releaseChangelog") {
     group = "publishing"
     description = "Send the latest changelog block to Discord"
@@ -163,58 +159,68 @@ tasks.register("releaseChangelog") {
         def modName = (project.findProperty("modDisplayName") ?: "Vinery").toString()
         def versionLabel = rootProject.mod_version
         def full = rootProject.file("CHANGELOG.md").exists() ? rootProject.file("CHANGELOG.md").text : ""
-        def m = (full =~ /(?s)(\[[^\]]+][\s\S]*?)(\n\*\*\*\n)/)
+        def m = (full =~ /(?ms)^(\[[^\]\n]+\][ \t]*$.*?)(?:^\*\*\*[ \t]*$|\z)/)
         def block = m.find() ? m.group(1).trim() : full.trim()
-        if (block.length() > 1900) block = block.substring(0, 1900) + "…"
 
-        def linksMd = "[Modrinth](https://modrinth.com/mod/lets-do-vinery)\n[CurseForge](https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery)"
-        def contentLine = "**${modName} ${versionLabel} has been released! 🎉**\n\nLearn about all changes and improvements below:"
-        def payload = """{
-  "username": "Blushy [Let’s Do] Assistant",
-    "avatar_url": "https://raw.githubusercontent.com/Let-s-Do-Collection/Vinery/1.20.1/common/src/main/resources/pack.png",
-  "content": "${escapeJson(contentLine)}",
-    "embeds": [{
-    "title": "**Changelog**",
-    "description": "${escapeJson(block)}",
-    "fields": [
-      { "name": "**Download it on**", "value": "${escapeJson(linksMd)}", "inline": false }
-    ]
-  }],
-  "components": [{
-    "type": 1,
-    "components": [
-      { "type": 2, "style": 5, "label": "Download on Modrinth",   "url": "https://modrinth.com/mod/lets-do-vinery" },
-      { "type": 2, "style": 5, "label": "Download on CurseForge", "url": "https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery" }
-    ]
-  }]
-}"""
+        int embedLimit = 4000
+        int messageLimit = 5500
+        def chunks = []
+        def current = new StringBuilder()
+        block.readLines().each { line ->
+            if (current.length() + line.length() + 1 > embedLimit) {
+                chunks << current.toString().trim()
+                current = new StringBuilder()
+            }
+            current.append(line).append("\n")
+        }
+        if (current.toString().trim()) chunks << current.toString().trim()
 
-        if ((project.findProperty("dryRun") ?: "false").toString().toBoolean()) {
-            println "DRY RUN — would send payload:\n${payload}"
-            return
+        def links = "[Modrinth](https://modrinth.com/mod/lets-do-vinery)\n[CurseForge](https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery)"
+        def messages = [[]]
+        int messageSize = 0
+        chunks.eachWithIndex { chunk, index ->
+            if (messages.last().size() == 10 || messageSize + chunk.length() > messageLimit) {
+                messages << []
+                messageSize = 0
+            }
+            def embed = [description: chunk]
+            if (index == 0) embed.title = "**Changelog**"
+            if (index == chunks.size() - 1) embed.fields = [[name: "**Download it on**", value: links, inline: false]]
+            messages.last() << embed
+            messageSize += chunk.length()
         }
 
-        HttpURLConnection conn = null
-        try {
-            conn = (HttpURLConnection) new URL(discordWebhookUrl).openConnection()
-            conn.setRequestMethod("POST")
-            conn.setDoOutput(true)
-            byte[] body = payload.getBytes("UTF-8")
-            conn.setRequestProperty("Content-Type", "application/json")
-            conn.setRequestProperty("Content-Length", Integer.toString(body.length))
-            conn.getOutputStream().write(body)
-            int code = conn.getResponseCode()
-            String resp = ""
-            try {
-                resp = conn.getInputStream().getText("UTF-8")
-            } catch (IOException ignored) {
-                resp = conn.getErrorStream() != null ? conn.getErrorStream().getText("UTF-8") : ""
+        boolean dryRun = (project.findProperty("dryRun") ?: "false").toString().toBoolean()
+        messages.eachWithIndex { embeds, index ->
+            def payload = [
+                    username  : "[Let’s Do] Assistant",
+                    avatar_url: "https://raw.githubusercontent.com/Let-s-Do-Collection/Vinery/1.20.1/common/src/main/resources/pack.png",
+                    embeds    : embeds
+            ]
+            if (index == 0) payload.content = "**${modName} ${versionLabel} has been released! 🎉**\n\nLearn about all changes and improvements below:".toString()
+            def json = groovy.json.JsonOutput.toJson(payload)
+            if (dryRun) {
+                println "DRY RUN — message ${index + 1}/${messages.size()}:\n${groovy.json.JsonOutput.prettyPrint(json)}"
+                return
             }
-            println "Discord webhook response: ${code} ${conn.getResponseMessage()}"
-            if (resp) println "Response body:\n${resp}"
-            if (code == 204) println "(204 No Content is success for Discord webhooks)"
-        } finally {
-            if (conn != null) conn.disconnect()
+            HttpURLConnection conn = (HttpURLConnection) new URL(discordWebhookUrl).openConnection()
+            try {
+                conn.setRequestMethod("POST")
+                conn.setDoOutput(true)
+                byte[] body = json.getBytes("UTF-8")
+                conn.setRequestProperty("Content-Type", "application/json")
+                conn.setRequestProperty("Content-Length", Integer.toString(body.length))
+                conn.getOutputStream().write(body)
+                int code = conn.getResponseCode()
+                println "Discord message ${index + 1}/${messages.size()}: ${code} ${conn.getResponseMessage()}"
+                if (code >= 300) {
+                    def error = conn.getErrorStream()
+                    if (error != null) println error.getText("UTF-8")
+                }
+            } finally {
+                conn.disconnect()
+            }
+            if (index < messages.size() - 1) Thread.sleep(1000)
         }
     }
 }

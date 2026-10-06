@@ -10,11 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.satisfy.vinery.core.Vinery;
-import net.satisfy.vinery.core.registry.ArmorRegistry;
-import net.satisfy.vinery.core.item.WinemakerBootsItem;
-import net.satisfy.vinery.core.item.WinemakerChestItem;
-import net.satisfy.vinery.core.item.WinemakerHelmetItem;
-import net.satisfy.vinery.core.item.WinemakerLegsItem;
+import net.satisfy.vinery.core.registry.ArmorSetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,18 +33,7 @@ public abstract class BoneMealItemMixin {
         Player player = context.getPlayer();
         if (player == null) return;
 
-        ItemStack helmet = player.getInventory().getArmor(3);
-        ItemStack chestplate = player.getInventory().getArmor(2);
-        ItemStack leggings = player.getInventory().getArmor(1);
-        ItemStack boots = player.getInventory().getArmor(0);
-
-        boolean hasFullSet = helmet.getItem() instanceof WinemakerHelmetItem &&
-                chestplate.getItem() instanceof WinemakerChestItem &&
-                leggings.getItem() instanceof WinemakerLegsItem &&
-                boots.getItem() instanceof WinemakerBootsItem;
-
-        if (hasFullSet) {
-            System.out.println("YES");
+        if (ArmorSetRegistry.hasWinemakerSet(player)) {
             cir.setReturnValue(InteractionResult.PASS);
             ItemStack heldItem = context.getItemInHand();
             if (!heldItem.isEmpty()) {

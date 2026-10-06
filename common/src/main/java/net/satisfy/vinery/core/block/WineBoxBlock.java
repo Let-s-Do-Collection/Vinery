@@ -1,5 +1,9 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.vinery.core.registry.EntityTypeRegistry;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.satisfy.foundation.util.ShapeUtil;
+import net.satisfy.foundation.storage.StorageBlock;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +29,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.satisfy.vinery.core.registry.StorageTypeRegistry;
 import net.satisfy.vinery.core.registry.TagRegistry;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -62,13 +65,13 @@ public class WineBoxBlock extends StorageBlock {
 
     public static final Map<Direction, VoxelShape> SHAPE_OPEN = Util.make(new HashMap<>(), map -> {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
-            map.put(direction, GeneralUtil.rotateShape(Direction.NORTH, direction, shapeOpen.get()));
+            map.put(direction, ShapeUtil.rotateShape(Direction.NORTH, direction, shapeOpen.get()));
         }
     });
 
     public static final Map<Direction, VoxelShape> SHAPE_CLOSED = Util.make(new HashMap<>(), map -> {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
-            map.put(direction, GeneralUtil.rotateShape(Direction.NORTH, direction, shapeClosed.get()));
+            map.put(direction, ShapeUtil.rotateShape(Direction.NORTH, direction, shapeClosed.get()));
         }
     });
 
@@ -117,6 +120,11 @@ public class WineBoxBlock extends StorageBlock {
     @Override
     public Direction[] unAllowedDirections() {
         return new Direction[]{Direction.DOWN, Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH};
+    }
+
+    @Override
+    public BlockEntityType<?> blockEntityType() {
+        return EntityTypeRegistry.STORAGE_ENTITY.get();
     }
 
     @Override

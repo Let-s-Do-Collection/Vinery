@@ -12,7 +12,9 @@
   ],
   "contact": {
     "sources": "https://github.com/satisfyu/Vinery",
-    "issues": "https://github.com/satisfyu/Let-s-Do-Hub"
+    "issues": "https://github.com/satisfyu/Let-s-Do-Hub",
+    "homepage": "https://www.lets-do.ch",
+    "wiki": "https://lets-do.ch/wiki/vinery/"
   },
   "license": "Custom",
   "icon": "pack.png",
@@ -41,7 +43,8 @@
   "depends": {
     "fabric-api": "*",
     "minecraft": ">=1.20",
-    "architectury": ">=9.0.8"
+    "architectury": ">=9.0.8",
+    "foundation": ">=1.0.0"
   },
   "conflicts": {
     "copperative": "*",

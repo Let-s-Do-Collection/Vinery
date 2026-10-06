@@ -1,5 +1,9 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.vinery.core.registry.EntityTypeRegistry;
+
+import net.satisfy.foundation.util.ShapeUtil;
+import net.satisfy.foundation.block.CabinetBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -10,9 +14,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.satisfy.vinery.core.block.entity.StorageBlockEntity;
+import net.satisfy.foundation.storage.StorageBlockEntity;
 import net.satisfy.vinery.core.block.entity.StoragePotBlockEntity;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +24,7 @@ import java.util.Map;
 
 public class StoragePotBlock extends CabinetBlock {
     public StoragePotBlock(Properties settings, SoundEvent openSound, SoundEvent closeSound) {
-        super(settings, openSound, closeSound);
+        super(settings, EntityTypeRegistry.STORAGE_POT_ENTITY, openSound, closeSound);
     }
 
     private static final VoxelShape VOXEL_SHAPE = createVoxelShape();
@@ -46,7 +49,7 @@ public class StoragePotBlock extends CabinetBlock {
 
     static {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
-            SHAPE.put(direction, GeneralUtil.rotateShape(Direction.NORTH, direction, VOXEL_SHAPE));
+            SHAPE.put(direction, ShapeUtil.rotateShape(Direction.NORTH, direction, VOXEL_SHAPE));
         }
     }
 

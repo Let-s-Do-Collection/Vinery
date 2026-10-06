@@ -1,5 +1,24 @@
 package net.satisfy.vinery.core.registry;
 
+import net.satisfy.foundation.wood.WoodStandingSignBlock;
+import net.satisfy.foundation.wood.WoodWallSignBlock;
+import net.satisfy.foundation.wood.WoodCeilingHangingSignBlock;
+import net.satisfy.foundation.wood.WoodWallHangingSignBlock;
+import net.satisfy.foundation.wood.WoodBoatItem;
+import net.satisfy.foundation.storage.WallShelfBlock;
+import net.satisfy.foundation.block.WindowBlock;
+import net.satisfy.vinery.platform.PlatformHelper;
+import net.minecraft.world.effect.MobEffects;
+import net.satisfy.foundation.banner.CompletionistWallBannerBlock;
+import net.satisfy.foundation.banner.CompletionistBannerBlock;
+import net.satisfy.foundation.banner.BannerSettings;
+import net.satisfy.foundation.block.BigTableBlock;
+import net.satisfy.foundation.block.CabinetBlock;
+import net.satisfy.foundation.block.ChairBlock;
+import net.satisfy.foundation.block.FacingBlock;
+import net.satisfy.foundation.util.LibUtil;
+
+import net.satisfy.foundation.util.RegistryUtil;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
@@ -24,9 +43,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.satisfy.vinery.core.Vinery;
 import net.satisfy.vinery.core.block.*;
 import net.satisfy.vinery.core.block.state.properties.VineryWoodType;
-import net.satisfy.vinery.core.entity.DarkCherryBoatEntity;
 import net.satisfy.vinery.core.item.*;
-import net.satisfy.vinery.core.util.GeneralUtil;
+import net.satisfy.foundation.armor.TexturedArmorItem;
 import net.satisfy.vinery.core.util.WineSettings;
 import net.satisfy.vinery.core.world.feature.VineryConfiguredFeatures;
 
@@ -41,10 +59,10 @@ public class ObjectRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(Vinery.MOD_ID, Registries.BLOCK);
     public static final Registrar<Block> BLOCK_REGISTRAR = BLOCKS.getRegistrar();
 
-    public static final RegistrySupplier<Block> DARK_CHERRY_SIGN = registerWithoutItem("dark_cherry_sign", () -> new DarkCherryStandingSignBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SIGN), VineryWoodType.DARK_CHERRY));
-    public static final RegistrySupplier<Block> DARK_CHERRY_WALL_SIGN = registerWithoutItem("dark_cherry_wall_sign", () -> new DarkCherryWallSignBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_SIGN), VineryWoodType.DARK_CHERRY));
-    public static final RegistrySupplier<Block> DARK_CHERRY_HANGING_SIGN = registerWithoutItem("dark_cherry_hanging_sign", () -> new DarkCherryCeilingHangingSignBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_HANGING_SIGN), VineryWoodType.DARK_CHERRY));
-    public static final RegistrySupplier<Block> DARK_CHERRY_WALL_HANGING_SIGN = registerWithoutItem("dark_cherry_wall_hanging_sign", () -> new DarkCherryWallHangingSignBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_HANGING_SIGN), VineryWoodType.DARK_CHERRY));
+    public static final RegistrySupplier<Block> DARK_CHERRY_SIGN = registerWithoutItem("dark_cherry_sign", () -> new WoodStandingSignBlock(VineryWoodType.DARK_CHERRY, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SIGN), EntityTypeRegistry.MOD_SIGN));
+    public static final RegistrySupplier<Block> DARK_CHERRY_WALL_SIGN = registerWithoutItem("dark_cherry_wall_sign", () -> new WoodWallSignBlock(VineryWoodType.DARK_CHERRY, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_SIGN), EntityTypeRegistry.MOD_SIGN));
+    public static final RegistrySupplier<Block> DARK_CHERRY_HANGING_SIGN = registerWithoutItem("dark_cherry_hanging_sign", () -> new WoodCeilingHangingSignBlock(VineryWoodType.DARK_CHERRY, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_HANGING_SIGN), EntityTypeRegistry.MOD_HANGING_SIGN));
+    public static final RegistrySupplier<Block> DARK_CHERRY_WALL_HANGING_SIGN = registerWithoutItem("dark_cherry_wall_hanging_sign", () -> new WoodWallHangingSignBlock(VineryWoodType.DARK_CHERRY, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_HANGING_SIGN), EntityTypeRegistry.MOD_HANGING_SIGN));
     public static final RegistrySupplier<Item> DARK_CHERRY_SIGN_ITEM = ITEMS.register("dark_cherry_sign", () -> new SignItem(new Item.Properties().stacksTo(16), ObjectRegistry.DARK_CHERRY_SIGN.get(), ObjectRegistry.DARK_CHERRY_WALL_SIGN.get()));
     public static final RegistrySupplier<Item> DARK_CHERRY_HANGING_SIGN_ITEM = ITEMS.register("dark_cherry_hanging_sign", () -> new HangingSignItem(ObjectRegistry.DARK_CHERRY_HANGING_SIGN.get(), ObjectRegistry.DARK_CHERRY_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
     public static final RegistrySupplier<Block> RED_GRAPE_BUSH = registerWithoutItem("red_grape_bush", () -> new GrapeBush(BlockBehaviour.Properties.ofFullCopy(Blocks.SWEET_BERRY_BUSH), GrapeTypeRegistry.RED));
@@ -87,19 +105,19 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> APPLE_PRESS = registerWithItem("apple_press", () -> new ApplePressBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistrySupplier<Block> DARK_CHERRY_CHAIR = registerWithItem("dark_cherry_chair", () -> new ChairBlock(BlockBehaviour.Properties.of().strength(2.0f, 3.0f).sound(SoundType.WOOD)));
     public static final RegistrySupplier<Block> DARK_CHERRY_TABLE = registerWithItem("dark_cherry_table", () -> new TableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)));
-    public static final RegistrySupplier<Block> DARK_CHERRY_CABINET = registerWithItem("dark_cherry_cabinet", () -> new CabinetBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD), SoundEventRegistry.CABINET_OPEN.get(), SoundEventRegistry.CABINET_CLOSE.get()));
-    public static final RegistrySupplier<Block> DARK_CHERRY_DRAWER = registerWithItem("dark_cherry_drawer", () -> new CabinetBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD), SoundEventRegistry.DRAWER_OPEN.get(), SoundEventRegistry.DRAWER_CLOSE.get()));
+    public static final RegistrySupplier<Block> DARK_CHERRY_CABINET = registerWithItem("dark_cherry_cabinet", () -> new CabinetBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD), EntityTypeRegistry.CABINET_BLOCK_ENTITY, SoundEventRegistry.CABINET_OPEN.get(), SoundEventRegistry.CABINET_CLOSE.get()));
+    public static final RegistrySupplier<Block> DARK_CHERRY_DRAWER = registerWithItem("dark_cherry_drawer", () -> new CabinetBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD), EntityTypeRegistry.CABINET_BLOCK_ENTITY, SoundEventRegistry.DRAWER_OPEN.get(), SoundEventRegistry.DRAWER_CLOSE.get()));
     public static final RegistrySupplier<Block> DARK_CHERRY_WINE_RACK_BIG = registerWithItem("dark_cherry_wine_rack_big", () -> new NineBottleStorageBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistrySupplier<Block> DARK_CHERRY_WINE_RACK_SMALL = registerWithItem("dark_cherry_wine_rack_small", () -> new FourBottleStorageBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistrySupplier<Block> DARK_CHERRY_WINE_RACK_MID = registerWithItem("dark_cherry_wine_rack_mid", () -> new BigBottleStorageBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistrySupplier<Block> DARK_CHERRY_BARREL = registerWithItem("dark_cherry_barrel", () -> new DarkCherryBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
-    public static final RegistrySupplier<Block> APPLE_LOG = registerWithItem("apple_log", GeneralUtil::logBlock);
-    public static final RegistrySupplier<Block> APPLE_WOOD = registerWithItem("apple_wood", GeneralUtil::logBlock);
-    public static final RegistrySupplier<Block> STRIPPED_DARK_CHERRY_LOG = registerWithItem("stripped_dark_cherry_log", GeneralUtil::logBlock);
-    public static final RegistrySupplier<Block> DARK_CHERRY_LOG = registerWithItem("dark_cherry_log", GeneralUtil::logBlock);
-    public static final RegistrySupplier<Block> STRIPPED_DARK_CHERRY_WOOD = registerWithItem("stripped_dark_cherry_wood", GeneralUtil::logBlock);
-    public static final RegistrySupplier<Block> DARK_CHERRY_WOOD = registerWithItem("dark_cherry_wood", GeneralUtil::logBlock);
-    public static final RegistrySupplier<Block> DARK_CHERRY_BEAM = registerWithItem("dark_cherry_beam", GeneralUtil::logBlock);
+    public static final RegistrySupplier<Block> APPLE_LOG = registerWithItem("apple_log", LibUtil::logBlock);
+    public static final RegistrySupplier<Block> APPLE_WOOD = registerWithItem("apple_wood", LibUtil::logBlock);
+    public static final RegistrySupplier<Block> STRIPPED_DARK_CHERRY_LOG = registerWithItem("stripped_dark_cherry_log", LibUtil::logBlock);
+    public static final RegistrySupplier<Block> DARK_CHERRY_LOG = registerWithItem("dark_cherry_log", LibUtil::logBlock);
+    public static final RegistrySupplier<Block> STRIPPED_DARK_CHERRY_WOOD = registerWithItem("stripped_dark_cherry_wood", LibUtil::logBlock);
+    public static final RegistrySupplier<Block> DARK_CHERRY_WOOD = registerWithItem("dark_cherry_wood", LibUtil::logBlock);
+    public static final RegistrySupplier<Block> DARK_CHERRY_BEAM = registerWithItem("dark_cherry_beam", LibUtil::logBlock);
     public static final RegistrySupplier<Block> DARK_CHERRY_PLANKS = registerWithItem("dark_cherry_planks", () -> new Block(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).instrument(NoteBlockInstrument.BIT).mapColor(MapColor.TERRACOTTA_RED)));
     public static final RegistrySupplier<Block> DARK_CHERRY_FLOORBOARD = registerWithItem("dark_cherry_floorboard", () -> new Block(BlockBehaviour.Properties.ofFullCopy(DARK_CHERRY_PLANKS.get())));
     public static final RegistrySupplier<Block> DARK_CHERRY_STAIRS = registerWithItem("dark_cherry_stairs", () -> new StairBlock(DARK_CHERRY_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DARK_CHERRY_PLANKS.get())));
@@ -110,8 +128,8 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> DARK_CHERRY_PRESSURE_PLATE = registerWithItem("dark_cherry_pressure_plate", () -> new PressurePlateBlock(BlockSetType.CHERRY, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)));
     public static final RegistrySupplier<Block> DARK_CHERRY_DOOR = registerWithItem("dark_cherry_door", () -> new DoorBlock( BlockSetType.CHERRY,BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR)));
     public static final RegistrySupplier<Block> DARK_CHERRY_TRAPDOOR = registerWithItem("dark_cherry_trapdoor", () -> new TrapDoorBlock(BlockSetType.CHERRY,BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR)));
-    public static final RegistrySupplier<Item> DARK_CHERRY_BOAT = ITEMS.register("dark_cherry_boat", () -> new DarkCherryBoatItem(false, DarkCherryBoatEntity.Type.DARK_CHERRY, new Item.Properties()));
-    public static final RegistrySupplier<Item> DARK_CHERRY_CHEST_BOAT = ITEMS.register("dark_cherry_chest_boat", () -> new DarkCherryBoatItem(true, DarkCherryBoatEntity.Type.DARK_CHERRY, new Item.Properties()));
+    public static final RegistrySupplier<Item> DARK_CHERRY_BOAT = ITEMS.register("dark_cherry_boat", () -> new WoodBoatItem(EntityTypeRegistry.DARK_CHERRY_BOAT, VineryWoodType.DARK_CHERRY_ID, new Item.Properties()));
+    public static final RegistrySupplier<Item> DARK_CHERRY_CHEST_BOAT = ITEMS.register("dark_cherry_chest_boat", () -> new WoodBoatItem(EntityTypeRegistry.DARK_CHERRY_CHEST_BOAT, VineryWoodType.DARK_CHERRY_ID, new Item.Properties()));
     public static final RegistrySupplier<Block> WINDOW_BLOCK = registerWithItem("window_block", () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)));
     public static final RegistrySupplier<Block> WINDOW = registerWithItem("window", () -> new WindowBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS_PANE)));
     public static final RegistrySupplier<Block> COARSE_DIRT_SLAB = registerWithItem("coarse_dirt_slab", () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COARSE_DIRT)));
@@ -159,12 +177,12 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> STORAGE_POT = registerWithItem("storage_pot", () -> new StoragePotBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD), SoundEvents.BRUSH_GENERIC, SoundEvents.BRUSH_GENERIC));
     public static final RegistrySupplier<Block> WINE_BOX = registerWithItem("wine_box", () -> new WineBoxBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).noOcclusion()));
     public static final RegistrySupplier<Block> DARK_CHERRY_BIG_TABLE = registerWithItem("dark_cherry_big_table", () -> new BigTableBlock(BlockBehaviour.Properties.of().strength(2.0F, 2.0F).pushReaction(PushReaction.IGNORE)));
-    public static final RegistrySupplier<Block> DARK_CHERRY_SHELF = registerWithItem("dark_cherry_shelf", () -> new ShelfBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistrySupplier<Block> DARK_CHERRY_SHELF = registerWithItem("dark_cherry_shelf", () -> new WallShelfBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion(), EntityTypeRegistry.STORAGE_ENTITY, StorageTypeRegistry.SHELF, stack -> !(stack.getItem() instanceof BlockItem) || stack.is(TagRegistry.IGNORE_BLOCK_ITEM)));
     public static final RegistrySupplier<Block> STACKABLE_LOG = registerWithItem("stackable_log", () -> new StackableLogBlock(getLogBlockSettings().noOcclusion().lightLevel(state -> state.getValue(StackableLogBlock.FIRED) ? 13 : 0)));
-    public static final RegistrySupplier<Item> STRAW_HAT = registerItem("straw_hat", () -> new WinemakerHelmetItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.HELMET, getSettings().rarity(Rarity.EPIC).durability(ArmorItem.Type.HELMET.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
-    public static final RegistrySupplier<Item> WINEMAKER_APRON = registerItem("winemaker_apron", () -> new WinemakerChestItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.CHESTPLATE, getSettings().rarity(Rarity.EPIC).durability(ArmorItem.Type.CHESTPLATE.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
-    public static final RegistrySupplier<Item> WINEMAKER_LEGGINGS = registerItem("winemaker_leggings", () -> new WinemakerLegsItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.LEGGINGS, getSettings().rarity(Rarity.RARE).durability(ArmorItem.Type.LEGGINGS.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
-    public static final RegistrySupplier<Item> WINEMAKER_BOOTS = registerItem("winemaker_boots", () -> new WinemakerBootsItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.BOOTS, getSettings().rarity(Rarity.RARE).durability(ArmorItem.Type.BOOTS.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
+    public static final RegistrySupplier<Item> STRAW_HAT = registerItem("straw_hat", () -> new TexturedArmorItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.HELMET, getSettings().rarity(Rarity.EPIC).durability(ArmorItem.Type.HELMET.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
+    public static final RegistrySupplier<Item> WINEMAKER_APRON = registerItem("winemaker_apron", () -> new TexturedArmorItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.CHESTPLATE, getSettings().rarity(Rarity.EPIC).durability(ArmorItem.Type.CHESTPLATE.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
+    public static final RegistrySupplier<Item> WINEMAKER_LEGGINGS = registerItem("winemaker_leggings", () -> new TexturedArmorItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.LEGGINGS, getSettings().rarity(Rarity.RARE).durability(ArmorItem.Type.LEGGINGS.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
+    public static final RegistrySupplier<Item> WINEMAKER_BOOTS = registerItem("winemaker_boots", () -> new TexturedArmorItem(ArmorMaterialRegistry.WINEMAKER_ARMOR, ArmorItem.Type.BOOTS, getSettings().rarity(Rarity.RARE).durability(ArmorItem.Type.BOOTS.getDurability(5)), Vinery.identifier("textures/models/armor/winemaker.png")));
     public static final RegistrySupplier<Item> MULE_SPAWN_EGG = registerItem("mule_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityTypeRegistry.MULE, -1, -1, getSettings()));
     public static final RegistrySupplier<Item> WANDERING_WINEMAKER_SPAWN_EGG = registerItem("wandering_winemaker_spawn_egg", () -> new ArchitecturySpawnEggItem(EntityTypeRegistry.WANDERING_WINEMAKER, -1, -1, getSettings()));
     public static final RegistrySupplier<Block> POTTED_APPLE_TREE_SAPLING = registerWithoutItem("potted_apple_tree_sapling", () -> new FlowerPotBlock(ObjectRegistry.APPLE_TREE_SAPLING.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY)));
@@ -196,8 +214,16 @@ public class ObjectRegistry {
     public static final RegistrySupplier<Block> CHERRY_WINE_RACK_BIG = registerWithItem("cherry_wine_rack_big", () -> new NineBottleStorageBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistrySupplier<Block> CHERRY_WINE_RACK_SMALL = registerWithItem("cherry_wine_rack_small", () -> new FourBottleStorageBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistrySupplier<Block> CHERRY_WINE_RACK_MID = registerWithItem("cherry_wine_rack_mid", () -> new BigBottleStorageBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()));
-    public static final RegistrySupplier<Block> VINERY_STANDARD = registerWithItem("vinery_standard", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
-    public static final RegistrySupplier<Block> VINERY_WALL_STANDARD = registerWithoutItem("vinery_wall_standard", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD)));
+    private static final BannerSettings BANNER_SETTINGS = new BannerSettings(
+            () -> EntityTypeRegistry.VINERY_STANDARD.get(),
+            () -> ObjectRegistry.VINERY_WALL_STANDARD.get(),
+            Vinery.identifier("textures/banner/vinery_banner.png"),
+            "tooltip.vinery.banner",
+            MobEffects.REGENERATION,
+            () -> PlatformHelper.shouldGiveEffect() ? 8 : 0,
+            () -> 1);
+    public static final RegistrySupplier<Block> VINERY_STANDARD = registerWithItem("vinery_standard", () -> new CompletionistBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD), BANNER_SETTINGS));
+    public static final RegistrySupplier<Block> VINERY_WALL_STANDARD = registerWithoutItem("vinery_wall_standard", () -> new CompletionistWallBannerBlock(BlockBehaviour.Properties.of().strength(1F).instrument(NoteBlockInstrument.BASS).noCollission().sound(SoundType.WOOD), BANNER_SETTINGS));
     public static final RegistrySupplier<Block> OAK_LATTICE = registerWithItem("oak_lattice", () -> new LatticeBlock(BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(Blocks.OAK_PLANKS.defaultBlockState().getSoundType()).noOcclusion()));
     public static final RegistrySupplier<Block> SPRUCE_LATTICE = registerWithItem("spruce_lattice",
             () -> new LatticeBlock(BlockBehaviour.Properties.of()
@@ -346,14 +372,14 @@ public class ObjectRegistry {
     }
 
     public static <T extends Block> RegistrySupplier<T> registerWithItem(String name, Supplier<T> block) {
-        return GeneralUtil.registerWithItem(BLOCKS, BLOCK_REGISTRAR, ITEMS, ITEM_REGISTRAR, Vinery.identifier(name), block);
+        return RegistryUtil.registerWithItem(BLOCKS, BLOCK_REGISTRAR, ITEMS, ITEM_REGISTRAR, Vinery.identifier(name), block);
     }
 
     public static <T extends Block> RegistrySupplier<T> registerWithoutItem(String path, Supplier<T> block) {
-        return GeneralUtil.registerWithoutItem(BLOCKS, BLOCK_REGISTRAR, Vinery.identifier(path), block);
+        return RegistryUtil.registerWithoutItem(BLOCKS, BLOCK_REGISTRAR, Vinery.identifier(path), block);
     }
 
     public static <T extends Item> RegistrySupplier<T> registerItem(String path, Supplier<T> itemSupplier) {
-        return GeneralUtil.registerItem(ITEMS, ITEM_REGISTRAR, Vinery.identifier(path), itemSupplier);
+        return RegistryUtil.registerItem(ITEMS, ITEM_REGISTRAR, Vinery.identifier(path), itemSupplier);
     }
 }

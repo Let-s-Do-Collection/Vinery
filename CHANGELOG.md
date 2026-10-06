@@ -1,3 +1,19 @@
+[1.5.5]
+
+**Changed**
+* Vinery now uses Foundation, the shared Let's Do library, which is bundled inside the mod jar - no separate download needed. Chairs, cabinets, drawers, shelves, wine racks, the big table and the Vinery Standard now use Foundation's shared implementations
+* Dark Cherry signs, hanging signs, boats and chest boats, the Dark Cherry Shelf, the window and the Fermentation Barrel slots now use Foundation as well
+* The Winemaker armor now uses Foundation's armor set system: the tooltip shows how many pieces you're wearing, and the custom models render the same way on Fabric and NeoForge
+* The creative tab is now split into four side tabs: Vineyard Essentials, Wines & Juices, Cherry, and Decoration & Storage
+
+**Fixed**
+* Fixed a server hang/crash when Create: Aeronautics/Sable contraptions hit Apple or Dark Cherry Leaves: fruit leaves no longer update the whole tree at once when a leaf breaks and use the vanilla leaf update behavior again (thanks to RhodeWithBrim)
+* Dark Cherry hanging signs now open the hanging sign editor instead of the regular sign editor
+* Boats no longer lose their leash when the world is reloaded
+* Taking wine out of the Fermentation Barrel now always counts the taken amount correctly for advancements
+
+***
+
 [1.5.4]
 
 **Added**

@@ -331,9 +331,8 @@
   "text.autoconfig.vinery.title": "Vinery",
 
   "tooltip.vinery.age": "Выдержка: %s",
-  "tooltip.vinery.armor.winemaker_armor0": "Мечта винодела:",
-  "tooltip.vinery.armor.winemaker_armor1": "Бонус целого комплекта:",
-  "tooltip.vinery.armor.winemaker_armor2": "Костная мука больше не будет тратиться.",
+  "tooltip.vinery.armor.winemaker_set": "Мечта винодела",
+  "tooltip.vinery.armor.winemaker_set.bonus": "Костная мука больше не будет тратиться.",
   "tooltip.vinery.bottle_size.small": "Маленькая бутылка",
   "tooltip.vinery.bottle_size.big": "Большая бутылка",
   "tooltip.vinery.storage": "Хранилище для %s",

@@ -1,5 +1,6 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.foundation.util.ShapeUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +30,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.satisfy.vinery.core.block.entity.ApplePressBlockEntity;
 import net.satisfy.vinery.core.registry.EntityTypeRegistry;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -194,8 +194,8 @@ public class ApplePressBlock extends BaseEntityBlock {
 		Supplier<VoxelShape> bottomShapeSupplier = ApplePressBlock::makeBottomShape;
 
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
-			TOP_SHAPES.put(direction, GeneralUtil.rotateShape(Direction.NORTH, direction, topShapeSupplier.get()));
-			BOTTOM_SHAPES.put(direction, GeneralUtil.rotateShape(Direction.NORTH, direction, bottomShapeSupplier.get()));
+			TOP_SHAPES.put(direction, ShapeUtil.rotateShape(Direction.NORTH, direction, topShapeSupplier.get()));
+			BOTTOM_SHAPES.put(direction, ShapeUtil.rotateShape(Direction.NORTH, direction, bottomShapeSupplier.get()));
 		}
 	}
 

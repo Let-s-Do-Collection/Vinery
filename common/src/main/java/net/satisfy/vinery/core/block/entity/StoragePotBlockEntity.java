@@ -1,5 +1,6 @@
 package net.satisfy.vinery.core.block.entity;
 
+import net.satisfy.foundation.block.CabinetBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.satisfy.vinery.core.registry.EntityTypeRegistry;

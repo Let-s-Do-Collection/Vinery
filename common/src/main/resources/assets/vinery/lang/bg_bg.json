@@ -327,9 +327,8 @@
   "text.autoconfig.vinery.title": "Vinery",
 
   "tooltip.vinery.age": "Възраст: %s",
-  "tooltip.vinery.armor.winemaker_armor0": "Страстта на лозаря:",
-  "tooltip.vinery.armor.winemaker_armor1": "Ефект при пълна броня:",
-  "tooltip.vinery.armor.winemaker_armor2": "Стритите кости вече не се хабят при употреба.",
+  "tooltip.vinery.armor.winemaker_set": "Страстта на лозаря",
+  "tooltip.vinery.armor.winemaker_set.bonus": "Стритите кости вече не се хабят при употреба.",
   "tooltip.vinery.bottle_size.small": "Малка бутилка",
   "tooltip.vinery.bottle_size.big": "Голяма бутилка",
   "tooltip.vinery.storage": "Склад за %s",

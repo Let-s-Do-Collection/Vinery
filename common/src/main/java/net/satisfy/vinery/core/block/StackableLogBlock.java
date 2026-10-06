@@ -1,5 +1,6 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.foundation.util.ShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -38,7 +39,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.satisfy.vinery.core.util.GeneralUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -191,9 +191,9 @@ public class StackableLogBlock extends SlabBlock {
     public static final Map<Direction, Map<SlabType, VoxelShape>> SHAPE = net.minecraft.Util.make(new HashMap<>(), map -> {
         for (Direction direction : Direction.Plane.HORIZONTAL.stream().toList()) {
             map.put(direction, new HashMap<>());
-            map.get(direction).put(SlabType.DOUBLE, GeneralUtil.rotateShape(Direction.NORTH, direction, DOUBLE_SUPPLIER.get()));
-            map.get(direction).put(SlabType.TOP, GeneralUtil.rotateShape(Direction.NORTH, direction, TOP_AABB_SUPPLIER.get()));
-            map.get(direction).put(SlabType.BOTTOM, GeneralUtil.rotateShape(Direction.NORTH, direction, BOTTOM_AABB_SUPPLIER.get()));
+            map.get(direction).put(SlabType.DOUBLE, ShapeUtil.rotateShape(Direction.NORTH, direction, DOUBLE_SUPPLIER.get()));
+            map.get(direction).put(SlabType.TOP, ShapeUtil.rotateShape(Direction.NORTH, direction, TOP_AABB_SUPPLIER.get()));
+            map.get(direction).put(SlabType.BOTTOM, ShapeUtil.rotateShape(Direction.NORTH, direction, BOTTOM_AABB_SUPPLIER.get()));
         }
     });
 

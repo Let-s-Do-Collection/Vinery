@@ -1,5 +1,8 @@
 package net.satisfy.vinery.core.block;
 
+import net.satisfy.vinery.core.registry.EntityTypeRegistry;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.satisfy.foundation.storage.StorageBlock;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.satisfy.vinery.core.block.entity.StorageBlockEntity;
+import net.satisfy.foundation.storage.StorageBlockEntity;
 import net.satisfy.vinery.core.item.DrinkBlockItem;
 import net.satisfy.vinery.core.registry.StorageTypeRegistry;
 import net.satisfy.vinery.core.registry.TagRegistry;
@@ -120,6 +123,11 @@ public class WineBottleBlock extends StorageBlock {
         }
         return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
     }
+    @Override
+    public BlockEntityType<?> blockEntityType() {
+        return EntityTypeRegistry.STORAGE_ENTITY.get();
+    }
+
     @Override
     public int size() {
         return maxCount;

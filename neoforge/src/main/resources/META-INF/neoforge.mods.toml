@@ -13,7 +13,8 @@ credits = "Cristelknight, cph101dev, MissLilitu, CR-055, BaumeisterJO"
 description = '''
 In Vino Veritas - it's time for wine! Build your own vineyard, produce wine, and establish your own winery.
 '''
-logoFile = "pack.png"
+logoFile = "logo.png"
+displayURL = "https://www.lets-do.ch"
 
 [[dependencies.vinery]]
 modId = "neoforge"
@@ -36,15 +37,19 @@ versionRange = "[13.0.8,)"
 ordering = "AFTER"
 side = "BOTH"
 
+[[dependencies.vinery]]
+modId = "foundation"
+mandatory = true
+versionRange = "[1.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
 [[incompatibleMods]]
 modId = "copperative"
 
 [[incompatibleMods]]
 modId = "nethervinery"
 versionRange = "<1.2.14"
-
-[[mixins]]
-config = "vinery.mixins.json"
 
 [[mixins]]
 config = "vinery-common.mixins.json"
