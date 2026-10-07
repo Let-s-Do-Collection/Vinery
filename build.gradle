@@ -33,7 +33,17 @@ allprojects {
     group = rootProject.maven_group
 
     repositories {
-        mavenLocal()
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Let's Do Maven"
+                    url = "https://raw.githubusercontent.com/Let-s-Do-Collection/Foundation/1.21.1/maven"
+                }
+            }
+            filter {
+                includeGroup "net.satisfy.foundation"
+            }
+        }
         maven { url "https://maven.neoforged.net/releases" }
         exclusiveContent {
             forRepository {
