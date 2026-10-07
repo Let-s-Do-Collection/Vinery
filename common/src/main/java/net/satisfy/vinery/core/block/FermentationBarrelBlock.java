@@ -1,9 +1,15 @@
 package net.satisfy.vinery.core.block;
 
+import net.minecraft.Util;
 import net.satisfy.foundation.util.ShapeUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.RandomSource;
+import net.satisfy.foundation.registry.FoundationParticles;
+import net.satisfy.vinery.core.wine.JuiceUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,7 +44,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@SuppressWarnings({"unchecked", "deprecation"})
 public class FermentationBarrelBlock extends HorizontalDirectionalBlock implements EntityBlock {
     private static final Supplier<VoxelShape> voxelShapeSupplier = () -> {
         VoxelShape shape = Shapes.empty();
@@ -48,11 +54,16 @@ public class FermentationBarrelBlock extends HorizontalDirectionalBlock implemen
         return shape;
     };
 
-    public static final Map<Direction, VoxelShape> SHAPE = net.minecraft.Util.make(new HashMap<>(), map -> {
+    public static final Map<Direction, VoxelShape> SHAPE = Util.make(new HashMap<>(), map -> {
         for (Direction direction : Direction.Plane.HORIZONTAL.stream().toList()) {
             map.put(direction, ShapeUtil.rotateShape(Direction.SOUTH, direction, voxelShapeSupplier.get()));
         }
     });
+
+    /** Drip spawn point inside the block for facing south, rotated for the other directions. */
+    private static final double TAP_X = 0.34;
+    private static final double TAP_Y = 0.38;
+    private static final double TAP_Z = -0.02;
 
     public FermentationBarrelBlock(Properties settings) {
         super(settings);
@@ -64,19 +75,19 @@ public class FermentationBarrelBlock extends HorizontalDirectionalBlock implemen
     }
 
     @Override
-    public @NotNull InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if (world.isClientSide) {
+    public @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof FermentationBarrelBlockEntity barrelBlockEntity) {
             if (player.isShiftKeyDown()) {
                 if (barrelBlockEntity.getFluidLevel() > 0) {
                     barrelBlockEntity.setFluidLevel(0);
                     barrelBlockEntity.setJuiceType("");
-                    world.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    world.sendBlockUpdated(pos, state, state, 3);
+                    level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.sendBlockUpdated(pos, state, state, 3);
                     return InteractionResult.SUCCESS;
                 }
             } else {
@@ -85,7 +96,29 @@ public class FermentationBarrelBlock extends HorizontalDirectionalBlock implemen
             }
         }
 
-        return super.useWithoutItem(state, world, pos, player, hit);
+        return super.useWithoutItem(state, level, pos, player, hit);
+    }
+
+    public static Vec3 tapPosition(BlockState state, BlockPos pos) {
+        double dx = TAP_X - 0.5;
+        double dz = TAP_Z - 0.5;
+        for (int i = 0; i < state.getValue(FACING).get2DDataValue(); i++) {
+            double rotated = -dz;
+            dz = dx;
+            dx = rotated;
+        }
+        return new Vec3(pos.getX() + 0.5 + dx, pos.getY() + TAP_Y, pos.getZ() + 0.5 + dz);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (random.nextInt(8) != 0) return;
+        if (!(level.getBlockEntity(pos) instanceof FermentationBarrelBlockEntity barrel) || barrel.getFluidLevel() <= 0) return;
+        Vec3 tap = tapPosition(state, pos);
+        double x = tap.x;
+        double y = tap.y;
+        double z = tap.z;
+        level.addParticle(ColorParticleOption.create(FoundationParticles.COLORED_DRIP.get(), FastColor.ARGB32.opaque(JuiceUtil.color(barrel.getJuiceType()))), x, y, z, 0, 0, 0);
     }
 
     @Override
@@ -94,21 +127,21 @@ public class FermentationBarrelBlock extends HorizontalDirectionalBlock implemen
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE.get(state.getValue(FACING));
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock())) {
-            final BlockEntity blockEntity = world.getBlockEntity(pos);
+            final BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof FermentationBarrelBlockEntity) {
-                if (world instanceof ServerLevel) {
-                    Containers.dropContents(world, pos, (Container) blockEntity);
+                if (level instanceof ServerLevel) {
+                    Containers.dropContents(level, pos, (Container) blockEntity);
                 }
-                world.updateNeighbourForOutputSignal(pos, this);
+                level.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onRemove(state, world, pos, newState, moved);
+            super.onRemove(state, level, pos, newState, moved);
         }
     }
 
@@ -122,7 +155,7 @@ public class FermentationBarrelBlock extends HorizontalDirectionalBlock implemen
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide ? null
-                : createTicker(type, EntityTypeRegistry.FERMENTATION_BARREL_ENTITY.get(), (world, pos, state1, blockEntity) -> FermentationBarrelBlockEntity.tick(world, pos, blockEntity));
+                : createTicker(type, EntityTypeRegistry.FERMENTATION_BARREL_ENTITY.get(), (level1, pos, state1, blockEntity) -> FermentationBarrelBlockEntity.tick(level1, pos, blockEntity));
     }
 
     @Nullable

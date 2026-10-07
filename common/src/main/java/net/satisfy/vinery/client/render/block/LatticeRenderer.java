@@ -22,7 +22,7 @@ import net.satisfy.vinery.core.Vinery;
 import net.satisfy.vinery.core.block.LatticeBlock;
 import net.satisfy.vinery.core.block.entity.LatticeBlockEntity;
 import net.satisfy.vinery.core.registry.GrapeTypeRegistry;
-import net.satisfy.vinery.core.util.GrapeType;
+import net.satisfy.vinery.core.wine.GrapeType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +64,9 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
     private final ModelPart hanging_1_r1;
     private final ModelPart hanging_2_r1;
 
+    private static final CubeDeformation WALL_LEAF_DEFORMATION = new CubeDeformation(-0.05F, -0.1F, 0.0F);
+    private static final CubeDeformation FLOOR_LEAF_DEFORMATION = new CubeDeformation(-0.1F, 0.0F, -0.1F);
+
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Vinery.identifier("lattice"), "main");
 
     public LatticeRenderer(BlockEntityRendererProvider.Context context) {
@@ -90,10 +93,6 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
         this.hanging_2_r1 = grape_cluster_floor.getChild("hanging_2_r1");
     }
 
-
-
-
-    @SuppressWarnings("unused")
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -102,11 +101,11 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
 
         PartDefinition grape_cluster = lattice_wall.addOrReplaceChild("grape_cluster", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -10.0F));
 
-        PartDefinition growing_red = grape_cluster.addOrReplaceChild("growing_red", CubeListBuilder.create().texOffs(46, 17).addBox(-15.0F, -16.0F, -10.5F, 16.0F, 16.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(7.0F, 0.0F, 17.0F));
+        PartDefinition growing_red = grape_cluster.addOrReplaceChild("growing_red", CubeListBuilder.create().texOffs(46, 17).addBox(-15.0F, -16.0F, -10.5F, 16.0F, 16.0F, 1.0F, WALL_LEAF_DEFORMATION), PartPose.offset(7.0F, 0.0F, 17.0F));
 
-        PartDefinition sprout = grape_cluster.addOrReplaceChild("sprout", CubeListBuilder.create().texOffs(46, 0).addBox(-15.0F, -16.0F, -10.5F, 16.0F, 16.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(7.0F, 0.0F, 17.0F));
+        PartDefinition sprout = grape_cluster.addOrReplaceChild("sprout", CubeListBuilder.create().texOffs(46, 0).addBox(-15.0F, -16.0F, -10.5F, 16.0F, 16.0F, 1.0F, WALL_LEAF_DEFORMATION), PartPose.offset(7.0F, 0.0F, 17.0F));
 
-        PartDefinition growing_white = grape_cluster.addOrReplaceChild("growing_white", CubeListBuilder.create().texOffs(46, 34).addBox(-15.0F, -16.0F, -10.5F, 16.0F, 16.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(7.0F, 0.0F, 17.0F));
+        PartDefinition growing_white = grape_cluster.addOrReplaceChild("growing_white", CubeListBuilder.create().texOffs(46, 34).addBox(-15.0F, -16.0F, -10.5F, 16.0F, 16.0F, 1.0F, WALL_LEAF_DEFORMATION), PartPose.offset(7.0F, 0.0F, 17.0F));
 
         PartDefinition mesh = lattice_wall.addOrReplaceChild("mesh", CubeListBuilder.create().texOffs(48, 64).addBox(-30.0F, -12.0F, 2.0F, 16.0F, 16.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(22.0F, -4.0F, 5.0F));
 
@@ -136,15 +135,15 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
 
         PartDefinition growing_red_floor = grape_cluster_floor.addOrReplaceChild("growing_red_floor", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, 1.0F));
 
-        PartDefinition growing_red_floor_r1 = growing_red_floor.addOrReplaceChild("growing_red_floor_r1", CubeListBuilder.create().texOffs(2, 52).addBox(-18.0F, -30.5F, -3.0F, 16.0F, 1.0F, 12.0F), PartPose.offsetAndRotation(3.0F, 32.5F, 8.5F, 0.0F, -1.5708F, 0.0F));
+        PartDefinition growing_red_floor_r1 = growing_red_floor.addOrReplaceChild("growing_red_floor_r1", CubeListBuilder.create().texOffs(2, 52).addBox(-18.0F, -30.5F, -3.0F, 16.0F, 1.0F, 12.0F, FLOOR_LEAF_DEFORMATION), PartPose.offsetAndRotation(3.0F, 32.5F, 8.5F, 0.0F, -1.5708F, 0.0F));
 
         PartDefinition sprout_floor = grape_cluster_floor.addOrReplaceChild("sprout_floor", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, 1.0F));
 
-        PartDefinition sprouting_grapes_floor_r1 = sprout_floor.addOrReplaceChild("sprouting_grapes_floor_r1", CubeListBuilder.create().texOffs(2, 39).addBox(-18.0F, -30.5F, -3.0F, 16.0F, 1.0F, 12.0F), PartPose.offsetAndRotation(3.0F, 32.5F, 8.5F, 0.0F, -1.5708F, 0.0F));
+        PartDefinition sprouting_grapes_floor_r1 = sprout_floor.addOrReplaceChild("sprouting_grapes_floor_r1", CubeListBuilder.create().texOffs(2, 39).addBox(-18.0F, -30.5F, -3.0F, 16.0F, 1.0F, 12.0F, FLOOR_LEAF_DEFORMATION), PartPose.offsetAndRotation(3.0F, 32.5F, 8.5F, 0.0F, -1.5708F, 0.0F));
 
         PartDefinition growing_white_floor = grape_cluster_floor.addOrReplaceChild("growing_white_floor", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, 1.0F));
 
-        PartDefinition growing_white_floor_r1 = growing_white_floor.addOrReplaceChild("growing_white_floor_r1", CubeListBuilder.create().texOffs(2, 65).addBox(-18.0F, -30.5F, -3.0F, 16.0F, 1.0F, 12.0F), PartPose.offsetAndRotation(3.0F, 32.5F, 8.5F, 0.0F, -1.5708F, 0.0F));
+        PartDefinition growing_white_floor_r1 = growing_white_floor.addOrReplaceChild("growing_white_floor_r1", CubeListBuilder.create().texOffs(2, 65).addBox(-18.0F, -30.5F, -3.0F, 16.0F, 1.0F, 12.0F, FLOOR_LEAF_DEFORMATION), PartPose.offsetAndRotation(3.0F, 32.5F, 8.5F, 0.0F, -1.5708F, 0.0F));
 
         PartDefinition lattice_parts = lattice_floor.addOrReplaceChild("lattice_parts", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
@@ -180,16 +179,6 @@ public class LatticeRenderer implements BlockEntityRenderer<LatticeBlockEntity> 
             poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
             poseStack.scale(1.0f, -1.0f, -1.0f);
             lattice_parts.render(poseStack, consumer, packedLight, packedOverlay);
-
-            if (!grapeType.equals(GrapeTypeRegistry.NONE)) {
-                if (age < 4) {
-                    sprout_floor.render(poseStack, consumer, packedLight, packedOverlay);
-                } else if (grapeType.isRed()) {
-                    growing_red_floor.render(poseStack, consumer, packedLight, packedOverlay);
-                } else {
-                    growing_white_floor.render(poseStack, consumer, packedLight, packedOverlay);
-                }
-            }
         } else {
             mesh.render(poseStack, consumer, packedLight, packedOverlay);
 

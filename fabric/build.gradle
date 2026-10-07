@@ -45,8 +45,10 @@ repositories {
 dependencies {
     include(modImplementation("net.satisfy.foundation:foundation-fabric:${rootProject.foundation_version}") { transitive = false })
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
     modImplementation "com.terraformersmc:modmenu:${rootProject.mod_menu_version}"
+    modCompileOnly("dev.emi:emi-fabric:${rootProject.emi_version}:api")
+    modLocalRuntime("dev.emi:emi-fabric:${rootProject.emi_version}")
 
     modApi( "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
     modApi( "dev.architectury:architectury-fabric:${rootProject.architectury_version}") { exclude group: 'net.fabricmc', module: 'fabric-loader' }

@@ -2,6 +2,12 @@ package net.satisfy.vinery.client;
 
 import net.satisfy.foundation.client.armor.ArmorModels;
 import net.satisfy.foundation.client.creative.CreativeSideTabs;
+import net.satisfy.foundation.overlay.BlockInfoOverlay;
+import net.satisfy.vinery.client.event.DoubleJumpHandler;
+import net.satisfy.vinery.client.gui.overlay.*;
+import net.satisfy.vinery.client.render.block.GrapevinePotRenderer;
+import net.satisfy.vinery.client.render.block.StoragePotRenderer;
+import net.satisfy.vinery.client.render.block.StackableLogRenderer;
 import net.minecraft.network.chat.Component;
 import net.satisfy.vinery.core.registry.TabRegistry;
 import net.satisfy.foundation.client.wood.WoodBoatRenderer;
@@ -28,16 +34,18 @@ import net.satisfy.vinery.client.model.*;
 import net.satisfy.foundation.banner.CompletionistBannerRenderer;
 import net.satisfy.vinery.client.render.block.LatticeRenderer;
 import net.satisfy.vinery.client.render.block.storage.*;
+import net.satisfy.vinery.core.block.BottleStorageBlock;
 import net.satisfy.vinery.client.render.entity.MuleRenderer;
 import net.satisfy.vinery.client.render.entity.WanderingWinemakerRenderer;
 import net.satisfy.vinery.core.registry.EntityTypeRegistry;
-import net.satisfy.vinery.core.registry.ScreenhandlerTypeRegistry;
+import net.satisfy.vinery.core.registry.MenuTypeRegistry;
 import net.satisfy.vinery.core.registry.StorageTypeRegistry;
 
 import static net.satisfy.vinery.core.registry.ObjectRegistry.*;
 
 @Environment(EnvType.CLIENT)
 public class VineryClient {
+
     public static void onInitializeClient() {
         RenderTypeRegistry.register(RenderType.cutout(),
                 RED_GRAPE_BUSH.get(), WHITE_GRAPE_BUSH.get(), DARK_CHERRY_DOOR.get(), FERMENTATION_BARREL.get(),
@@ -63,28 +71,32 @@ public class VineryClient {
         RenderTypeRegistry.register(RenderType.translucent(), WINDOW.get(), WINDOW_BLOCK.get());
 
         ColorHandlerRegistry.registerItemColors((stack, tintIndex) -> GrassColor.get(0.5, 1.0), GRASS_SLAB);
-        ColorHandlerRegistry.registerBlockColors((state, world, pos, tintIndex) -> {
-                    if (world == null || pos == null) {
+        ColorHandlerRegistry.registerBlockColors((state, level, pos, tintIndex) -> {
+                    if (level == null || pos == null) {
                         return -1;
                     }
-                    return BiomeColors.getAverageGrassColor(world, pos);
+                    return BiomeColors.getAverageGrassColor(level, pos);
                 }, GRASS_SLAB.get()
         );
-        ColorHandlerRegistry.registerBlockColors((state, world, pos, tintIndex) -> {
-            if (world == null || pos == null) {
+        ColorHandlerRegistry.registerBlockColors((state, level, pos, tintIndex) -> {
+            if (level == null || pos == null) {
                 return -1;
             }
-            return BiomeColors.getAverageFoliageColor(world, pos);
+            return BiomeColors.getAverageFoliageColor(level, pos);
         }, JUNGLE_RED_GRAPE_BUSH.get(), JUNGLE_WHITE_GRAPE_BUSH.get());
 
         registerStorageType();
         registerScreenFactory();
         registerBlockEntityRenderer();
         registerArmorModels();
+        DoubleJumpHandler.init();
+        BlockInfoOverlay.init();
+        BlockInfoOverlay.registerProvider(new GrapevinePotInfoProvider());
+        BlockInfoOverlay.registerProvider(new StorageSlotInfoProvider());
         CreativeSideTabs.register(TabRegistry.VINERY_TAB.getKey(),
                 CreativeSideTabs.SideTab.of(Component.translatable("creativetab.vinery.side.essentials"), RED_GRAPE.get(), TabRegistry::acceptEssentials),
                 CreativeSideTabs.SideTab.of(Component.translatable("creativetab.vinery.side.wines"), CHENET_WINE_ITEM.get(), TabRegistry::acceptWines),
-                CreativeSideTabs.SideTab.of(Component.translatable("creativetab.vinery.side.cherry"), DARK_CHERRY_LOG.get(), TabRegistry::acceptCherry),
+                CreativeSideTabs.SideTab.of(Component.translatable("creativetab.vinery.side.dark_cherry"), DARK_CHERRY_LOG.get(), TabRegistry::acceptDarkCherry),
                 CreativeSideTabs.SideTab.of(Component.translatable("creativetab.vinery.side.decoration"), OAK_WINE_RACK_BIG.get(), TabRegistry::acceptDecoration));
     }
 
@@ -99,22 +111,25 @@ public class VineryClient {
 
     public static void registerStorageType(){
         registerStorageTypes(StorageTypeRegistry.BIG_BOTTLE, new BigBottleRenderer());
-        registerStorageTypes(StorageTypeRegistry.FOUR_BOTTLE, new FourBottleRenderer());
-        registerStorageTypes(StorageTypeRegistry.NINE_BOTTLE, new NineBottleRenderer());
+        registerStorageTypes(StorageTypeRegistry.FOUR_BOTTLE, new BottleRenderer(BottleStorageBlock.Layout.FOUR));
+        registerStorageTypes(StorageTypeRegistry.NINE_BOTTLE, new BottleRenderer(BottleStorageBlock.Layout.NINE));
         registerStorageTypes(StorageTypeRegistry.SHELF, new WallShelfRenderer());
         registerStorageTypes(StorageTypeRegistry.WINE_BOX, new WineBoxRenderer());
         registerStorageTypes(StorageTypeRegistry.WINE_BOTTLE, new WineBottleRenderer());
     }
 
     public static void registerScreenFactory() {
-        MenuRegistry.registerScreenFactory(ScreenhandlerTypeRegistry.FERMENTATION_BARREL_GUI_HANDLER.get(), FermentationBarrelGui::new);
-        MenuRegistry.registerScreenFactory(ScreenhandlerTypeRegistry.APPLE_PRESS_GUI_HANDLER.get(), ApplePressGui::new);
+        MenuRegistry.registerScreenFactory(MenuTypeRegistry.FERMENTATION_BARREL_MENU.get(), FermentationBarrelGui::new);
+        MenuRegistry.registerScreenFactory(MenuTypeRegistry.APPLE_PRESS_MENU.get(), ApplePressGui::new);
     }
 
     public static void registerBlockEntityRenderer() {
         BlockEntityRendererRegistry.register(EntityTypeRegistry.VINERY_STANDARD.get(), CompletionistBannerRenderer::new);
         BlockEntityRendererRegistry.register(EntityTypeRegistry.STORAGE_ENTITY.get(), context -> new StorageBlockEntityRenderer());
         BlockEntityRendererRegistry.register(EntityTypeRegistry.LATTICE.get(), LatticeRenderer::new);
+        BlockEntityRendererRegistry.register(EntityTypeRegistry.GRAPEVINE_POT.get(), GrapevinePotRenderer::new);
+        BlockEntityRendererRegistry.register(EntityTypeRegistry.STORAGE_POT_ENTITY.get(), StoragePotRenderer::new);
+        BlockEntityRendererRegistry.register(EntityTypeRegistry.STACKABLE_LOG.get(), StackableLogRenderer::new);
         WoodClient.registerSignMaterials(VineryWoodType.DARK_CHERRY);
         WoodClient.registerSignRenderers(EntityTypeRegistry.MOD_SIGN.get(), EntityTypeRegistry.MOD_HANGING_SIGN.get());
 

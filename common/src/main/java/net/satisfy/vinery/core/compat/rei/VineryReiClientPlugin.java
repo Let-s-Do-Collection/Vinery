@@ -11,8 +11,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.satisfy.vinery.core.compat.rei.press.ApplePressCategory;
 import net.satisfy.vinery.core.compat.rei.press.ApplePressDisplay;
-import net.satisfy.vinery.core.compat.rei.press.ApplePressFermentingCategory;
-import net.satisfy.vinery.core.compat.rei.press.ApplePressFermentingDisplay;
 import net.satisfy.vinery.core.compat.rei.wine.FermentationBarrelCategory;
 import net.satisfy.vinery.core.compat.rei.wine.FermentationBarrelDisplay;
 import net.satisfy.vinery.core.recipe.ApplePressFermentingRecipe;
@@ -23,21 +21,20 @@ import net.satisfy.vinery.core.registry.ObjectRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class VineryReiClientPlugin {
     public static void registerCategories(CategoryRegistry registry) {
         registry.add(new FermentationBarrelCategory());
-        registry.add(new ApplePressCategory());
-        registry.add(new ApplePressFermentingCategory());
+        registry.add(new ApplePressCategory(ApplePressDisplay.MASHING));
+        registry.add(new ApplePressCategory(ApplePressDisplay.FERMENTING));
         registry.addWorkstations(FermentationBarrelDisplay.FERMENTATION_BARREL_DISPLAY, EntryStacks.of(ObjectRegistry.FERMENTATION_BARREL.get()));
-        registry.addWorkstations(ApplePressDisplay.APPLE_PRESS_DISPLAY, EntryStacks.of(ObjectRegistry.APPLE_PRESS.get()));
-        registry.addWorkstations(ApplePressFermentingDisplay.APPLE_PRESS_DISPLAY, EntryStacks.of(ObjectRegistry.APPLE_PRESS.get()));
+        registry.addWorkstations(ApplePressDisplay.MASHING, EntryStacks.of(ObjectRegistry.APPLE_PRESS.get()));
+        registry.addWorkstations(ApplePressDisplay.FERMENTING, EntryStacks.of(ObjectRegistry.APPLE_PRESS.get()));
     }
 
     public static void registerDisplays(DisplayRegistry registry) {
         registry.registerRecipeFiller(FermentationBarrelRecipe.class,FermentationBarrelRecipe.Type ,FermentationBarrelDisplay::new);
-        registry.registerRecipeFiller(ApplePressMashingRecipe.class, ApplePressMashingRecipe.Type ,ApplePressDisplay::new);
-        registry.registerRecipeFiller(ApplePressFermentingRecipe.class, ApplePressFermentingRecipe.Type , ApplePressFermentingDisplay::new);
+        registry.registerRecipeFiller(ApplePressMashingRecipe.class, ApplePressMashingRecipe.Type ,ApplePressDisplay::mashing);
+        registry.registerRecipeFiller(ApplePressFermentingRecipe.class, ApplePressFermentingRecipe.Type , ApplePressDisplay::fermenting);
     }
 
     public static List<Ingredient> ingredients(Recipe<RecipeInput> recipe, ItemStack stack){

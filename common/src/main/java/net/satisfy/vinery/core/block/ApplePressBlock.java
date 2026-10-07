@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@SuppressWarnings("deprecation")
 public class ApplePressBlock extends BaseEntityBlock {
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final EnumProperty<DoubleBlockHalf> HALF = EnumProperty.create("half", DoubleBlockHalf.class);
@@ -60,59 +59,59 @@ public class ApplePressBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!world.isClientSide) {
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!level.isClientSide) {
 			if (state.getValue(HALF) == DoubleBlockHalf.UPPER && state.getBlock() != newState.getBlock()) {
 				BlockPos lowerPos = pos.below();
-				BlockState lowerState = world.getBlockState(lowerPos);
+				BlockState lowerState = level.getBlockState(lowerPos);
 				if (lowerState.getBlock() == this && lowerState.getValue(HALF) == DoubleBlockHalf.LOWER) {
-					world.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
+					level.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
 				}
 			} else if (state.getValue(HALF) == DoubleBlockHalf.LOWER && state.getBlock() != newState.getBlock()) {
 				BlockPos upperPos = pos.above();
-				BlockState upperState = world.getBlockState(upperPos);
+				BlockState upperState = level.getBlockState(upperPos);
 				if (upperState.getBlock() == this && upperState.getValue(HALF) == DoubleBlockHalf.UPPER) {
-					world.setBlock(upperPos, Blocks.AIR.defaultBlockState(), 35);
+					level.setBlock(upperPos, Blocks.AIR.defaultBlockState(), 35);
 				}
 			}
 		}
-		super.onRemove(state, world, pos, newState, isMoving);
+		super.onRemove(state, level, pos, newState, isMoving);
 	}
 
 	@Override
-	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-		if (!world.isClientSide) {
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (!level.isClientSide) {
 			BlockPos otherPartPos;
 			BlockState otherPartState;
 
 			if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
-				dropInventory(world, pos);
-				popResource(world, pos, new ItemStack(this));
+				dropInventory(level, pos);
+				popResource(level, pos, new ItemStack(this));
 				otherPartPos = pos.above();
-				otherPartState = world.getBlockState(otherPartPos);
+				otherPartState = level.getBlockState(otherPartPos);
 				if (otherPartState.getBlock() == this) {
-					world.setBlock(otherPartPos, Blocks.AIR.defaultBlockState(), 35);
+					level.setBlock(otherPartPos, Blocks.AIR.defaultBlockState(), 35);
 				}
 			} else if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-				popResource(world, pos, new ItemStack(this));
+				popResource(level, pos, new ItemStack(this));
 				otherPartPos = pos.below();
-				otherPartState = world.getBlockState(otherPartPos);
+				otherPartState = level.getBlockState(otherPartPos);
 				if (otherPartState.getBlock() == this) {
-					dropInventory(world, otherPartPos);
-					world.setBlock(otherPartPos, Blocks.AIR.defaultBlockState(), 35);
+					dropInventory(level, otherPartPos);
+					level.setBlock(otherPartPos, Blocks.AIR.defaultBlockState(), 35);
 				}
 			}
 		}
-		return super.playerWillDestroy(world, pos, state, player);
+		return super.playerWillDestroy(level, pos, state, player);
 	}
 
-	private void dropInventory(Level world, BlockPos pos) {
-		BlockEntity blockEntity = world.getBlockEntity(pos);
+	private void dropInventory(Level level, BlockPos pos) {
+		BlockEntity blockEntity = level.getBlockEntity(pos);
 		if (blockEntity instanceof ApplePressBlockEntity applePress) {
 			for (int i = 0; i < applePress.getItems().size(); i++) {
 				ItemStack stack = applePress.getItem(i);
 				if (!stack.isEmpty()) {
-					popResource(world, pos, stack);
+					popResource(level, pos, stack);
 				}
 			}
 			applePress.clearContent();
@@ -120,13 +119,13 @@ public class ApplePressBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public @NotNull InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+	public @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
 		if (state.getValue(HALF) != DoubleBlockHalf.LOWER) {
 			return InteractionResult.PASS;
 		}
 
-		if (!world.isClientSide) {
-			MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
+		if (!level.isClientSide) {
+			MenuProvider screenHandlerFactory = state.getMenuProvider(level, pos);
 			if (screenHandlerFactory != null) {
 				player.openMenu(screenHandlerFactory);
 			}
@@ -142,7 +141,7 @@ public class ApplePressBlock extends BaseEntityBlock {
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return createTickerHelper(type, EntityTypeRegistry.APPLE_PRESS_BLOCK_ENTITY.get(), (world1, pos, state1, be) -> be.tick(world1, pos, state1, be));
 	}
 
@@ -154,20 +153,20 @@ public class ApplePressBlock extends BaseEntityBlock {
 	@Nullable
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-		BlockGetter world = ctx.getLevel();
+		BlockGetter level = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
-		if (pos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(pos.above()).canBeReplaced(ctx)) {
+		if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(ctx)) {
 			return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite()).setValue(HALF, DoubleBlockHalf.LOWER);
 		}
 		return null;
 	}
 
 	@Override
-	public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
 		if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
 			BlockPos upperPos = pos.above();
 			BlockState upperState = state.setValue(HALF, DoubleBlockHalf.UPPER);
-			world.setBlock(upperPos, upperState, 3);
+			level.setBlock(upperPos, upperState, 3);
 		}
 	}
 
@@ -180,7 +179,7 @@ public class ApplePressBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+	public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		Direction facing = state.getValue(FACING);
 		if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
 			return TOP_SHAPES.get(facing);

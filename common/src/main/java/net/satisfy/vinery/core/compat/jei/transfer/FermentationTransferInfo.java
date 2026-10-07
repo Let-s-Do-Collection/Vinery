@@ -4,25 +4,25 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.satisfy.vinery.client.gui.handler.FermentationBarrelGuiHandler;
+import net.satisfy.vinery.core.menu.FermentationBarrelMenu;
 import net.satisfy.vinery.core.compat.jei.category.FermentationBarrelCategory;
 import net.satisfy.vinery.core.recipe.FermentationBarrelRecipe;
-import net.satisfy.vinery.core.registry.ScreenhandlerTypeRegistry;
+import net.satisfy.vinery.core.registry.MenuTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FermentationTransferInfo implements IRecipeTransferInfo<FermentationBarrelGuiHandler, FermentationBarrelRecipe> {
+public class FermentationTransferInfo implements IRecipeTransferInfo<FermentationBarrelMenu, FermentationBarrelRecipe> {
     @Override
-    public @NotNull Class<? extends FermentationBarrelGuiHandler> getContainerClass() {
-        return FermentationBarrelGuiHandler.class;
+    public @NotNull Class<? extends FermentationBarrelMenu> getContainerClass() {
+        return FermentationBarrelMenu.class;
     }
 
     @Override
-    public @NotNull Optional<MenuType<FermentationBarrelGuiHandler>> getMenuType() {
-        return Optional.of(ScreenhandlerTypeRegistry.FERMENTATION_BARREL_GUI_HANDLER.get());
+    public @NotNull Optional<MenuType<FermentationBarrelMenu>> getMenuType() {
+        return Optional.of(MenuTypeRegistry.FERMENTATION_BARREL_MENU.get());
     }
 
     @Override
@@ -31,12 +31,12 @@ public class FermentationTransferInfo implements IRecipeTransferInfo<Fermentatio
     }
 
     @Override
-    public boolean canHandle(FermentationBarrelGuiHandler container, FermentationBarrelRecipe recipe) {
+    public boolean canHandle(FermentationBarrelMenu container, FermentationBarrelRecipe recipe) {
         return true;
     }
 
     @Override
-    public @NotNull List<Slot> getRecipeSlots(FermentationBarrelGuiHandler container, FermentationBarrelRecipe recipe) {
+    public @NotNull List<Slot> getRecipeSlots(FermentationBarrelMenu container, FermentationBarrelRecipe recipe) {
         List<Slot> slots = new ArrayList<>();
         slots.add(container.getSlot(0));
         for(int i = 1; i <= recipe.getIngredients().size() && i < 5; i++){
@@ -46,7 +46,7 @@ public class FermentationTransferInfo implements IRecipeTransferInfo<Fermentatio
     }
 
     @Override
-    public @NotNull List<Slot> getInventorySlots(FermentationBarrelGuiHandler container, FermentationBarrelRecipe recipe) {
+    public @NotNull List<Slot> getInventorySlots(FermentationBarrelMenu container, FermentationBarrelRecipe recipe) {
         List<Slot> slots = new ArrayList<>();
         for (int i = 6; i < 6 + 36; i++) {
             Slot slot = container.getSlot(i);

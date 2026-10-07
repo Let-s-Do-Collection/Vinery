@@ -8,7 +8,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.satisfy.vinery.core.Vinery;
 
-@SuppressWarnings("unused")
 public class TabRegistry {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Vinery.MOD_ID, Registries.CREATIVE_MODE_TAB);
 
@@ -18,7 +17,7 @@ public class TabRegistry {
             .displayItems((parameters, output) -> {
                 acceptEssentials(output);
                 acceptWines(output);
-                acceptCherry(output);
+                acceptDarkCherry(output);
                 acceptDecoration(output);
             })
             .build());
@@ -59,6 +58,9 @@ public class TabRegistry {
         output.accept(ObjectRegistry.FERMENTATION_BARREL.get());
         output.accept(ObjectRegistry.APPLE_PRESS.get());
         output.accept(ObjectRegistry.SPRUCE_LATTICE.get());
+        output.accept(ObjectRegistry.SPRUCE_WINE_RACK_SMALL.get());
+        output.accept(ObjectRegistry.SPRUCE_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.SPRUCE_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.GRAPEVINE_STEM.get());
         output.accept(ObjectRegistry.STRAW_HAT.get());
         output.accept(ObjectRegistry.WINEMAKER_APRON.get());
@@ -112,14 +114,12 @@ public class TabRegistry {
         output.accept(ObjectRegistry.WINE_BOTTLE.get());
     }
 
-    public static void acceptCherry(CreativeModeTab.Output output) {
+    public static void acceptDarkCherry(CreativeModeTab.Output output) {
         output.accept(ObjectRegistry.DARK_CHERRY_LOG.get());
         output.accept(ObjectRegistry.DARK_CHERRY_WOOD.get());
         output.accept(ObjectRegistry.STRIPPED_DARK_CHERRY_LOG.get());
         output.accept(ObjectRegistry.STRIPPED_DARK_CHERRY_WOOD.get());
-        output.accept(ObjectRegistry.DARK_CHERRY_BEAM.get());
         output.accept(ObjectRegistry.DARK_CHERRY_PLANKS.get());
-        output.accept(ObjectRegistry.DARK_CHERRY_FLOORBOARD.get());
         output.accept(ObjectRegistry.DARK_CHERRY_STAIRS.get());
         output.accept(ObjectRegistry.DARK_CHERRY_SLAB.get());
         output.accept(ObjectRegistry.DARK_CHERRY_FENCE.get());
@@ -128,16 +128,18 @@ public class TabRegistry {
         output.accept(ObjectRegistry.DARK_CHERRY_TRAPDOOR.get());
         output.accept(ObjectRegistry.DARK_CHERRY_PRESSURE_PLATE.get());
         output.accept(ObjectRegistry.DARK_CHERRY_BUTTON.get());
+        output.accept(ObjectRegistry.DARK_CHERRY_BEAM.get());
+        output.accept(ObjectRegistry.DARK_CHERRY_FLOORBOARD.get());
         output.accept(ObjectRegistry.DARK_CHERRY_SIGN_ITEM.get());
         output.accept(ObjectRegistry.DARK_CHERRY_HANGING_SIGN_ITEM.get());
         output.accept(ObjectRegistry.DARK_CHERRY_BOAT.get());
         output.accept(ObjectRegistry.DARK_CHERRY_CHEST_BOAT.get());
+        output.accept(ObjectRegistry.DARK_CHERRY_TABLE.get());
         output.accept(ObjectRegistry.DARK_CHERRY_BIG_TABLE.get());
+        output.accept(ObjectRegistry.DARK_CHERRY_CHAIR.get());
         output.accept(ObjectRegistry.DARK_CHERRY_SHELF.get());
         output.accept(ObjectRegistry.DARK_CHERRY_DRAWER.get());
         output.accept(ObjectRegistry.DARK_CHERRY_CABINET.get());
-        output.accept(ObjectRegistry.DARK_CHERRY_TABLE.get());
-        output.accept(ObjectRegistry.DARK_CHERRY_CHAIR.get());
         output.accept(ObjectRegistry.DARK_CHERRY_BARREL.get());
         output.accept(ObjectRegistry.DARK_CHERRY_WINE_RACK_SMALL.get());
         output.accept(ObjectRegistry.DARK_CHERRY_WINE_RACK_MID.get());
@@ -145,35 +147,30 @@ public class TabRegistry {
     }
 
     public static void acceptDecoration(CreativeModeTab.Output output) {
-        output.accept(ObjectRegistry.WINDOW_BLOCK.get());
-        output.accept(ObjectRegistry.WINDOW.get());
         output.accept(ObjectRegistry.OAK_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.OAK_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.OAK_WINE_RACK_MID.get());
-        output.accept(ObjectRegistry.SPRUCE_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.SPRUCE_WINE_RACK_BIG.get());
-        output.accept(ObjectRegistry.SPRUCE_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.OAK_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.BIRCH_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.BIRCH_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.BIRCH_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.BIRCH_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.JUNGLE_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.JUNGLE_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.JUNGLE_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.JUNGLE_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.ACACIA_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.ACACIA_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.ACACIA_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.ACACIA_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.DARK_OAK_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.DARK_OAK_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.DARK_OAK_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.DARK_OAK_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.MANGROVE_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.MANGROVE_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.MANGROVE_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.MANGROVE_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.BAMBOO_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.BAMBOO_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.BAMBOO_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.BAMBOO_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.CHERRY_WINE_RACK_SMALL.get());
-        output.accept(ObjectRegistry.CHERRY_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.CHERRY_WINE_RACK_MID.get());
+        output.accept(ObjectRegistry.CHERRY_WINE_RACK_BIG.get());
         output.accept(ObjectRegistry.OAK_LATTICE.get());
         output.accept(ObjectRegistry.BIRCH_LATTICE.get());
         output.accept(ObjectRegistry.JUNGLE_LATTICE.get());
@@ -183,6 +180,8 @@ public class TabRegistry {
         output.accept(ObjectRegistry.BAMBOO_LATTICE.get());
         output.accept(ObjectRegistry.CHERRY_LATTICE.get());
         output.accept(ObjectRegistry.DARK_CHERRY_LATTICE.get());
+        output.accept(ObjectRegistry.WINDOW.get());
+        output.accept(ObjectRegistry.WINDOW_BLOCK.get());
     }
 
     public static void init() {

@@ -8,39 +8,39 @@ license = "Custom"
 modId = "vinery"
 version = "${version}"
 displayName = "[Let's Do] Vinery"
-authors = "Jason13Official, Satisfy"
-credits = "Cristelknight, cph101dev, MissLilitu, CR-055, BaumeisterJO"
+authors = "satisfy"
+credits = "MissLilitu, CR-055, Jason13Official, Cristelknight, cph101dev, BaumeisterJO"
 description = '''
-In Vino Veritas - it's time for wine! Build your own vineyard, produce wine, and establish your own winery.
+Sun-warmed vineyards, creaking barrels and dusty bottles in a cool cellar. Grow your grapes, press your own wine and build the winery of your dreams.
 '''
-logoFile = "logo.png"
+logoFile = "pack.png"
 displayURL = "https://www.lets-do.ch"
 
 [[dependencies.vinery]]
 modId = "neoforge"
-mandatory = true
-versionRange = "[21.0,)"
+type = "required"
+versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.vinery]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.21,)"
+type = "required"
+versionRange = "[1.21.1,1.22)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.vinery]]
 modId = "architectury"
-mandatory = true
+type = "required"
 versionRange = "[13.0.8,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.vinery]]
 modId = "foundation"
-mandatory = true
-versionRange = "[1.0.0,)"
+type = "required"
+versionRange = "[1.0.1,)"
 ordering = "AFTER"
 side = "BOTH"
 

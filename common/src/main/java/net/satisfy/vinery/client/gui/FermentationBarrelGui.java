@@ -4,17 +4,21 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.satisfy.vinery.client.gui.handler.FermentationBarrelGuiHandler;
+import net.satisfy.foundation.client.gui.recipebook.StationRecipeBookScreen;
+import net.satisfy.vinery.core.menu.FermentationBarrelMenu;
 import net.satisfy.vinery.core.Vinery;
+import net.satisfy.vinery.core.recipe.FermentationBarrelRecipe;
+
+import java.util.ArrayList;
+import java.util.List;
 import net.satisfy.vinery.platform.PlatformHelper;
 
 @Environment(EnvType.CLIENT)
-public class FermentationBarrelGui extends AbstractContainerScreen<FermentationBarrelGuiHandler> {
+public class FermentationBarrelGui extends StationRecipeBookScreen<FermentationBarrelMenu> {
     public static final ResourceLocation BACKGROUND = Vinery.identifier("textures/gui/fermentation_barrel_gui.png");
 
     private static final int FLUID_WIDTH = 20;
@@ -29,7 +33,7 @@ public class FermentationBarrelGui extends AbstractContainerScreen<FermentationB
     private static final int CRAFT_PROGRESS_GUI_Y = 20;
     private static final int CRAFT_PROGRESS_GUI_HEIGHT = 29;
 
-    public FermentationBarrelGui(FermentationBarrelGuiHandler handler, Inventory inventory, Component title) {
+    public FermentationBarrelGui(FermentationBarrelMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -40,21 +44,16 @@ public class FermentationBarrelGui extends AbstractContainerScreen<FermentationB
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.leftPos = (this.width - this.imageWidth) / 2;
-        this.topPos = (this.height - this.imageHeight) / 2;
-    }
-
-    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        this.renderBackground(guiGraphics,mouseX,mouseY,delta);
         super.render(guiGraphics, mouseX, mouseY, delta);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         if (isMouseOverFluidArea(mouseX, mouseY)) {
-            Component tooltip = getFluidTooltip();
-            guiGraphics.renderTooltip(this.font, tooltip, mouseX, mouseY);
+            List<Component> tooltip = new ArrayList<>();
+            tooltip.add(getFluidTooltip());
+            if (recipeBook.getGhost() != null && recipeBook.getGhost().value() instanceof FermentationBarrelRecipe recipe && recipe.getJuiceData().amount() > 0) {
+                tooltip.add(FermentationBarrelMenu.neededJuice(recipe));
+            }
+            guiGraphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
         }
 
         if (isMouseOverCraftingTimeArea(mouseX, mouseY)) {
@@ -138,7 +137,6 @@ public class FermentationBarrelGui extends AbstractContainerScreen<FermentationB
     }
 
     public static void drawJuiceBar(GuiGraphics guiGraphics, String juiceType, int juiceAmount, int originX, int originY) {
-
         final int MAX_FLUID = PlatformHelper.getMaxFluidLevel();
         int scaledWidth = (int) ((double) juiceAmount / MAX_FLUID * FLUID_WIDTH);
         scaledWidth = Math.max(0, Math.min(FLUID_WIDTH, scaledWidth));

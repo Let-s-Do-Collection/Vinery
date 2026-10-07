@@ -2,7 +2,7 @@ package net.satisfy.vinery.core.item;
 
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.block.Block;
-import net.satisfy.vinery.core.util.GrapeType;
+import net.satisfy.vinery.core.wine.GrapeType;
 
 public class GrapeBushSeedItem extends ItemNameBlockItem {
     private final GrapeType type;

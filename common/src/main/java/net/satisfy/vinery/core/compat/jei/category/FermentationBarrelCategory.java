@@ -20,7 +20,6 @@ import net.satisfy.vinery.core.registry.ObjectRegistry;
 import net.satisfy.vinery.platform.PlatformHelper;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("unused")
 public class FermentationBarrelCategory implements IRecipeCategory<FermentationBarrelRecipe> {
     public static final RecipeType<FermentationBarrelRecipe> FERMENTATION_BARREL = RecipeType.create(Vinery.MOD_ID, "wine_fermentation", FermentationBarrelRecipe.class);
     public static final int WIDTH = 124;
@@ -55,9 +54,13 @@ public class FermentationBarrelCategory implements IRecipeCategory<FermentationB
     }
 
     @Override
-    @SuppressWarnings("removal")
-    public @NotNull IDrawable getBackground() {
-        return this.background;
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override
@@ -76,7 +79,6 @@ public class FermentationBarrelCategory implements IRecipeCategory<FermentationB
     }
 
     private Component getFluidTooltip(String juiceType, int fluidLevel) {
-
         int maxFluidLevel = PlatformHelper.getMaxFluidLevel();
 
         double percentage = (double) fluidLevel / maxFluidLevel * 100;
@@ -100,7 +102,7 @@ public class FermentationBarrelCategory implements IRecipeCategory<FermentationB
 
     @Override
     public void draw(FermentationBarrelRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-
+        background.draw(guiGraphics);
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
 
         if (recipe.getJuiceData().amount() > 0) {

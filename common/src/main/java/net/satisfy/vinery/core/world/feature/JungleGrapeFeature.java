@@ -13,24 +13,18 @@ import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfi
 import net.satisfy.vinery.core.block.GrapeVineBlock;
 
 public class JungleGrapeFeature extends Feature<BlockStateConfiguration> {
-
-
-
     public JungleGrapeFeature(Codec<BlockStateConfiguration> codec) {
         super(codec);
     }
 
     @Override
     public boolean place(FeaturePlaceContext<BlockStateConfiguration> context) {
-
         int tries = 12;
 
         int xz = 7;
         int height = 10;
 
         int length = 12;
-
-
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for(int i = 0; i < tries; i++) {
@@ -39,7 +33,6 @@ public class JungleGrapeFeature extends Feature<BlockStateConfiguration> {
                     context.random().nextInt(height) - 1,
                     context.random().nextInt((xz * 2) + 1) - xz
             );
-
 
             if(!context.level().isEmptyBlock(mutable)) {
                 continue;

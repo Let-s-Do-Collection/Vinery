@@ -1,12 +1,15 @@
 package net.satisfy.vinery.core.registry;
 
-import net.satisfy.vinery.core.util.GrapeType;
+import net.satisfy.vinery.core.wine.GrapeType;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class GrapeTypeRegistry {
-    public static final Set<GrapeType> GRAPE_TYPE_TYPES = new HashSet<>();
+    private static final Set<GrapeType> TYPES = new LinkedHashSet<>();
+    public static final Set<GrapeType> GRAPE_TYPE_TYPES = Collections.unmodifiableSet(TYPES);
+    private static boolean frozen;
 
     public static final GrapeType NONE = registerGrapeType("none", false, false);
     public static final GrapeType RED = registerGrapeType("red", false, true);
@@ -30,8 +33,20 @@ public class GrapeTypeRegistry {
     }
 
     public static GrapeType registerGrapeType(String id, boolean lattice, boolean red) {
+        if (frozen) {
+            throw new IllegalStateException("Grape type '" + id + "' registered too late, use a VineryPlugin");
+        }
+        if (!id.matches("[a-z0-9_]+")) {
+            throw new IllegalArgumentException("Grape type id '" + id + "' may only contain a-z, 0-9 and _");
+        }
         GrapeType grapeType = new GrapeType(id, lattice, red);
-        GRAPE_TYPE_TYPES.add(grapeType);
+        if (!TYPES.add(grapeType)) {
+            throw new IllegalArgumentException("Grape type '" + id + "' is already registered");
+        }
         return grapeType;
+    }
+
+    public static void freeze() {
+        frozen = true;
     }
 }

@@ -1,5 +1,7 @@
 package net.satisfy.vinery.neoforge.client;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.*;
@@ -11,6 +13,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
@@ -19,9 +22,10 @@ import net.satisfy.foundation.neoforge.client.FoundationArmorExtensions;
 import net.satisfy.vinery.client.VineryClient;
 import net.satisfy.vinery.client.gui.ApplePressGui;
 import net.satisfy.vinery.client.gui.FermentationBarrelGui;
+import net.satisfy.vinery.client.util.ExtraModels;
 import net.satisfy.vinery.core.Vinery;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
-import net.satisfy.vinery.core.registry.ScreenhandlerTypeRegistry;
+import net.satisfy.vinery.core.registry.MenuTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -29,10 +33,11 @@ import java.util.Optional;
 
 @EventBusSubscriber(modid = Vinery.MOD_ID, value = Dist.CLIENT)
 public class VineryClientNeoForge {
-
     @SubscribeEvent
     public static void onClientSetup(RegisterEvent event) {
-        VineryClient.preInitClient();
+        if (event.getRegistryKey().equals(Registries.BLOCK)) {
+            VineryClient.preInitClient();
+        }
     }
 
     @SubscribeEvent
@@ -82,11 +87,15 @@ public class VineryClientNeoForge {
         }
     }
 
+    @SubscribeEvent
+    public static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
+        ExtraModels.all().forEach(id -> event.register(ModelResourceLocation.standalone(id)));
+    }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(ScreenhandlerTypeRegistry.APPLE_PRESS_GUI_HANDLER.get(), ApplePressGui::new);
-        event.register(ScreenhandlerTypeRegistry.FERMENTATION_BARREL_GUI_HANDLER.get(), FermentationBarrelGui::new);
+        event.register(MenuTypeRegistry.APPLE_PRESS_MENU.get(), ApplePressGui::new);
+        event.register(MenuTypeRegistry.FERMENTATION_BARREL_MENU.get(), FermentationBarrelGui::new);
     }
 
     @SubscribeEvent

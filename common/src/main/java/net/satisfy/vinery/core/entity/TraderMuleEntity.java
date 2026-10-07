@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class TraderMuleEntity extends AbstractChestedHorse {
-	public TraderMuleEntity(EntityType<? extends TraderMuleEntity> entityType, Level world) {
-		super(entityType, world);
+	public TraderMuleEntity(EntityType<? extends TraderMuleEntity> entityType, Level level) {
+		super(entityType, level);
 	}
 	private int despawnDelay = 47999;
 

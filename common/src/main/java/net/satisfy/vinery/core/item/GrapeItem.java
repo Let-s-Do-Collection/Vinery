@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.satisfy.vinery.core.util.GrapeType;
+import net.satisfy.vinery.core.wine.GrapeType;
 import org.jetbrains.annotations.NotNull;
 
 public class GrapeItem extends Item {
@@ -24,10 +24,10 @@ public class GrapeItem extends Item {
     }
 
     @Override
-    public @NotNull ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entityLiving) {
-        if (!world.isClientSide() && entityLiving instanceof Player player) {
+    public @NotNull ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entityLiving) {
+        if (!level.isClientSide() && entityLiving instanceof Player player) {
             if (stack.getItem() == this) {
-                if (world.getRandom().nextFloat() < CHANCE_OF_GETTING_SEEDS) {
+                if (level.getRandom().nextFloat() < CHANCE_OF_GETTING_SEEDS) {
                     ItemStack returnStack = new ItemStack(returnItem);
                     if (!player.getInventory().add(returnStack)) {
                         player.drop(returnStack, false);
@@ -35,7 +35,7 @@ public class GrapeItem extends Item {
                 }
             }
         }
-        return super.finishUsingItem(stack, world, entityLiving);
+        return super.finishUsingItem(stack, level, entityLiving);
     }
 
 }

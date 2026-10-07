@@ -21,7 +21,6 @@ import net.satisfy.vinery.core.util.VillagerUtil;
 import net.satisfy.vinery.fabric.config.VineryFabricConfig;
 
 public class VineryFabricVillagers {
-
     private static final ResourceLocation WINEMAKER_POI_IDENTIFIER = Vinery.identifier("winemaker_poi");
     public static final PoiType WINEMAKER_POI;
     public static final VillagerProfession WINEMAKER;
@@ -53,13 +52,11 @@ public class VineryFabricVillagers {
     private static void registerTradesForLevel(VineryFabricConfig.VillagerSettings.TradeLevelSettings tradeLevelSettings, int level, RegistryAccess registryAccess) {
         TradeOfferHelper.registerVillagerOffers(WINEMAKER, level, factories -> {
             for (VineryFabricConfig.VillagerSettings.TradeEntry entry : tradeLevelSettings.trades) {
-                // Validate price is within valid range (1-99)
                 if (entry.price < 1 || entry.price > 99) {
                     System.err.println("Vinery Villager Trade has invalid price: " + entry.price + " (must be 1-99). Skipping trade for item: " + entry.item);
                     continue;
                 }
 
-                // Validate max uses is positive
                 if (entry.maxUses < 1) {
                     System.err.println("Vinery Villager Trade has invalid maxUses: " + entry.maxUses + " (must be >= 1). Skipping trade for item: " + entry.item);
                     continue;
@@ -72,7 +69,6 @@ public class VineryFabricVillagers {
                     ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(modId, itemId);
                     Item item = registryAccess.registryOrThrow(Registries.ITEM).get(rl);
 
-                    // Validate item exists and is not air
                     if (item != null && item != Items.AIR) {
                         if (entry.type == VineryFabricConfig.VillagerSettings.TradeType.BUY) {
                             factories.add(new VillagerUtil.BuyForOneEmeraldFactory(item, entry.price, entry.maxUses, entry.experience));

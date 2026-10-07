@@ -4,13 +4,15 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
+import net.satisfy.vinery.core.util.InfoOverlayMode;
+import net.satisfy.vinery.core.wine.WineEffects;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Config(name = "vinery")
 @Config.Gui.Background("vinery:textures/block/dark_cherry_planks.png")
 public class VineryFabricConfig implements ConfigData {
-
     @ConfigEntry.Gui.CollapsibleObject
     public BlocksSettings blocks = new BlocksSettings();
 
@@ -22,6 +24,9 @@ public class VineryFabricConfig implements ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     public TraderSettings trader = new TraderSettings();
+
+    @ConfigEntry.Gui.CollapsibleObject
+    public InfoOverlaySettings infoOverlay = new InfoOverlaySettings();
 
     public static class BlocksSettings {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 10000)
@@ -48,8 +53,18 @@ public class VineryFabricConfig implements ConfigData {
         @ConfigEntry.BoundedDiscrete(min = 0, max = 1)
         public double grapeGrowthChance = 0.5;
 
+        @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
         public double grapeGrowthMultiplier = 1.0;
+
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
+        public int grapevinePotStomps = 12;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int grapevinePotHeavyArmorBonus = 10;
+
+        public boolean grapevinePotSplashParticles = true;
 
         public boolean grapevineLeavesEnabled = true;
     }
@@ -62,23 +77,38 @@ public class VineryFabricConfig implements ConfigData {
         public BannerSettings banner = new BannerSettings();
 
         public static class WineSettings {
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 100000)
-            public int startDuration = 1800;
+            @ConfigEntry.Gui.Tooltip
+            public boolean agingEnabled = true;
 
+            @ConfigEntry.Gui.Tooltip
+            public boolean ageOnlyInStorage = false;
+
+            @ConfigEntry.Gui.Tooltip
             @ConfigEntry.BoundedDiscrete(min = 1, max = 100000)
             public int maxDuration = 15000;
 
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 10)
+            @ConfigEntry.Gui.Tooltip
+            @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
             public int maxLevel = 5;
 
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 10000)
+            @ConfigEntry.Gui.Tooltip
+            @ConfigEntry.BoundedDiscrete(min = 0, max = 10000)
             public int durationPerYear = 200;
 
+            @ConfigEntry.Gui.Tooltip
+            @ConfigEntry.BoundedDiscrete(min = 1, max = 5)
+            public double cellarAgingMultiplier = 1.5;
+
+            @ConfigEntry.Gui.Tooltip
             @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
             public int daysPerYear = 24;
 
+            @ConfigEntry.Gui.Tooltip
             @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
             public int yearsPerEffectLevel = 6;
+
+            @ConfigEntry.Gui.Tooltip
+            public List<String> effects = new ArrayList<>(WineEffects.DEFAULTS);
         }
     }
 
@@ -89,6 +119,12 @@ public class VineryFabricConfig implements ConfigData {
         public boolean isShowTooltipEnabled() {
             return giveEffect && showTooltip;
         }
+    }
+
+    public static class InfoOverlaySettings {
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public InfoOverlayMode mode = InfoOverlayMode.ON;
     }
 
     public static class TraderSettings {
@@ -102,7 +138,6 @@ public class VineryFabricConfig implements ConfigData {
     }
 
     public static class VillagerSettings {
-
         @ConfigEntry.Gui.CollapsibleObject
         public TradeLevelSettings level1 = new TradeLevelSettings(1);
 

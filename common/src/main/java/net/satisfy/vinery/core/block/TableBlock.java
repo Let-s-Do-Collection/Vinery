@@ -34,7 +34,7 @@ public class TableBlock extends LineConnectingBlock implements SimpleWaterlogged
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
     }
 
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Direction direction = state.getValue(FACING);
         LineConnectingType type = state.getValue(TYPE);
 
@@ -56,9 +56,9 @@ public class TableBlock extends LineConnectingBlock implements SimpleWaterlogged
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos clickedPos = context.getClickedPos();
-        return Objects.requireNonNull(super.getStateForPlacement(context)).setValue(WATERLOGGED, world.getFluidState(clickedPos).getType() == Fluids.WATER);
+        return Objects.requireNonNull(super.getStateForPlacement(context)).setValue(WATERLOGGED, level.getFluidState(clickedPos).getType() == Fluids.WATER);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

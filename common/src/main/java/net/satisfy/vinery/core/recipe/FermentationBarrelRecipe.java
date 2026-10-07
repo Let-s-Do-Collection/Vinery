@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.satisfy.vinery.core.block.entity.FermentationBarrelBlockEntity;
 import net.satisfy.vinery.core.recipe.input.FermentationBarrelRecipeInput;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
-import net.satisfy.vinery.core.registry.RecipeTypesRegistry;
+import net.satisfy.vinery.core.registry.RecipeTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class FermentationBarrelRecipe implements Recipe<FermentationBarrelRecipeInput> {
@@ -28,7 +28,7 @@ public class FermentationBarrelRecipe implements Recipe<FermentationBarrelRecipe
     private final ItemStack output;
     private final FermentationBarrelRecipeInput.JuiceData juiceData;
     private final boolean wineBottleRequired;
-    public static RecipeType<FermentationBarrelRecipe> Type = RecipeTypesRegistry.FERMENTATION_BARREL_RECIPE_TYPE.get();
+    public static RecipeType<FermentationBarrelRecipe> Type = RecipeTypeRegistry.FERMENTATION_BARREL_RECIPE_TYPE.get();
 
     public FermentationBarrelRecipe(NonNullList<Ingredient> inputs, FermentationBarrelRecipeInput.JuiceData data, ItemStack output, boolean wineBottleRequired) {
         this.inputs = inputs;
@@ -48,7 +48,7 @@ public class FermentationBarrelRecipe implements Recipe<FermentationBarrelRecipe
     }
 
     @Override
-    public boolean matches(FermentationBarrelRecipeInput input, Level world) {
+    public boolean matches(FermentationBarrelRecipeInput input, Level level) {
         if (this.juiceData.amount() > 0) {
             if (input.data().amount() < this.juiceData.amount()) return false;
             if (!this.juiceData.type().equals(input.data().type())) return false;
@@ -78,7 +78,6 @@ public class FermentationBarrelRecipe implements Recipe<FermentationBarrelRecipe
         return this.output.copy();
     }
 
-
     @Override
     public @NotNull NonNullList<Ingredient> getIngredients() {
         return this.inputs;
@@ -100,12 +99,12 @@ public class FermentationBarrelRecipe implements Recipe<FermentationBarrelRecipe
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeTypesRegistry.FERMENTATION_BARREL_RECIPE_SERIALIZER.get();
+        return RecipeTypeRegistry.FERMENTATION_BARREL_RECIPE_SERIALIZER.get();
     }
 
     @Override
     public @NotNull RecipeType<?> getType() {
-        return RecipeTypesRegistry.FERMENTATION_BARREL_RECIPE_TYPE.get();
+        return RecipeTypeRegistry.FERMENTATION_BARREL_RECIPE_TYPE.get();
     }
 
     @Override

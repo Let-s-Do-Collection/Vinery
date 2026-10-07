@@ -9,12 +9,13 @@
     "BlockMixin",
     "BoneMealItemMixin",
     "ExperienceOrbMixin",
-    "FoxEntityEatSweetBerriesGoalMixin",
+    "FoxEatBerriesGoalMixin",
     "LivingEntityMixin",
-    "PlantBlockMixin",
+    "BushBlockMixin",
     "ShovelItemMixin",
     "SpreadingSnowyDirtBlockMixin",
-    "WanderingTraderManagerMixin"
+    "StorageBlockEntityMixin",
+    "WanderingTraderSpawnerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

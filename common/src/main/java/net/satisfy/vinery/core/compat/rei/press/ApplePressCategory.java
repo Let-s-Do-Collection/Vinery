@@ -15,10 +15,15 @@ import net.satisfy.vinery.core.registry.ObjectRegistry;
 import java.util.List;
 
 public class ApplePressCategory implements DisplayCategory<ApplePressDisplay> {
+    private final CategoryIdentifier<ApplePressDisplay> id;
+
+    public ApplePressCategory(CategoryIdentifier<ApplePressDisplay> id) {
+        this.id = id;
+    }
 
     @Override
     public CategoryIdentifier<ApplePressDisplay> getCategoryIdentifier() {
-        return ApplePressDisplay.APPLE_PRESS_DISPLAY;
+        return id;
     }
 
     @Override

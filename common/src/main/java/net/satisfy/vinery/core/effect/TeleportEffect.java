@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 public class TeleportEffect extends InstantenousMobEffect {
-
     public TeleportEffect() {
         super(MobEffectCategory.BENEFICIAL, 0xFF69B4);
     }
@@ -31,7 +30,7 @@ public class TeleportEffect extends InstantenousMobEffect {
     private void teleport(Entity source) {
         if (!(source instanceof Player player)) return;
 
-        Level world = player.level();
+        Level level = player.level();
 
         for (int attempt = 0; attempt < 16; attempt++) {
             double x = player.getX() + (player.getRandom().nextDouble() - 0.5) * 16.0;
@@ -40,13 +39,12 @@ public class TeleportEffect extends InstantenousMobEffect {
 
             BlockPos pos = new BlockPos((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
 
-            if (world.isInWorldBounds(pos) &&
-                    !world.getBlockState(pos).liquid() &&
-                    !world.getBlockState(pos.above()).liquid() &&
-                    !fullBlockAt(world, pos) &&
-                    !fullBlockAt(world, pos.above()) &&
-                    fullBlockAt(world, pos.below())) {
-
+            if (level.isInWorldBounds(pos) &&
+                    !level.getBlockState(pos).liquid() &&
+                    !level.getBlockState(pos.above()).liquid() &&
+                    !fullBlockAt(level, pos) &&
+                    !fullBlockAt(level, pos.above()) &&
+                    fullBlockAt(level, pos.below())) {
                 if (!player.level().isClientSide) {
                     player.teleportTo(x + 0.5, pos.getY() + 0.5, z + 0.5);
                 }
@@ -57,7 +55,7 @@ public class TeleportEffect extends InstantenousMobEffect {
         }
     }
 
-    private static boolean fullBlockAt(Level world, BlockPos target){
-        return Block.isShapeFullBlock(world.getBlockState(target).getCollisionShape(world, target));
+    private static boolean fullBlockAt(Level level, BlockPos target){
+        return Block.isShapeFullBlock(level.getBlockState(target).getCollisionShape(level, target));
     }
 }

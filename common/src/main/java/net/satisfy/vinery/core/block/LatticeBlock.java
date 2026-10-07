@@ -2,6 +2,7 @@ package net.satisfy.vinery.core.block;
 
 import net.satisfy.foundation.block.LineConnectingType;
 import net.satisfy.foundation.block.LineConnectingBlock;
+import net.satisfy.vinery.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -35,13 +36,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.satisfy.vinery.core.block.entity.LatticeBlockEntity;
 import net.satisfy.vinery.core.item.GrapeBushSeedItem;
-import net.satisfy.vinery.core.util.GrapeType;
+import net.satisfy.foundation.registry.FoundationParticles;
+import net.satisfy.vinery.core.wine.GrapeType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
-@SuppressWarnings("deprecation")
 public class LatticeBlock extends StemBlock implements EntityBlock {
     public static final BooleanProperty SUPPORT = BooleanProperty.create("support");
     public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
@@ -97,14 +96,14 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
     }
 
     @Override
-    public @NotNull ItemInteractionResult useItemOn(ItemStack stack , BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull ItemInteractionResult useItemOn(ItemStack stack , BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         int age = state.getValue(AGE);
 
         if (stack.getItem() instanceof AxeItem) {
             BlockState newState = state.setValue(SUPPORT, !state.getValue(SUPPORT));
-            BlockState updateState = getConnection(newState, world, pos);
-            world.setBlock(pos, updateState, 3);
+            BlockState updateState = getConnection(newState, level, pos);
+            level.setBlock(pos, updateState, 3);
             return ItemInteractionResult.SUCCESS;
         }
 
@@ -112,46 +111,46 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
             GrapeType type = seedItem.getType();
             if (age == 0 && type.isLattice()) {
                 BlockState newState = withAge(state, 1, type);
-                world.setBlock(pos, newState, 3);
+                level.setBlock(pos, newState, 3);
 
-                BlockEntity be = world.getBlockEntity(pos);
+                BlockEntity be = level.getBlockEntity(pos);
                 if (be instanceof LatticeBlockEntity lattice) {
                     lattice.setAge(1);
                     lattice.setGrapeType(type);
                 }
 
                 if (!player.isCreative()) stack.shrink(1);
-                world.playSound(null, pos, PLACE_SOUND_EVENT, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, pos, PLACE_SOUND_EVENT, SoundSource.BLOCKS, 1.0F, 1.0F);
                 return ItemInteractionResult.SUCCESS;
             }
         }
 
         if (age > 0 && stack.getItem() == Items.SHEARS) {
             stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
-            if (age > 2) dropGrapes(world, state, pos, hit.getDirection());
-            dropGrapeSeeds(world, state, pos, hit.getDirection());
-            world.setBlock(pos, state.setValue(AGE, 0), 3);
+            if (age > 2) dropGrapes(level, state, pos, hit.getDirection());
+            dropGrapeSeeds(level, state, pos, hit.getDirection());
+            level.setBlock(pos, state.setValue(AGE, 0), 3);
 
-            BlockEntity be = world.getBlockEntity(pos);
+            BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof LatticeBlockEntity lattice) {
                 lattice.setAge(0);
             }
 
-            world.playSound(player, pos, BREAK_SOUND_EVENT, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(player, pos, BREAK_SOUND_EVENT, SoundSource.BLOCKS, 1.0F, 1.0F);
             return ItemInteractionResult.SUCCESS;
         }
 
         if (age > 2) {
             stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
-            dropGrapes(world, state, pos, hit.getDirection());
-            world.setBlock(pos, state.setValue(AGE, 1), 3);
+            dropGrapes(level, state, pos, hit.getDirection());
+            level.setBlock(pos, state.setValue(AGE, 1), 3);
 
-            BlockEntity be = world.getBlockEntity(pos);
+            BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof LatticeBlockEntity lattice) {
                 lattice.setAge(1);
             }
 
-            world.playSound(player, pos, BREAK_SOUND_EVENT, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(player, pos, BREAK_SOUND_EVENT, SoundSource.BLOCKS, 1.0F, 1.0F);
             return ItemInteractionResult.SUCCESS;
         }
 
@@ -159,31 +158,40 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        Random rand = new Random();
-        if (rand.nextInt(100) >= 98 || isMature(state)) return;
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (random.nextDouble() >= 0.98 * PlatformHelper.getGrapeGrowthMultiplier() || isMature(state)) return;
         int age = state.getValue(AGE);
         GrapeType type = state.getValue(GRAPE);
 
         BlockState newState = withAge(state, age + 1, type);
-        world.setBlock(pos, newState, UPDATE_CLIENTS);
+        level.setBlock(pos, newState, UPDATE_CLIENTS);
 
-        BlockEntity be = world.getBlockEntity(pos);
+        BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof LatticeBlockEntity lattice) {
             lattice.setAge(age + 1);
             lattice.setGrapeType(type);
         }
 
-        super.randomTick(state, world, pos, random);
+        super.randomTick(state, level, pos, random);
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!state.canSurvive(world, pos)) {
-            if (state.getValue(AGE) > 0) dropGrapeSeeds(world, state, pos, null);
-            if (state.getValue(AGE) > 2) dropGrapes(world, state, pos, null);
-            world.destroyBlock(pos, true);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!state.canSurvive(level, pos)) {
+            if (state.getValue(AGE) > 0) dropGrapeSeeds(level, state, pos, null);
+            if (state.getValue(AGE) > 2) dropGrapes(level, state, pos, null);
+            level.destroyBlock(pos, true);
         }
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(AGE) == 0 || random.nextInt(30) != 0) return;
+        if (!level.getBlockState(pos.below()).isAir()) return;
+        double x = pos.getX() + random.nextDouble();
+        double y = pos.getY() + 0.1;
+        double z = pos.getZ() + random.nextDouble();
+        level.addParticle(FoundationParticles.LEAF.get(), x, y, z, 0, 0, 0);
     }
 
     @Override
@@ -193,9 +201,9 @@ public class LatticeBlock extends StemBlock implements EntityBlock {
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canSurvive(world, pos)) world.scheduleTick(pos, this, 1);
-        return getConnection(state, world, pos);
+    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (!state.canSurvive(level, pos)) level.scheduleTick(pos, this, 1);
+        return getConnection(state, level, pos);
     }
 
     @Override

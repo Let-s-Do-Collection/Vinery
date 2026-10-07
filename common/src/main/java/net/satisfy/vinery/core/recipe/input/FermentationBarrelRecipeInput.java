@@ -17,7 +17,6 @@ public record FermentationBarrelRecipeInput(
         ItemStack wineBottle,
         JuiceData data
 ) implements RecipeInput {
-
     public static final int WINE_BOTTLE_SLOT = 0;
 
     @Override

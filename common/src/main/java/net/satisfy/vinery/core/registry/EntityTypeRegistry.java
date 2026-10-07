@@ -52,6 +52,8 @@ public class EntityTypeRegistry {
                     BlockEntityType.Builder.of(StoragePotBlockEntity::new, STORAGE_POT.get()).build(null)
             );
 
+    public static final RegistrySupplier<BlockEntityType<StackableLogBlockEntity>> STACKABLE_LOG = registerBlockEntity("stackable_log", () -> BlockEntityType.Builder.of(StackableLogBlockEntity::new, ObjectRegistry.STACKABLE_LOG.get()).build(null));
+
     public static final Supplier<EntityType<WoodBoat>> DARK_CHERRY_BOAT = PlatformHelper.registerBoatType("dark_cherry_boat", WoodBoat::new, MobCategory.MISC, 1.375F, 0.5625F, 10);
     public static final Supplier<EntityType<WoodBoat>> DARK_CHERRY_CHEST_BOAT = PlatformHelper.<WoodBoat>registerBoatType("dark_cherry_chest_boat", WoodChestBoat::new, MobCategory.MISC, 1.375F, 0.5625F, 10);
 
@@ -63,6 +65,7 @@ public class EntityTypeRegistry {
                     BlockEntityType.Builder.of(DarkCherryBarrelBlockEntity::new, DARK_CHERRY_BARREL.get()).build(null)
             );
 
+    public static final RegistrySupplier<BlockEntityType<GrapevinePotBlockEntity>> GRAPEVINE_POT = registerBlockEntity("grapevine_pot", () -> BlockEntityType.Builder.of(GrapevinePotBlockEntity::new, ObjectRegistry.GRAPEVINE_POT.get()).build(null));
     public static final RegistrySupplier<BlockEntityType<LatticeBlockEntity>> LATTICE = registerBlockEntity("lattice", () -> BlockEntityType.Builder.of(LatticeBlockEntity::new, OAK_LATTICE.get(), SPRUCE_LATTICE.get(), CHERRY_LATTICE.get(), BIRCH_LATTICE.get(), DARK_OAK_LATTICE.get(), ACACIA_LATTICE.get(), BAMBOO_LATTICE.get(), JUNGLE_LATTICE.get(), MANGROVE_LATTICE.get(), DARK_CHERRY_LATTICE.get()).build(null));
 
     public static final RegistrySupplier<EntityType<TraderMuleEntity>> MULE = registerEntity("mule", () -> EntityType.Builder.of(TraderMuleEntity::new, MobCategory.CREATURE).sized(0.9f, 1.4f).clientTrackingRange(10).build(Vinery.identifier("mule").toString()));

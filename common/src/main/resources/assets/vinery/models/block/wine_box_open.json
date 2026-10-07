@@ -1,4 +1,5 @@
 {
+	"format_version": "26.3",
 	"credit": "Made by Satisfy",
 	"textures": {
 		"1": "vinery:block/wine_box",
@@ -17,7 +18,7 @@
 				"east": {"uv": [1, 4, 0, 9], "texture": "#1"},
 				"south": {"uv": [0, 4.5, 14, 7], "texture": "#1"},
 				"west": {"uv": [2, 2, 1, 7], "texture": "#1"},
-				"up": {"uv": [0, 7, 14, 6.5], "texture": "#1"},
+				"up": {"uv": [0, 7, 14, 8], "texture": "#1"},
 				"down": {"uv": [0, 0, 1, 14], "rotation": 90, "texture": "#1"}
 			}
 		},
@@ -30,7 +31,7 @@
 				"east": {"uv": [1, 2, 0, 7], "texture": "#1"},
 				"south": {"uv": [14, 6, 0, 11], "texture": "#1"},
 				"west": {"uv": [2, 2, 1, 7], "texture": "#1"},
-				"up": {"uv": [0, 7, 14, 6.5], "texture": "#1"},
+				"up": {"uv": [0, 6, 14, 7], "texture": "#1"},
 				"down": {"uv": [0, 0, 1, 14], "rotation": 90, "texture": "#1"}
 			}
 		},
@@ -127,9 +128,9 @@
 			}
 		},
 		{
-			"from": [2, 6, 12.5],
-			"to": [14, 12, 12.5],
-			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9.25, 12.5]},
+			"from": [2, 6, 13],
+			"to": [14, 12, 13],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9.25, 13]},
 			"faces": {
 				"north": {"uv": [1, 1, 13, 7], "rotation": 180, "texture": "#3"},
 				"south": {"uv": [1, 1, 13, 7], "texture": "#3"}
@@ -154,7 +155,7 @@
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"firstperson_lefthand": {
-			"rotation": [0, 225, 0],
+			"rotation": [0, -135, 0],
 			"translation": [0, 2.5, 0],
 			"scale": [0.4, 0.4, 0.4]
 		},
@@ -163,7 +164,7 @@
 			"scale": [0.25, 0.25, 0.25]
 		},
 		"gui": {
-			"rotation": [30, 225, 0],
+			"rotation": [30, -135, 0],
 			"scale": [0.625, 0.625, 0.625]
 		},
 		"head": {
@@ -178,12 +179,14 @@
 		{
 			"name": "Box_Bottom",
 			"origin": [0, 0, 0],
+			"scope": 0,
 			"color": 0,
 			"children": [0, 1, 2, 3, 4]
 		},
 		{
 			"name": "Box_Top",
 			"origin": [0, 0, 0],
+			"scope": 0,
 			"color": 0,
 			"children": [5, 6, 7, 8, 9, 10]
 		}

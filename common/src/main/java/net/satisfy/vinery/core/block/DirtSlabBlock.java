@@ -24,18 +24,17 @@ public class DirtSlabBlock extends SlabBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
 
         if (heldItem.is(ItemTags.SHOVELS)) {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 BlockState pathState = ObjectRegistry.DIRT_PATH_SLAB.get().defaultBlockState()
                         .setValue(TYPE, state.getValue(TYPE))
                         .setValue(WATERLOGGED, state.getValue(WATERLOGGED));
 
-                world.setBlock(pos, pathState, Block.UPDATE_ALL);
-                world.playSound(null, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlock(pos, pathState, Block.UPDATE_ALL);
+                level.playSound(null, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!player.isCreative()) {
                     heldItem.hurtAndBreak(1,player, EquipmentSlot.OFFHAND);

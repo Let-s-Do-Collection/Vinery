@@ -19,14 +19,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.satisfy.vinery.core.recipe.input.ApplePressFermentingRecipeInput;
-import net.satisfy.vinery.core.registry.RecipeTypesRegistry;
+import net.satisfy.vinery.core.registry.RecipeTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class ApplePressFermentingRecipe implements Recipe<ApplePressFermentingRecipeInput> {
     public final Ingredient input;
     private final ItemStack output;
     private final boolean requiresBottle;
-    public static RecipeType<ApplePressFermentingRecipe> Type = RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get();
+    public static RecipeType<ApplePressFermentingRecipe> Type = RecipeTypeRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get();
 
     public ApplePressFermentingRecipe(Ingredient input, ItemStack output, boolean requiresBottle) {
         this.input = input;
@@ -39,7 +39,7 @@ public class ApplePressFermentingRecipe implements Recipe<ApplePressFermentingRe
     }
 
     @Override
-    public boolean matches(ApplePressFermentingRecipeInput inventory, Level world) {
+    public boolean matches(ApplePressFermentingRecipeInput inventory, Level level) {
         return input.test(inventory.getItem(0));
     }
 
@@ -79,12 +79,12 @@ public class ApplePressFermentingRecipe implements Recipe<ApplePressFermentingRe
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_SERIALIZER.get();
+        return RecipeTypeRegistry.APPLE_PRESS_FERMENTING_RECIPE_SERIALIZER.get();
     }
 
     @Override
     public @NotNull RecipeType<?> getType() {
-        return RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get();
+        return RecipeTypeRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get();
     }
 
     @Override
@@ -93,7 +93,6 @@ public class ApplePressFermentingRecipe implements Recipe<ApplePressFermentingRe
     }
 
     public static class Serializer implements RecipeSerializer<ApplePressFermentingRecipe> {
-
         private static final MapCodec<Boolean> WINE_BOTTLE_CODEC = RecordCodecBuilder.mapCodec(inst ->
                 inst.group(
                         Codec.BOOL.fieldOf("required").forGetter(b -> b)

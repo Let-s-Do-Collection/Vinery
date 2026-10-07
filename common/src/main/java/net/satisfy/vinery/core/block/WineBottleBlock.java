@@ -47,8 +47,8 @@ public class WineBottleBlock extends StorageBlock {
     }
 
     @Override
-    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
 
         if(blockEntity instanceof StorageBlockEntity wineEntity){
             NonNullList<ItemStack> inventory = wineEntity.getInventory();
@@ -56,28 +56,28 @@ public class WineBottleBlock extends StorageBlock {
             if (canInsertStack(stack) && willFitStack(stack, inventory)) {
                 int posInE = getFirstEmptySlot(inventory);
                 if(posInE == Integer.MIN_VALUE) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                if(!world.isClientSide()){
+                if(!level.isClientSide()){
                     wineEntity.setStack(posInE, stack.split(1));
                     if (player.isCreative()) {
                         stack.grow(1);
                     }
-                    world.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
-                return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
             } else if (stack.isEmpty() && !isEmpty(inventory)) {
                 int posInE = getLastFullSlot(inventory);
                 if(posInE == Integer.MIN_VALUE) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                if(!world.isClientSide()){
+                if(!level.isClientSide()){
                     ItemStack wine = wineEntity.removeStack(posInE);
                     if (!player.getInventory().add(wine)) {
                         player.drop(wine, false);
                     }
                     if (isEmpty(inventory)) {
-                        world.destroyBlock(pos, false);
+                        level.destroyBlock(pos, false);
                     }
-                    world.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
-                return ItemInteractionResult.sidedSuccess(world.isClientSide());
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
             }
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -104,9 +104,8 @@ public class WineBottleBlock extends StorageBlock {
         return Integer.MIN_VALUE;
     }
 
-
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 

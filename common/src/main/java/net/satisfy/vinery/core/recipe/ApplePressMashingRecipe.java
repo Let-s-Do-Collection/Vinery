@@ -17,13 +17,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.satisfy.vinery.core.recipe.input.*;
-import net.satisfy.vinery.core.registry.RecipeTypesRegistry;
+import net.satisfy.vinery.core.registry.RecipeTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class ApplePressMashingRecipe implements Recipe<ApplePressMashingRecipeInput> {
     public final Ingredient input;
     private final ItemStack output;
-    public static RecipeType<ApplePressMashingRecipe> Type = RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get();
+    public static RecipeType<ApplePressMashingRecipe> Type = RecipeTypeRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get();
 
     public ApplePressMashingRecipe(Ingredient input, ItemStack output) {
         this.input = input;
@@ -31,7 +31,7 @@ public class ApplePressMashingRecipe implements Recipe<ApplePressMashingRecipeIn
     }
 
     @Override
-    public boolean matches(ApplePressMashingRecipeInput inventory, Level world) {
+    public boolean matches(ApplePressMashingRecipeInput inventory, Level level) {
         return input.test(inventory.getItem(0));
     }
 
@@ -57,15 +57,14 @@ public class ApplePressMashingRecipe implements Recipe<ApplePressMashingRecipeIn
         return this.output.copy();
     }
 
-
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_SERIALIZER.get();
+        return RecipeTypeRegistry.APPLE_PRESS_MASHING_RECIPE_SERIALIZER.get();
     }
 
     @Override
     public @NotNull RecipeType<?> getType() {
-        return RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get();
+        return RecipeTypeRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get();
     }
 
     @Override
@@ -82,7 +81,6 @@ public class ApplePressMashingRecipe implements Recipe<ApplePressMashingRecipeIn
     }
 
     public static class Serializer implements RecipeSerializer<ApplePressMashingRecipe> {
-
         @Override
         public MapCodec<ApplePressMashingRecipe> codec() {
             return RecordCodecBuilder.mapCodec(inst->inst.group(
@@ -94,7 +92,6 @@ public class ApplePressMashingRecipe implements Recipe<ApplePressMashingRecipeIn
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, ApplePressMashingRecipe> streamCodec() {
             return new StreamCodec<>(){
-
                 @Override
                 public void encode(RegistryFriendlyByteBuf buf, ApplePressMashingRecipe recipe) {
                     Ingredient.CONTENTS_STREAM_CODEC.encode(buf,recipe.getInput());
@@ -107,6 +104,5 @@ public class ApplePressMashingRecipe implements Recipe<ApplePressMashingRecipeIn
             };
         }
     }
-
 
 }

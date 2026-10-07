@@ -25,7 +25,6 @@ public class VineryNeoForgeVillagers {
     public static final Supplier<VillagerProfession> WINEMAKER = VILLAGER_PROFESSIONS.register("winemaker", () ->
             new VillagerProfession("winemaker", x -> x.value() == WINEMAKER_POI.get(), x -> x.value() == WINEMAKER_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_FARMER));
 
-
     public static void registerPOIs(){
         try {
             ObfuscationReflectionHelper.findMethod(PoiType.class, "registerBlockStates", PoiType.class).invoke(null, WINEMAKER_POI.get());

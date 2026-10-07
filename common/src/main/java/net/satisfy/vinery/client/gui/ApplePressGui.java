@@ -4,16 +4,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.satisfy.vinery.client.gui.handler.ApplePressGuiHandler;
+import net.satisfy.foundation.client.gui.recipebook.StationRecipeBookScreen;
+import net.satisfy.vinery.core.menu.ApplePressMenu;
 import net.satisfy.vinery.core.Vinery;
 
 @Environment(EnvType.CLIENT)
-public class ApplePressGui extends AbstractContainerScreen<ApplePressGuiHandler> {
+public class ApplePressGui extends StationRecipeBookScreen<ApplePressMenu> {
     public static final ResourceLocation TEXTURE = Vinery.identifier("textures/gui/apple_press_gui.png");
 
     public static final int MASHING_BAR_X = 40;
@@ -30,13 +30,8 @@ public class ApplePressGui extends AbstractContainerScreen<ApplePressGuiHandler>
     public static final int FERMENTING_BAR_U = 176;
     public static final int FERMENTING_BAR_V = 47;
 
-    public ApplePressGui(ApplePressGuiHandler handler, Inventory inventory, Component title) {
+    public ApplePressGui(ApplePressMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
     }
 
     @Override
@@ -44,8 +39,8 @@ public class ApplePressGui extends AbstractContainerScreen<ApplePressGuiHandler>
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
+        int x = leftPos;
+        int y = topPos;
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
         renderProgressArrows(guiGraphics, x, y);
     }
@@ -65,12 +60,5 @@ public class ApplePressGui extends AbstractContainerScreen<ApplePressGuiHandler>
             int yPosition = y + FERMENTING_BAR_Y + FERMENTING_BAR_HEIGHT - height;
             guiGraphics.blit(TEXTURE, xPosition, yPosition, FERMENTING_BAR_U, FERMENTING_BAR_V + FERMENTING_BAR_HEIGHT - height, FERMENTING_BAR_WIDTH, height);
         }
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        renderBackground(guiGraphics,mouseX,mouseY,delta);
-        super.render(guiGraphics, mouseX, mouseY, delta);
-        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

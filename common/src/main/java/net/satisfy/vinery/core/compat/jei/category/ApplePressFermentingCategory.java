@@ -62,11 +62,14 @@ public class ApplePressFermentingCategory implements IRecipeCategory<ApplePressF
         return title;
     }
 
-    @NotNull
     @Override
-    @SuppressWarnings("removal")
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return BACKGROUND_WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return BACKGROUND_HEIGHT;
     }
 
     @Override
@@ -93,6 +96,7 @@ public class ApplePressFermentingCategory implements IRecipeCategory<ApplePressF
 
     @Override
     public void draw(ApplePressFermentingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics);
         arrow.draw(guiGraphics, ARROW_POS.x() - X_OFFSET, ARROW_POS.y() - Y_OFFSET);
     }
 }

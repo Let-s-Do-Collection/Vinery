@@ -19,7 +19,6 @@ import net.satisfy.vinery.core.registry.ObjectRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class GrapejuiceBottleItem extends Item {
-
     public GrapejuiceBottleItem(Item.Properties properties) {
         super(properties);
     }
@@ -44,7 +43,6 @@ public class GrapejuiceBottleItem extends Item {
 
         return itemStack.isEmpty() ? ItemStack.EMPTY : itemStack;
     }
-
 
     public int getUseDuration(ItemStack itemStack) {
         return 40;

@@ -1,5 +1,12 @@
 package net.satisfy.vinery.core.block.entity;
 
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.FastColor;
+import net.satisfy.foundation.registry.FoundationParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -14,19 +21,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
-import net.satisfy.vinery.client.gui.handler.ApplePressGuiHandler;
+import net.satisfy.vinery.core.menu.ApplePressMenu;
 import net.satisfy.vinery.core.recipe.ApplePressFermentingRecipe;
 import net.satisfy.vinery.core.recipe.ApplePressMashingRecipe;
 import net.satisfy.vinery.core.recipe.input.ApplePressFermentingRecipeInput;
 import net.satisfy.vinery.core.recipe.input.ApplePressMashingRecipeInput;
 import net.satisfy.vinery.core.registry.EntityTypeRegistry;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
-import net.satisfy.vinery.core.registry.RecipeTypesRegistry;
+import net.satisfy.vinery.core.registry.SoundEventRegistry;
+import net.satisfy.vinery.core.registry.RecipeTypeRegistry;
 import net.satisfy.foundation.util.ImplementedInventory;
 import net.satisfy.vinery.platform.PlatformHelper;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +49,8 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
     private int maxProgress1 = PlatformHelper.getApplePressMashingTime();
     private int progress2 = 0;
     private int maxProgress2 = PlatformHelper.getApplePressFermentationTime();
+    private final RecipeManager.CachedCheck<ApplePressMashingRecipeInput, ApplePressMashingRecipe> mashingCheck = RecipeManager.createCheck(RecipeTypeRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get());
+    private final RecipeManager.CachedCheck<ApplePressFermentingRecipeInput, ApplePressFermentingRecipe> fermentingCheck = RecipeManager.createCheck(RecipeTypeRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get());
 
     public ApplePressBlockEntity(BlockPos pos, BlockState state) {
         super(EntityTypeRegistry.APPLE_PRESS_BLOCK_ENTITY.get(), pos, state);
@@ -101,7 +111,7 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        return new ApplePressGuiHandler(syncId, inv, this, this.propertyDelegate);
+        return new ApplePressMenu(syncId, inv, this, this.propertyDelegate);
     }
 
     @Override
@@ -120,59 +130,64 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
         progress2 = nbt.getInt("apple_press.progress2");
     }
 
+    /** Lets mashing and fermenting finish on the next tick, false if both slots are empty. */
+    public boolean finishProcessing() {
+        boolean mashing = hasInput(this, 0);
+        boolean fermenting = hasInput(this, 1);
+        if (mashing) {
+            progress1 = Math.max(progress1, maxProgress1 - 1);
+        }
+        if (fermenting) {
+            progress2 = Math.max(progress2, maxProgress2 - 1);
+        }
+        return mashing || fermenting;
+    }
+
     @Override
-    public void tick(Level world, BlockPos pos, BlockState state, ApplePressBlockEntity entity) {
-        if (world.isClientSide()) return;
+    public void tick(Level level, BlockPos pos, BlockState state, ApplePressBlockEntity entity) {
+        if (level.isClientSide()) return;
 
         boolean dirty = false;
 
-        if (hasInput(entity, 0)) {
-            ApplePressMashingRecipeInput input = new ApplePressMashingRecipeInput(entity.getItem(0));
-            if(world.getRecipeManager().getRecipeFor(RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get(),input,world).isEmpty()) {
-                return;
+        ApplePressMashingRecipe mashing = hasInput(entity, 0)
+                ? entity.mashingCheck.getRecipeFor(new ApplePressMashingRecipeInput(entity.getItem(0)), level).map(holder -> holder.value()).orElse(null)
+                : null;
+        if (mashing != null && canProcessMashing(entity, mashing)) {
+            entity.progress1++;
+            if (level.getGameTime() % 30 == 0) {
+                entity.playWorkingEffects(SoundEventRegistry.BLOCK_GRAPEVINE_POT_SQUEEZE.get(), 0.5F, 0xD8B84C, 3);
             }
-            Recipe<?> recipe1 = world.getRecipeManager().getRecipeFor(RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get(),input,level).get().value();
-            if (recipe1 instanceof ApplePressMashingRecipe mashingRecipe) {
-                if (canProcessMashing(entity, mashingRecipe)) {
-                    entity.progress1++;
-                    if (entity.progress1 >= entity.maxProgress1) {
-                        processMashing(entity, mashingRecipe);
-                        dirty = true;
-                    }
-                } else {
-                    entity.progress1 = 0;
-                }
-            } else {
-                entity.progress1 = 0;
+            if (entity.progress1 >= entity.maxProgress1) {
+                processMashing(entity, mashing);
+                dirty = true;
             }
         } else {
             entity.progress1 = 0;
         }
 
-        if (hasInput(entity, 1)) {
-            ApplePressFermentingRecipeInput input = new ApplePressFermentingRecipeInput(entity.getItem(1));
-            if(world.getRecipeManager().getRecipeFor(RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get(), input, world).isEmpty()) return;
-            Recipe<?> recipe2 = world.getRecipeManager().getRecipeFor(RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get(), input, world).get().value();
-            if (recipe2 instanceof ApplePressFermentingRecipe fermentingRecipe) {
-                if (canProcessFermenting(entity, fermentingRecipe)) {
-                    entity.progress2++;
-                    if (entity.progress2 >= entity.maxProgress2) {
-                        processFermenting(entity, fermentingRecipe);
-                        dirty = true;
-                    }
-                } else {
-                    entity.progress2 = 0;
-                }
-            } else {
-                entity.progress2 = 0;
+        ApplePressFermentingRecipe fermenting = hasInput(entity, 1)
+                ? entity.fermentingCheck.getRecipeFor(new ApplePressFermentingRecipeInput(entity.getItem(1)), level).map(holder -> holder.value()).orElse(null)
+                : null;
+        if (fermenting != null && canProcessFermenting(entity, fermenting)) {
+            entity.progress2++;
+            if (level.getGameTime() % 40 == 0) {
+                entity.playWorkingEffects(SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, 0.4F, 0xC98A2E, 2);
+            }
+            if (entity.progress2 >= entity.maxProgress2) {
+                processFermenting(entity, fermenting);
+                dirty = true;
             }
         } else {
             entity.progress2 = 0;
         }
 
         if (dirty) {
-            setChanged(world, pos, state);
+            setChanged(level, pos, state);
         }
+    }
+
+    private static boolean fits(ItemStack output, ItemStack result) {
+        return output.isEmpty() || ItemStack.isSameItemSameComponents(output, result) && output.getCount() + result.getCount() <= output.getMaxStackSize();
     }
 
     private static boolean hasInput(ApplePressBlockEntity entity, int slot) {
@@ -183,9 +198,8 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
         ItemStack input = entity.getItem(0);
         ItemStack output = entity.getItem(1);
         if (!recipe.matches(new ApplePressMashingRecipeInput(input), entity.level)) return false;
-        if (output.isEmpty()) return true;
         assert entity.level != null;
-        return output.getItem() == recipe.getResultItem(entity.level.registryAccess()).getItem();
+        return fits(output, recipe.getResultItem(entity.level.registryAccess()));
     }
 
     private static void processMashing(ApplePressBlockEntity entity, ApplePressMashingRecipe recipe) {
@@ -199,6 +213,7 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
             outputSlot.grow(result.getCount());
         }
         entity.progress1 = 0;
+        entity.playProcessEffects(SoundEventRegistry.BLOCK_GRAPEVINE_POT_SQUEEZE.get(), 0xD8B84C);
     }
 
     private static boolean canProcessFermenting(ApplePressBlockEntity entity, ApplePressFermentingRecipe recipe) {
@@ -207,10 +222,8 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
             ItemStack bottle = entity.getItem(2);
             if (!isWineBottle(bottle)) return false;
         }
-        ItemStack output = entity.getItem(3);
-        if (output.isEmpty()) return true;
         assert entity.level != null;
-        return output.getItem() == recipe.getResultItem(entity.level.registryAccess()).getItem();
+        return fits(entity.getItem(3), recipe.getResultItem(entity.level.registryAccess()));
     }
 
     private static void processFermenting(ApplePressBlockEntity entity, ApplePressFermentingRecipe recipe) {
@@ -227,6 +240,23 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
             outputSlot.grow(result.getCount());
         }
         entity.progress2 = 0;
+        entity.playProcessEffects(SoundEvents.BOTTLE_FILL, 0xC98A2E);
+    }
+
+    private void playWorkingEffects(SoundEvent sound, float volume, int color, int particles) {
+        if (!(this.level instanceof ServerLevel serverLevel)) return;
+        BlockPos pos = this.worldPosition;
+        ColorParticleOption splash = ColorParticleOption.create(FoundationParticles.DYE_SPLASH.get(), FastColor.ARGB32.opaque(color));
+        serverLevel.sendParticles(splash, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, particles, 0.2, 0.05, 0.2, 0.05);
+        serverLevel.playSound(null, pos, sound, SoundSource.BLOCKS, volume, 0.9F + serverLevel.random.nextFloat() * 0.2F);
+    }
+
+    private void playProcessEffects(SoundEvent sound, int color) {
+        if (!(this.level instanceof ServerLevel serverLevel)) return;
+        BlockPos pos = this.worldPosition;
+        ColorParticleOption splash = ColorParticleOption.create(FoundationParticles.DYE_SPLASH.get(), FastColor.ARGB32.opaque(color));
+        serverLevel.sendParticles(splash, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, 12, 0.25, 0.05, 0.25, 0.15);
+        serverLevel.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 0.9F + serverLevel.random.nextFloat() * 0.2F);
     }
 
     private static boolean isWineBottle(ItemStack stack) {
@@ -254,13 +284,12 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
             return switch (index) {
                 case 0 -> isValidForApplePressMashing(stack);
                 case 1 -> isValidForApplePressFermenting(stack);
-                case 2 -> isWineBottle(stack); 
+                case 2 -> isWineBottle(stack);
                 default -> false;
             };
         }
         return false;
     }
-
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
@@ -270,7 +299,7 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
     private boolean isValidForApplePressMashing(ItemStack stack) {
         if (level == null) return false;
         return level.getRecipeManager()
-                .getAllRecipesFor(RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get())
+                .getAllRecipesFor(RecipeTypeRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get())
                 .stream()
                 .anyMatch(recipe -> recipe.value().getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack)));
     }
@@ -278,7 +307,7 @@ public class ApplePressBlockEntity extends BlockEntity implements MenuProvider, 
     private boolean isValidForApplePressFermenting(ItemStack stack) {
         if (level == null) return false;
         return level.getRecipeManager()
-                .getAllRecipesFor(RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get())
+                .getAllRecipesFor(RecipeTypeRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get())
                 .stream()
                 .anyMatch(recipe -> recipe.value().getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack)));
     }

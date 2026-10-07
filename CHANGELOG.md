@@ -1,16 +1,54 @@
 [1.5.5]
 
+**Added**
+* Grapevine Pot: looking at it now shows a HUD panel with which grapes are inside, how full it is, how many times you've stomped them and how many bottles are left. Juice splashes out and the grapes get squished every time you land in the pot, and the juice now sloshes a little when you fill a bottle
+* Stackable Logs: lit logs now work like a campfire. Put up to 4 food items on top and let them cook. They burn out after 10 minutes, adding a log while they burn resets the timer. They can also be lit with Fire Charges, burning arrows and fireballs, while Water Bottles, Splash Water Bottles and rain put them out
+* HUD panels for wine racks, the Wine Box and shelves: aim at a slot to see what's inside. Wines also show their age and whether they're fully aged. Empty slots show which wines can go there, replacing the old "Storage for…" and bottle size tooltips
+* HUD panels for grape bushes, grapevine stems and lattices: growth progress, what to plant and why something isn't growing (light, sunlight, soil)
+* Wine tooltips now say "Fully Aged" once the highest effect level is reached
+* Cellar aging: wine stored without sky light (underground or fully roofed) now ages faster, 1.5x by default
+* New config options: every wine's effect, amplifier and duration, turning wine aging off completely, letting wine only age while it sits in storage (wine racks, Wine Box, shelves, placed bottles), the Grapevine Pot's jumps needed, heavy armor bonus and splash particles, and showing the HUD panels always, never or only while wearing the Straw Hat
+* EMI support: Fermentation Barrel and Apple Press (mashing and fermenting) recipes now show up in EMI
+* Lattices with grapes planted now drop the occasional leaf
+* Bottles now slide into wine racks when you put them in
+* The Fermentation Barrel now drips juice from its tap while it holds juice, in the color of the juice, and splashes when a recipe finishes
+* The Apple Press now splashes and makes sounds while it works and when mashing or fermenting finishes
+* The Vinery Standard now has the Legendary rarity, its name shows in a golden gradient with a rarity line in the tooltip
+* The Straw Hat and the Winemaker Apron, Leggings and Boots now all have the Rare rarity, shown in blue with a rarity line in the tooltip
+
 **Changed**
-* Vinery now uses Foundation, the shared Let's Do library, which is bundled inside the mod jar - no separate download needed. Chairs, cabinets, drawers, shelves, wine racks, the big table and the Vinery Standard now use Foundation's shared implementations
-* Dark Cherry signs, hanging signs, boats and chest boats, the Dark Cherry Shelf, the window and the Fermentation Barrel slots now use Foundation as well
-* The Winemaker armor now uses Foundation's armor set system: the tooltip shows how many pieces you're wearing, and the custom models render the same way on Fabric and NeoForge
+* Vinery now uses Foundation, the shared Let's Do library, which is bundled inside the mod jar - no separate download needed. Chairs, cabinets, drawers, shelves, wine racks, the big table, the Vinery Standard, Dark Cherry signs, hanging signs, boats and chest boats, the Dark Cherry Shelf, the window and the Fermentation Barrel slots now use Foundation's shared implementations
+* Winemaker armor now uses Foundation's armor set system: the tooltip shows how many pieces you're wearing, and the custom models render the same way on Fabric and NeoForge
 * The creative tab is now split into four side tabs: Vineyard Essentials, Wines & Juices, Cherry, and Decoration & Storage
+* Grapevine Pot: stomping now takes 12 jumps, heavy armor (iron or better) stomps 10% faster, grape types can no longer be mixed in one pot, and breaking a pot that isn't stomped yet gives the grapes back
+* Flint and Steel and Shovels now lose durability when used on Stackable Logs
+* The effect level in wine tooltips now matches the vanilla numbering (amplifier 1 shows as II)
+* The Experience effect now gives +50% experience per level when picking up experience orbs, the same on Fabric and NeoForge
+* The Fermentation Barrel only looks up its recipe when its contents change instead of every tick, and empty barrels no longer save every tick
+* The Apple Press uses a cached recipe lookup instead of searching all recipes twice per tick
+* Taiga grape bushes check their soil much cheaper
+* The Grapevine Pot has half as many block states, its content is drawn from dedicated models
+* White grapes and white juice (block texture, Fermentation Barrel bar) got a new golden color, the old green looked more like grass
+* The recipe book now puts the Wine Bottle into its slot for recipes that need one (Apple Press and Fermentation Barrel)
 
 **Fixed**
-* Fixed a server hang/crash when Create: Aeronautics/Sable contraptions hit Apple or Dark Cherry Leaves: fruit leaves no longer update the whole tree at once when a leaf breaks and use the vanilla leaf update behavior again (thanks to RhodeWithBrim)
+* The Experience effect could hand out bonus experience every tick while standing on an experience orb, and stacked twice on Fabric
+* Burning Stackable Logs never hurt anyone, they now deal campfire damage (sneak to walk over them safely)
+* Improved Jump Boost did nothing since 1.21, the jump height bonus works again
+* Double jump on NeoForge now uses the jump key binding and works the same as on Fabric
+* The Grape Growth Multiplier now actually works and affects bushes, grapevine stems and lattices
+* The config comments now correctly say durations are in ticks, not seconds
+* The Grapevine Pot squeeze sound no longer plays once the juice is done
+* The Apple Press no longer stops fermenting when the mashing slot holds something it can't mash
+* Apple Press and Fermentation Barrel outputs no longer stack past the stack limit, and wines brewed on different days no longer merge in the barrel output (losing their age)
+* The Fermentation Barrel no longer grants free juice when the max fluid level isn't a multiple of the juice amount
+* Taking wine out of the Fermentation Barrel now always counts the taken amount correctly for advancements
+* The Party effect no longer spawns a client-side ghost firework
+* Server hang/crash when Create: Aeronautics/Sable contraptions hit Apple or Dark Cherry Leaves: fruit leaves no longer update the whole tree at once when a leaf breaks and use the vanilla leaf update behavior again (thanks to RhodeWithBrim)
 * Dark Cherry hanging signs now open the hanging sign editor instead of the regular sign editor
 * Boats no longer lose their leash when the world is reloaded
-* Taking wine out of the Fermentation Barrel now always counts the taken amount correctly for advancements
+* Added the missing German name for the Apple Press REI category and missing German translations
+* Lattice leaves no longer flicker where two lattices meet, and floor lattices no longer draw their leaves twice
 
 ***
 

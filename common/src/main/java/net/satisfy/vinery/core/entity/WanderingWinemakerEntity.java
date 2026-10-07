@@ -39,8 +39,8 @@ public class WanderingWinemakerEntity extends WanderingTrader {
 		return trades;
 	}
 
-	public WanderingWinemakerEntity(EntityType<? extends WanderingWinemakerEntity> entityType, Level world) {
-		super(entityType, world);
+	public WanderingWinemakerEntity(EntityType<? extends WanderingWinemakerEntity> entityType, Level level) {
+		super(entityType, level);
 	}
 
 	@Override

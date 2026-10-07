@@ -19,7 +19,6 @@ public class WinemakerChestplateModel<T extends LivingEntity> extends HumanoidMo
         showParts();
     }
 
-    @SuppressWarnings("unused")
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition root = meshdefinition.getRoot();

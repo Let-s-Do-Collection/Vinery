@@ -12,7 +12,6 @@ import net.satisfy.vinery.core.Vinery;
 import java.util.function.Supplier;
 
 public class VineryFeatures {
-
     private static final Registrar<Feature<?>> FEATURES = DeferredRegister.create(Vinery.MOD_ID, Registries.FEATURE).getRegistrar();
     public static final RegistrySupplier<Feature<BlockStateConfiguration>> JUNGLE_GRAPE_FEATURE = register("jungle_grape_feature", () -> new JungleGrapeFeature(BlockStateConfiguration.CODEC));
 

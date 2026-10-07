@@ -19,7 +19,6 @@ public class WinemakerLeggingsModel<T extends LivingEntity> extends HumanoidMode
         showParts();
     }
 
-    @SuppressWarnings("unused")
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition root = meshdefinition.getRoot();

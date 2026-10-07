@@ -1,6 +1,8 @@
 package net.satisfy.vinery.platform.fabric;
 
 import me.shedaniel.autoconfig.AutoConfig;
+import net.fabricmc.loader.api.FabricLoader;
+import net.satisfy.vinery.api.VineryPlugin;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.core.Registry;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.Block;
 import net.satisfy.vinery.core.Vinery;
+import net.satisfy.vinery.core.util.InfoOverlayMode;
 import net.satisfy.vinery.fabric.config.VineryFabricConfig;
 import net.satisfy.vinery.platform.PlatformHelper;
 
@@ -19,7 +22,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class PlatformHelperImpl extends PlatformHelper {
-
     public static int getTotalFermentationTime() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
         return config.blocks.totalFermentationTime;
@@ -65,6 +67,26 @@ public class PlatformHelperImpl extends PlatformHelper {
         return config.blocks.grapeGrowthMultiplier;
     }
 
+    public static double getCellarAgingMultiplier() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.items.wine.cellarAgingMultiplier;
+    }
+
+    public static int getGrapevinePotStomps() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.blocks.grapevinePotStomps;
+    }
+
+    public static int getGrapevinePotHeavyArmorBonus() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.blocks.grapevinePotHeavyArmorBonus;
+    }
+
+    public static boolean shouldShowGrapevinePotSplash() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.blocks.grapevinePotSplashParticles;
+    }
+
     public static boolean shouldGrapevineLeavesGrow() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
         return config.blocks.grapevineLeavesEnabled;
@@ -75,9 +97,24 @@ public class PlatformHelperImpl extends PlatformHelper {
         return config.items.wine.maxLevel;
     }
 
-    public static int getWineStartDuration() {
+    public static List<? extends String> getWineEffects() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.startDuration;
+        return config.items.wine.effects;
+    }
+
+    public static boolean isWineAgingEnabled() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.items.wine.agingEnabled;
+    }
+
+    public static boolean shouldWineAgeOnlyInStorage() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.items.wine.ageOnlyInStorage;
+    }
+
+    public static InfoOverlayMode getInfoOverlayMode() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.infoOverlay.mode;
     }
 
     public static int getWineDurationPerYear() {
@@ -132,5 +169,13 @@ public class PlatformHelperImpl extends PlatformHelper {
                 FabricEntityTypeBuilder.create(category, factory).dimensions(EntityDimensions.scalable(width, height)).trackRangeChunks(clientTrackingRange).build()
         );
         return () -> registry;
+    }
+
+    public static boolean reloadConfig() {
+        return AutoConfig.getConfigHolder(VineryFabricConfig.class).load();
+    }
+
+    public static List<VineryPlugin> getPlugins() {
+        return FabricLoader.getInstance().getEntrypoints("vinery", VineryPlugin.class);
     }
 }

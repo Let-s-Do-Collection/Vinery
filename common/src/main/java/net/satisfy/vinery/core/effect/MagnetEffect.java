@@ -20,7 +20,6 @@ public class MagnetEffect extends MobEffect {
         if (entity instanceof Player player && !player.isShiftKeyDown()) {
             List<Entity> entities = player.getCommandSenderWorld().getEntities(player, player.getBoundingBox().inflate(5 + amplifier), p -> p instanceof ItemEntity);
             for (Entity entityNearby : entities) {
-
                 if(player.getInventory().getFreeSlot() == -1){
                     Vec3 vec3 = entity.getEyePosition().subtract(entityNearby.position());
 

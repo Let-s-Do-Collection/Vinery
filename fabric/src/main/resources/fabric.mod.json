@@ -3,12 +3,17 @@
   "id": "vinery",
   "version": "${version}",
   "name": "[Let's Do] Vinery",
-  "description": "In Vino Veritas - it's time for wine! Build your own vineyard, produce wine, and establish your own winery.",
+  "description": "Sun-warmed vineyards, creaking barrels and dusty bottles in a cool cellar. Grow your grapes, press your own wine and build the winery of your dreams.",
   "authors": [
-    "Jason13Official, Satisfy"
+    "satisfy"
   ],
   "contributors": [
-    "MissLilitu, Cristelknight, cph101dev, BaumeisterJO, CR-055"
+    "MissLilitu",
+    "CR-055",
+    "Jason13Official",
+    "Cristelknight",
+    "cph101dev",
+    "BaumeisterJO"
   ],
   "contact": {
     "sources": "https://github.com/satisfyu/Vinery",
@@ -29,6 +34,9 @@
     "rei_client": [
       "net.satisfy.vinery.fabric.core.rei.VineryReiClientPluginFabric"
     ],
+    "emi": [
+      "net.satisfy.vinery.core.compat.emi.VineryEmiPlugin"
+    ],
     "jei_mod_plugin": [
       "net.satisfy.vinery.core.compat.jei.VineryJEIPlugin"
     ],
@@ -37,14 +45,14 @@
     ]
   },
   "mixins": [
-    "vinery.mixins.json",
     "vinery-common.mixins.json"
   ],
   "depends": {
+    "fabricloader": ">=0.16.14",
     "fabric-api": "*",
-    "minecraft": ">=1.20",
-    "architectury": ">=9.0.8",
-    "foundation": ">=1.0.0"
+    "minecraft": ">=1.21.1 <1.22",
+    "architectury": ">=13.0.8",
+    "foundation": ">=1.0.1"
   },
   "conflicts": {
     "copperative": "*",

@@ -5,7 +5,6 @@ import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import net.satisfy.vinery.core.compat.rei.VineryReiClientPlugin;
 
-
 public class VineryReiClientPluginFabric implements REIClientPlugin {
     @Override
     public void registerCategories(CategoryRegistry registry) {

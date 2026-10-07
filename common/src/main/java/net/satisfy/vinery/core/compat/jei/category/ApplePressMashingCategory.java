@@ -3,12 +3,14 @@ package net.satisfy.vinery.core.compat.jei.category;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -48,11 +50,14 @@ public class ApplePressMashingCategory implements IRecipeCategory<ApplePressMash
         return title;
     }
 
-    @NotNull
     @Override
-    @SuppressWarnings("removal")
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return BACKGROUND_WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return BACKGROUND_HEIGHT;
     }
 
     @Override
@@ -69,5 +74,10 @@ public class ApplePressMashingCategory implements IRecipeCategory<ApplePressMash
         assert Minecraft.getInstance().level != null;
         builder.addSlot(RecipeIngredientRole.OUTPUT, 101 - X_OFFSET, 50 - Y_OFFSET)
                 .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
+    }
+
+    @Override
+    public void draw(ApplePressMashingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics);
     }
 }

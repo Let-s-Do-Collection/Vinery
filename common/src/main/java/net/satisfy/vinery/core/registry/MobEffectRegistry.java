@@ -8,9 +8,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class MobEffectRegistry {
-
     private static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Vinery.MOD_ID,Registries.MOB_EFFECT);
 
     public static final ResourceLocation ARMOR_EFFECT = Vinery.identifier("armor_effect");
@@ -31,18 +31,18 @@ public class MobEffectRegistry {
 
     public static void register() {
         EFFECTS.register();
-        EFFECTS.register(ARMOR_EFFECT, () -> new ArmorEffect());
-        EFFECTS.register(HEALTH_EFFECT, () -> new ImprovedHealthEffect());
-        EFFECTS.register(LUCK_EFFECT, () -> new LuckEffect());
+        EFFECTS.register(ARMOR_EFFECT, () -> new VineryEffect(MobEffectCategory.BENEFICIAL, 0x56CBFD).withModifier(Attributes.ARMOR, "armor", 2.0).withModifier(Attributes.ARMOR_TOUGHNESS, "armor_toughness", 3.0));
+        EFFECTS.register(HEALTH_EFFECT, () -> new VineryEffect(MobEffectCategory.BENEFICIAL, 0x56CBFD).withModifier(Attributes.MAX_HEALTH, "max_health", 4.0));
+        EFFECTS.register(LUCK_EFFECT, () -> new VineryEffect(MobEffectCategory.BENEFICIAL, 0x56CBFD).withModifier(Attributes.LUCK, "luck", 2.0));
         EFFECTS.register(RESISTANCE_EFFECT, () -> new ResistanceEffect());
-        EFFECTS.register(EXPERIENCE_EFFECT, () -> new ExpandableEffect(MobEffectCategory.BENEFICIAL, 0x00FF00));
-        EFFECTS.register(IMPROVED_JUMP_BOOST, () -> new ExpandableEffect(MobEffectCategory.BENEFICIAL, 0x00FF00));
-        EFFECTS.register(PARTY_EFFECT, () -> new ExpandableEffect(MobEffectCategory.BENEFICIAL, 0xFF0000));
+        EFFECTS.register(EXPERIENCE_EFFECT, () -> new VineryEffect(MobEffectCategory.BENEFICIAL, 0x00FF00));
+        EFFECTS.register(IMPROVED_JUMP_BOOST, () -> new VineryEffect(MobEffectCategory.BENEFICIAL, 0x00FF00));
+        EFFECTS.register(PARTY_EFFECT, () -> new VineryEffect(MobEffectCategory.BENEFICIAL, 0xFF0000));
         EFFECTS.register(TELEPORT, () -> new TeleportEffect());
         EFFECTS.register(CREEPER_EFFECT, () -> new CreeperEffect());
         EFFECTS.register(CLIMBING_EFFECT, () -> new ClimbingEffect());
         EFFECTS.register(FROSTY_ARMOR_EFFECT, () -> new FrostyArmorEffect());
-        EFFECTS.register(JELLIE, () -> new JellieEffect());
+        EFFECTS.register(JELLIE, () -> new JellyEffect());
         EFFECTS.register(LAVA_WALKER, () -> new LavaWalkerEffect());
         EFFECTS.register(MAGNET, () -> new MagnetEffect());
         EFFECTS.register(WATER_WALKER, () -> new WaterWalkerEffect());

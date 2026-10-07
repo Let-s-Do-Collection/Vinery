@@ -31,17 +31,17 @@ public class DarkCherryBarrelBlockEntity extends RandomizableContainerBlockEntit
         this.inventory = NonNullList.withSize(27, ItemStack.EMPTY);
         this.stateManager = new ContainerOpenersCounter() {
             @Override
-            protected void onOpen(Level world, BlockPos pos, BlockState state) {
-                world.setBlock(pos, state.setValue(BlockStateProperties.OPEN, true), 3);
+            protected void onOpen(Level level, BlockPos pos, BlockState state) {
+                level.setBlock(pos, state.setValue(BlockStateProperties.OPEN, true), 3);
             }
 
             @Override
-            protected void onClose(Level world, BlockPos pos, BlockState state) {
-                world.setBlock(pos, state.setValue(BlockStateProperties.OPEN, false), 3);
+            protected void onClose(Level level, BlockPos pos, BlockState state) {
+                level.setBlock(pos, state.setValue(BlockStateProperties.OPEN, false), 3);
             }
 
             @Override
-            protected void openerCountChanged(Level world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+            protected void openerCountChanged(Level level, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
             }
 
             @Override

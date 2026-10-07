@@ -19,7 +19,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class DirtPathSlabBlock extends SlabBlock {
     protected static final VoxelShape BOTTOM_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
     protected static final VoxelShape TOP_SHAPE = Block.box(0.0D, 8.0D, 0.0D, 16.0D, 15.0D, 16.0D);
@@ -44,11 +43,8 @@ public class DirtPathSlabBlock extends SlabBlock {
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
-
-
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        //FarmBlock.turnToDirt(null, state, level, pos);
     }
 
     @Override

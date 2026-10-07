@@ -14,7 +14,6 @@ import net.satisfy.vinery.core.Vinery;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
-@SuppressWarnings("unused")
 public class MuleModel<T extends AbstractHorse> extends AgeableListModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Vinery.identifier("trader_mule"), "main");
 
@@ -48,7 +47,6 @@ public class MuleModel<T extends AbstractHorse> extends AgeableListModel<T> {
 	private final ModelPart tail;
 	private final ModelPart[] saddleParts;
 	private final ModelPart[] ridingParts;
-
 
 	public MuleModel(ModelPart modelPart) {
 		super(true, 16.2F, 1.36F, 2.7272F, 2.0F, 20.0F);
@@ -142,7 +140,6 @@ public class MuleModel<T extends AbstractHorse> extends AgeableListModel<T> {
 	protected @NotNull Iterable<ModelPart> bodyParts() {
 		return ImmutableList.of(this.body, this.rightHindLeg, this.leftHindLeg, this.rightFrontLeg, this.leftFrontLeg, this.rightHindBabyLeg, this.leftHindBabyLeg, this.rightFrontBabyLeg, this.leftFrontBabyLeg);
 	}
-
 
 	public void prepareMobModel(T abstractHorse, float f, float g, float h) {
 		super.prepareMobModel(abstractHorse, f, g, h);

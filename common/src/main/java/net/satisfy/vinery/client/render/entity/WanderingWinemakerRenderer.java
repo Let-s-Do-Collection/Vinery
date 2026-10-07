@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public class WanderingWinemakerRenderer extends WanderingTraderRenderer {
 	private static final ResourceLocation TEXTURE = Vinery.identifier("textures/entity/wandering_winemaker.png");
-	
+
 	public WanderingWinemakerRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
-	
+
 	@Override
 	public @NotNull ResourceLocation getTextureLocation(WanderingTrader entity) {
 		return TEXTURE;

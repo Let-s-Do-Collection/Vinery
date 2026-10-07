@@ -41,25 +41,31 @@ public class WineBoxBlock extends StorageBlock {
 
     private static final Supplier<VoxelShape> shapeOpen = () -> {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.25, 0.9375, 0.3125, 0.3125), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.6875, 0.9375, 0.3125, 0.75), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.3125, 0.125, 0.3125, 0.6875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.3125, 0.875, 0.125, 0.6875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0.3125, 0.75, 0.9375, 0.8125, 0.8125), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.4375, 0.8125, 0.6875, 0.5625, 0.875, 0.8125), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.875, 0, 0.3125, 0.9375, 0.3125, 0.6875), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 0, 4, 15, 5, 5), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 0, 11, 15, 5, 12), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 0, 5, 2, 5, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(14, 0, 5, 15, 5, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(2, 0, 5, 14, 2, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 5, 12, 15, 6, 13), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 6, 12, 2, 12, 13), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(14, 6, 12, 15, 12, 13), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 12, 12, 15, 13, 13), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(7, 13, 11, 9, 14, 13), BooleanOp.OR);
         return shape;
     };
 
     private static final Supplier<VoxelShape> shapeClosed = () -> {
         VoxelShape shape = Shapes.empty();
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.25, 0.9375, 0.3125, 0.3125), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.6875, 0.9375, 0.3125, 0.75), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.3125, 0.125, 0.3125, 0.6875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.875, 0, 0.3125, 0.9375, 0.3125, 0.6875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.125, 0, 0.3125, 0.875, 0.125, 0.6875), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.0625, 0.3125, 0.25, 0.9375, 0.375, 0.75), BooleanOp.OR);
-        shape = Shapes.join(shape, Shapes.box(0.4375, 0.25, 0.1875, 0.5625, 0.375, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 0, 4, 15, 5, 5), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 0, 11, 15, 5, 12), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 0, 5, 2, 5, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(14, 0, 5, 15, 5, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(2, 0, 5, 14, 2, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 5, 11, 15, 6, 12), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 5, 5, 2, 6, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(14, 5, 5, 15, 6, 11), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(1, 5, 4, 15, 6, 5), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(7, 4, 3, 9, 6, 4), BooleanOp.OR);
         return shape;
     };
 
@@ -88,21 +94,20 @@ public class WineBoxBlock extends StorageBlock {
         builder.add(OPEN);
     }
 
-
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;
     }
 
     @Override
-    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (player.isShiftKeyDown() && stack.isEmpty()) {
-            if (!world.isClientSide()) {
-                world.setBlock(pos, state.setValue(OPEN, !state.getValue(OPEN)), Block.UPDATE_ALL);
+            if (!level.isClientSide()) {
+                level.setBlock(pos, state.setValue(OPEN, !state.getValue(OPEN)), Block.UPDATE_ALL);
             }
-            return ItemInteractionResult.sidedSuccess(world.isClientSide());
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
         } else if (state.getValue(OPEN)) {
-            return super.useItemOn(stack,state, world, pos, player, hand, hit);
+            return super.useItemOn(stack,state, level, pos, player, hand, hit);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
@@ -143,7 +148,7 @@ public class WineBoxBlock extends StorageBlock {
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Direction facing = state.getValue(FACING);
         boolean isOpen = state.getValue(OPEN);
         return isOpen ? SHAPE_OPEN.get(facing) : SHAPE_CLOSED.get(facing);

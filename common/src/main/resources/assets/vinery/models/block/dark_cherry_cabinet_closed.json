@@ -1,68 +1,8 @@
 {
-	"credit": "Made by Satisfy",
-	"textures": {
-		"2": "vinery:block/dark_cherry_cabinet_front",
-		"3": "vinery:block/dark_cherry_cabinet_side",
-		"4": "vinery:block/dark_cherry_drawer_top",
-		"particle": "vinery:block/dark_cherry_cabinet_front"
-	},
-	"elements": [
-		{
-			"from": [0, 0, 0],
-			"to": [16, 16, 16],
-			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#4"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#4"}
-			}
-		}
-	],
-	"gui_light": "front",
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 2.5, 0],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 2.5, 0],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 45, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, 225, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"ground": {
-			"translation": [0, 3, 0],
-			"scale": [0.25, 0.25, 0.25]
-		},
-		"gui": {
-			"rotation": [30, 225, 0],
-			"scale": [0.625, 0.625, 0.625]
-		},
-		"head": {
-			"rotation": [0, 180, 0],
-			"translation": [0, 13, 7]
-		},
-		"fixed": {
-			"scale": [0.5, 0.5, 0.5]
-		}
-	},
-	"groups": [
-		{
-			"name": "wine_rack",
-			"origin": [0, 0, 0],
-			"color": 0,
-			"nbt": "{}",
-			"children": [0]
-		}
-	]
+  "parent": "foundation:block/template_cabinet",
+  "textures": {
+    "front": "vinery:block/dark_cherry_cabinet_front",
+    "side": "vinery:block/dark_cherry_cabinet_side",
+    "top": "vinery:block/dark_cherry_drawer_top"
+  }
 }

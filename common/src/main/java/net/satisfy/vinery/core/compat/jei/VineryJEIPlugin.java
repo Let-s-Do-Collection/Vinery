@@ -18,13 +18,13 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.satisfy.vinery.core.Vinery;
 import net.satisfy.vinery.core.compat.jei.category.ApplePressMashingCategory;
 import net.satisfy.vinery.core.compat.jei.category.FermentationBarrelCategory;
-import net.satisfy.vinery.core.compat.jei.category.ApplePressFermentingCategory; // Import der neuen Kategorie
+import net.satisfy.vinery.core.compat.jei.category.ApplePressFermentingCategory;
 import net.satisfy.vinery.core.compat.jei.transfer.FermentationTransferInfo;
 import net.satisfy.vinery.core.recipe.ApplePressMashingRecipe;
 import net.satisfy.vinery.core.recipe.FermentationBarrelRecipe;
-import net.satisfy.vinery.core.recipe.ApplePressFermentingRecipe; // Import der neuen Rezeptklasse
+import net.satisfy.vinery.core.recipe.ApplePressFermentingRecipe;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
-import net.satisfy.vinery.core.registry.RecipeTypesRegistry;
+import net.satisfy.vinery.core.registry.RecipeTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,7 +32,6 @@ import java.util.Objects;
 
 @JeiPlugin
 public class VineryJEIPlugin implements IModPlugin {
-
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new FermentationBarrelCategory(registration.getJeiHelpers().getGuiHelper()));
@@ -44,13 +43,13 @@ public class VineryJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
 
-        List<RecipeHolder<FermentationBarrelRecipe>> fermentationBarrelRecipes = rm.getAllRecipesFor(RecipeTypesRegistry.FERMENTATION_BARREL_RECIPE_TYPE.get());
+        List<RecipeHolder<FermentationBarrelRecipe>> fermentationBarrelRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.FERMENTATION_BARREL_RECIPE_TYPE.get());
         registration.addRecipes(FermentationBarrelCategory.FERMENTATION_BARREL, fermentationBarrelRecipes.stream().map(RecipeHolder::value).toList());
 
-        List<RecipeHolder<ApplePressFermentingRecipe>> applePressRecipes = rm.getAllRecipesFor(RecipeTypesRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get());
+        List<RecipeHolder<ApplePressFermentingRecipe>> applePressRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.APPLE_PRESS_FERMENTING_RECIPE_TYPE.get());
         registration.addRecipes(ApplePressFermentingCategory.APPLE_PRESS_TYPE, applePressRecipes.stream().map(RecipeHolder::value).toList());
 
-        List<RecipeHolder<ApplePressMashingRecipe>> applePressMashingRecipes = rm.getAllRecipesFor(RecipeTypesRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get());
+        List<RecipeHolder<ApplePressMashingRecipe>> applePressMashingRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.APPLE_PRESS_MASHING_RECIPE_TYPE.get());
         registration.addRecipes(ApplePressMashingCategory.APPLE_PRESS_MASHING_TYPE, applePressMashingRecipes.stream().map(RecipeHolder::value).toList());
     }
 
@@ -86,7 +85,6 @@ public class VineryJEIPlugin implements IModPlugin {
     }
 
     public static void buildSlotsFromRecipe(IRecipeLayoutBuilder builder, FermentationBarrelRecipe recipe) {
-
         final int BOTTOM_ROW_Y = 45;
 
         final NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();

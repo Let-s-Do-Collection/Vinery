@@ -12,14 +12,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-
 @Mixin(SpreadingSnowyDirtBlock.class)
 public class SpreadingSnowyDirtBlockMixin {
-
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo ci, BlockState defaultState, int j, BlockPos spreadPos) {
-        SpreadableGrassSlabBlock.trySpread(world, spreadPos);
+    public void onTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci, BlockState defaultState, int j, BlockPos spreadPos) {
+        SpreadableGrassSlabBlock.trySpread(level, spreadPos);
     }
 }
-
 

@@ -48,9 +48,9 @@ public class SpreadableGrassSlabBlock extends SlabBlock implements BonemealableB
         this.registerDefaultState(this.defaultBlockState().setValue(TYPE, SlabType.BOTTOM).setValue(WATERLOGGED, false).setValue(SNOWY, false));
     }
 
-    public static boolean canSurviveNew(BlockState state, LevelReader world, BlockPos pos) {
+    public static boolean canSurviveNew(BlockState state, LevelReader level, BlockPos pos) {
         BlockPos blockPos = pos.above();
-        BlockState blockState = world.getBlockState(blockPos);
+        BlockState blockState = level.getBlockState(blockPos);
 
         if (state.getBlock().equals(getDirtSlabBlock()) && state.getValue(SlabBlock.TYPE) == SlabType.BOTTOM) {
             return !state.getValue(SlabBlock.WATERLOGGED);
@@ -76,8 +76,8 @@ public class SpreadableGrassSlabBlock extends SlabBlock implements BonemealableB
             return true;
         }
 
-        int i = LightEngine.getLightBlockInto(world, GRASS_BLOCK.defaultBlockState(), pos, blockState, blockPos, Direction.UP, blockState.getLightBlock(world, blockPos));
-        return i < world.getMaxLightLevel();
+        int i = LightEngine.getLightBlockInto(level, GRASS_BLOCK.defaultBlockState(), pos, blockState, blockPos, Direction.UP, blockState.getLightBlock(level, blockPos));
+        return i < level.getMaxLightLevel();
     }
 
     @Override
@@ -88,36 +88,35 @@ public class SpreadableGrassSlabBlock extends SlabBlock implements BonemealableB
     }
 
     @Override
-    public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
         GrassBlock block = (GrassBlock) GRASS_BLOCK;
-        block.performBonemeal(world, random, pos, state);
+        block.performBonemeal(level, random, pos, state);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!canSurviveNew(state, world, pos)) {
-            world.setBlock(pos, getDirtSlabBlock().withPropertiesOf(state), Block.UPDATE_CLIENTS);
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!canSurviveNew(state, level, pos)) {
+            level.setBlock(pos, getDirtSlabBlock().withPropertiesOf(state), Block.UPDATE_CLIENTS);
         } else {
-            if (world.getMaxLocalRawBrightness(pos.above()) >= 9) {
+            if (level.getMaxLocalRawBrightness(pos.above()) >= 9) {
                 for(int i = 0; i < 4; ++i) {
                     BlockPos blockPos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
-                    trySpread(world, blockPos);
+                    trySpread(level, blockPos);
                 }
             }
         }
     }
 
-    public static void trySpread(ServerLevel world, BlockPos spreadPos) {
-        BlockState oldState = world.getBlockState(spreadPos);
+    public static void trySpread(ServerLevel level, BlockPos spreadPos) {
+        BlockState oldState = level.getBlockState(spreadPos);
 
         if (oldState.is(Blocks.DIRT) || oldState.is(getDirtSlabBlock())) {
-            BlockState aboveState = world.getBlockState(spreadPos.above());
+            BlockState aboveState = level.getBlockState(spreadPos.above());
             boolean isSnowy = aboveState.is(Blocks.SNOW);
             BlockState newState = null;
 
@@ -127,24 +126,22 @@ public class SpreadableGrassSlabBlock extends SlabBlock implements BonemealableB
                 newState = getGrassSlabBlock().withPropertiesOf(oldState).setValue(BlockStateProperties.SNOWY, isSnowy);
             }
 
-            if (newState != null && canSurviveNew(newState, world, spreadPos) && !world.getFluidState(spreadPos.above()).is(FluidTags.WATER)) {
-                world.setBlockAndUpdate(spreadPos, newState);
+            if (newState != null && canSurviveNew(newState, level, spreadPos) && !level.getFluidState(spreadPos.above()).is(FluidTags.WATER)) {
+                level.setBlockAndUpdate(spreadPos, newState);
             }
         }
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public @NotNull ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-
+    public @NotNull ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (heldItem.is(ItemTags.SHOVELS)) {
-            if (!world.isClientSide) {
+            if (!level.isClientSide) {
                 BlockState pathState = ObjectRegistry.DIRT_PATH_SLAB.get().defaultBlockState()
                         .setValue(TYPE, state.getValue(TYPE))
                         .setValue(WATERLOGGED, state.getValue(WATERLOGGED));
 
-                world.setBlock(pos, pathState, Block.UPDATE_ALL);
-                world.playSound(null, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlock(pos, pathState, Block.UPDATE_ALL);
+                level.playSound(null, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!player.isCreative()) {
                     heldItem.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
@@ -162,13 +159,13 @@ public class SpreadableGrassSlabBlock extends SlabBlock implements BonemealableB
         builder.add(SNOWY);
     }
 
-    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
-        state = state.setValue(SNOWY, world.getBlockState(pos.above()).is(BlockTags.SNOW));
+        state = state.setValue(SNOWY, level.getBlockState(pos.above()).is(BlockTags.SNOW));
 
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 }

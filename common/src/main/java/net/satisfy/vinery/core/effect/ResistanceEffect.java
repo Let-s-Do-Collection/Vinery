@@ -35,7 +35,6 @@ public class ResistanceEffect extends MobEffect {
 
     @Override
     public void createModifiers(int pAmplifier, BiConsumer<Holder<Attribute>, AttributeModifier> biConsumer) {
-
         super.createModifiers(pAmplifier, biConsumer);
     }
 }

@@ -36,13 +36,12 @@ import org.joml.Vector3i;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
-@SuppressWarnings("deprecation")
 public class PaleStemBlock extends StemBlock {
     private static final VoxelShape PALE_SHAPE = Block.box(6.0, 0, 6.0, 10.0, 16.0, 10.0);
     public static final BooleanProperty LEAVES_PENDING = BooleanProperty.create("leaves_pending");
     public static final BooleanProperty LEAVES_DONE = BooleanProperty.create("leaves_done");
+    public static final int MIN_LIGHT = 9;
 
     public PaleStemBlock(Properties settings) {
         super(settings);
@@ -54,7 +53,7 @@ public class PaleStemBlock extends StemBlock {
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return PALE_SHAPE;
     }
 
@@ -79,66 +78,66 @@ public class PaleStemBlock extends StemBlock {
     }
 
     @Override
-    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand == InteractionHand.OFF_HAND) {
-            return super.useItemOn(stack,state, world, pos, player, hand, hit);
+            return super.useItemOn(stack,state, level, pos, player, hand, hit);
         }
         final int age = state.getValue(AGE);
         if (age > 0 && player.getItemInHand(hand).getItem() == Items.SHEARS) {
             if (age > 2) {
-                dropGrapes(world, state, pos, hit.getDirection());
+                dropGrapes(level, state, pos, hit.getDirection());
             }
-            dropGrapeSeeds(world, state, pos, hit.getDirection());
+            dropGrapeSeeds(level, state, pos, hit.getDirection());
             BlockState sheared = withAge(state, Math.max(0, age - 1), state.getValue(GRAPE));
             if (sheared.getValue(AGE) == 0) {
-                sheared = sheared.setValue(LEAVES_PENDING, false).setValue(LEAVES_DONE, false);
+                sheared = sheared.setValue(LEAVES_PENDING, false);
             }
-            world.setBlock(pos, sheared, 3);
-            world.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_BREAK, SoundSource.AMBIENT, 1.0F, 1.0F);
-            return ItemInteractionResult.sidedSuccess(world.isClientSide);
+            level.setBlock(pos, sheared, 3);
+            level.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_BREAK, SoundSource.AMBIENT, 1.0F, 1.0F);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        if (stack.getItem() instanceof GrapeBushSeedItem seed && hasTrunk(world, pos)) {
+        if (stack.getItem() instanceof GrapeBushSeedItem seed && hasTrunk(level, pos)) {
             if (age == 0) {
                 if (!seed.getType().isLattice()) {
-                    boolean schedule = (seed.getType() == GrapeTypeRegistry.WHITE || seed.getType() == GrapeTypeRegistry.RED) && PlatformHelper.shouldGrapevineLeavesGrow();
+                    boolean schedule = (seed.getType() == GrapeTypeRegistry.WHITE || seed.getType() == GrapeTypeRegistry.RED) && PlatformHelper.shouldGrapevineLeavesGrow() && !(level.getBlockState(pos.below()).getBlock() instanceof PaleStemBlock);
                     BlockState ns = withAge(state, 1, seed.getType());
                     if (schedule && !state.getValue(LEAVES_PENDING) && !state.getValue(LEAVES_DONE)) {
                         ns = ns.setValue(LEAVES_PENDING, true);
-                        int delay = 4800 + world.random.nextInt(4801);
-                        world.scheduleTick(pos, this, delay);
+                        int delay = 4800 + level.random.nextInt(4801);
+                        level.scheduleTick(pos, this, delay);
                     }
-                    world.setBlock(pos, ns, 3);
+                    level.setBlock(pos, ns, 3);
                     if (!player.isCreative()) {
                         stack.shrink(1);
                     }
-                    world.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_PLACE, SoundSource.AMBIENT, 1.0F, 1.0F);
+                    level.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_PLACE, SoundSource.AMBIENT, 1.0F, 1.0F);
                     return ItemInteractionResult.SUCCESS;
                 }
             }
         }
-        return super.useItemOn(stack,state, world, pos, player, hand, hit);
+        return super.useItemOn(stack,state, level, pos, player, hand, hit);
     }
 
     @Override
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onPlace(state, world, pos, oldState, moved);
-        if (!world.isClientSide && (state.getValue(GRAPE) == GrapeTypeRegistry.WHITE || state.getValue(GRAPE) == GrapeTypeRegistry.RED) && !state.getValue(LEAVES_PENDING) && !state.getValue(LEAVES_DONE) && PlatformHelper.shouldGrapevineLeavesGrow()) {
-            world.setBlock(pos, state.setValue(LEAVES_PENDING, true), 3);
-            int delay = 4800 + world.random.nextInt(4801);
-            world.scheduleTick(pos, this, delay);
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moved) {
+        super.onPlace(state, level, pos, oldState, moved);
+        if (!level.isClientSide && (state.getValue(GRAPE) == GrapeTypeRegistry.WHITE || state.getValue(GRAPE) == GrapeTypeRegistry.RED) && !state.getValue(LEAVES_PENDING) && !state.getValue(LEAVES_DONE) && PlatformHelper.shouldGrapevineLeavesGrow() && !(level.getBlockState(pos.below()).getBlock() instanceof PaleStemBlock)) {
+            level.setBlock(pos, state.setValue(LEAVES_PENDING, true), 3);
+            int delay = 4800 + level.random.nextInt(4801);
+            level.scheduleTick(pos, this, delay);
         }
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!state.canSurvive(world, pos)) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!state.canSurvive(level, pos)) {
             if (state.getValue(AGE) > 0) {
-                dropGrapeSeeds(world, state, pos, null);
+                dropGrapeSeeds(level, state, pos, null);
             }
             if (state.getValue(AGE) > 2) {
-                dropGrapes(world, state, pos, null);
+                dropGrapes(level, state, pos, null);
             }
-            world.destroyBlock(pos, true);
+            level.destroyBlock(pos, true);
             return;
         }
 
@@ -164,45 +163,44 @@ public class PaleStemBlock extends StemBlock {
                 for (Vector3i v : offsets) {
                     if (random.nextFloat() > 0.4f) continue;
                     BlockPos ground = pos.offset(v.x, 0, v.z);
-                    while (world.isInWorldBounds(ground) && world.getBlockState(ground).isAir()) {
+                    while (level.isInWorldBounds(ground) && level.getBlockState(ground).isAir()) {
                         ground = ground.below();
                     }
                     BlockPos placePos = ground.above();
-                    if (world.getBlockState(placePos).canBeReplaced()) {
-                        world.setBlock(placePos, ObjectRegistry.GRAPEVINE_LEAVES.get()
+                    if (level.getBlockState(placePos).canBeReplaced()) {
+                        level.setBlock(placePos, ObjectRegistry.GRAPEVINE_LEAVES.get()
                                 .defaultBlockState()
                                 .setValue(LeavesBlock.PERSISTENT, true), 3);
                     }
                 }
             }
-            world.setBlock(pos, state.setValue(LEAVES_PENDING, false).setValue(LEAVES_DONE, true), 3);
+            level.setBlock(pos, state.setValue(LEAVES_PENDING, false).setValue(LEAVES_DONE, true), 3);
         }
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        Random rand = new Random();
-        if (rand.nextInt(100) >= 98) return;
-        if (!isMature(state) && hasTrunk(world, pos) && state.getValue(AGE) > 0) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (random.nextDouble() >= 0.98 * PlatformHelper.getGrapeGrowthMultiplier()) return;
+        if (!isMature(state) && hasTrunk(level, pos) && state.getValue(AGE) > 0) {
             final int i;
-            if (world.getRawBrightness(pos, 0) >= 9 && (i = state.getValue(AGE)) < 4) {
-                world.setBlock(pos, this.withAge(state, i + 1, state.getValue(GRAPE)), Block.UPDATE_CLIENTS);
+            if (level.getRawBrightness(pos, 0) >= MIN_LIGHT && (i = state.getValue(AGE)) < 4) {
+                level.setBlock(pos, this.withAge(state, i + 1, state.getValue(GRAPE)), Block.UPDATE_CLIENTS);
             }
         }
-        super.randomTick(state, world, pos, random);
+        super.randomTick(state, level, pos, random);
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        return world.getBlockState(pos.below()).isRedstoneConductor(world, pos) || world.getBlockState(pos.below()).getBlock() == this;
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return level.getBlockState(pos.below()).isRedstoneConductor(level, pos) || level.getBlockState(pos.below()).getBlock() == this;
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canSurvive(world, pos)) {
-            world.scheduleTick(pos, this, 1);
+    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (!state.canSurvive(level, pos)) {
+            level.scheduleTick(pos, this, 1);
         }
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
     @Override

@@ -19,7 +19,6 @@ public class StrawHatModel<T extends LivingEntity> extends HumanoidModel<T> {
         showParts();
     }
 
-    @SuppressWarnings("unused")
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition root = meshdefinition.getRoot();
