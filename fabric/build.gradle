@@ -52,7 +52,7 @@ dependencies {
 
     modApi( "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
     modApi( "dev.architectury:architectury-fabric:${rootProject.architectury_version}") { exclude group: 'net.fabricmc', module: 'fabric-loader' }
-    modApi include("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_fabric_version}")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_fabric_version}")
 
 //    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
 //    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
@@ -119,7 +119,7 @@ modrinth {
     projectId = "lets-do-vinery"
     versionNumber = rootProject.mod_version
     versionName = "${rootProject.archives_base_name}-${rootProject.mod_version} [${rootProject.minecraft_version}-fabric]"
-    versionType = "beta"
+    versionType = "release"
     changelog = rootProject.file("CHANGELOG.md").exists() ? rootProject.file("CHANGELOG.md").text : " "
     gameVersions = [rootProject.minecraft_version]
     loaders = ["fabric"]
@@ -128,6 +128,7 @@ modrinth {
 
     dependencies {
         required.project "architectury-api"
+        required.project "cloth-config"
     }
 }
 
@@ -143,7 +144,7 @@ tasks.register("curseforge704465", net.darkhax.curseforgegradle.TaskPublishCurse
     mainFile.addGameVersion(rootProject.minecraft_version)
     mainFile.addModLoader("Fabric")
     mainFile.addEnvironment("Client", "Server")
-    mainFile.addRequirement("architectury-api")
+    mainFile.addRequirement("architectury-api", "cloth-config")
 }
 
 tasks.register("releaseChangelog") {

@@ -52,6 +52,7 @@
     "fabric-api": "*",
     "minecraft": ">=1.21.1 <1.22",
     "architectury": ">=13.0.8",
+    "cloth-config": ">=15.0.140",
     "foundation": ">=1.0.1"
   },
   "conflicts": {

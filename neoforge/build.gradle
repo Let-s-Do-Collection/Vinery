@@ -121,7 +121,7 @@ modrinth {
     projectId = "lets-do-vinery"
     versionNumber = rootProject.mod_version
     versionName = "${rootProject.archives_base_name}-${rootProject.mod_version} [${rootProject.minecraft_version}-neoforge]"
-    versionType = "beta"
+    versionType = "release"
     changelog = rootProject.file("CHANGELOG.md").exists() ? rootProject.file("CHANGELOG.md").text : " "
     gameVersions = [rootProject.minecraft_version]
     loaders = ["neoforge"]
