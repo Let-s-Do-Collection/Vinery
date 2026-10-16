@@ -26,14 +26,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
-import net.satisfy.vinery.core.util.InfoOverlayMode;
+import net.satisfy.vinery.core.util.InfoTooltips;
 
 public class GrapevinePotInfoProvider implements BlockInfoProvider {
     private static final Supplier<List<ItemStack>> ALL_GRAPES = Suppliers.memoize(GrapevinePotInfoProvider::allGrapes);
 
     @Override
     public List<InfoSection> describe(Level level, BlockPos pos, BlockState state, @Nullable BlockHitResult hit) {
-        if (hit == null || !(state.getBlock() instanceof GrapevinePotBlock) || !InfoOverlayMode.isVisible(Minecraft.getInstance().player)) {
+        if (!PlatformHelper.showGrapevinePotInfo() || !InfoTooltips.canSee(Minecraft.getInstance().player) || hit == null || !(state.getBlock() instanceof GrapevinePotBlock)) {
             return List.of();
         }
         if (!(level.getBlockEntity(pos) instanceof GrapevinePotBlockEntity pot)) {
@@ -52,8 +52,8 @@ public class GrapevinePotInfoProvider implements BlockInfoProvider {
 
         if (stage < GrapevinePotBlock.FULL_STAGE) {
             sections.add(InfoSection.icons(Component.translatable("hud.vinery.grapevine_pot.in_pot"), List.of(new ItemStack(type.getFruit(), grapes)), InfoSection.ROW_COLUMNS).withDecorations());
-            sections.add(InfoSection.lines(Component.translatable("hud.vinery.grapevine_pot.filled", grapes, GrapevinePotBlock.MAX_GRAPES).withStyle(ChatFormatting.GRAY),
-                    List.of(Component.translatable("hud.vinery.grapevine_pot.more_hint", type.getFruit().getDescription()).withStyle(ChatFormatting.GRAY))));
+            sections.add(InfoSection.title(Component.translatable("hud.vinery.grapevine_pot.filled", grapes, GrapevinePotBlock.MAX_GRAPES).withStyle(ChatFormatting.GRAY)));
+            sections.add(InfoSection.title(Component.translatable("hud.vinery.grapevine_pot.more_hint", type.getFruit().getDescription()).withStyle(ChatFormatting.GRAY)));
             return sections;
         }
 
@@ -66,7 +66,7 @@ public class GrapevinePotInfoProvider implements BlockInfoProvider {
             if (player != null && bonus > 0 && GrapevinePotBlock.isHeavyArmored(player)) {
                 lines.add(Component.translatable("hud.vinery.grapevine_pot.heavy_armor", bonus).withStyle(ChatFormatting.GOLD));
             }
-            MutableComponent title = Component.translatable("hud.vinery.grapevine_pot.stomp").withStyle(ChatFormatting.BOLD, ChatFormatting.LIGHT_PURPLE);
+            MutableComponent title = Component.translatable("hud.vinery.grapevine_pot.stomp").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD);
             sections.add(InfoSection.lines(title, lines));
             return sections;
         }

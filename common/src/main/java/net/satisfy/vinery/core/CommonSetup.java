@@ -7,12 +7,12 @@ import net.satisfy.foundation.rarity.FoundationRarities;
 import net.satisfy.foundation.rarity.FoundationRarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FireBlock;
 
 import java.util.List;
 
 import static net.satisfy.vinery.core.registry.ObjectRegistry.*;
+import net.satisfy.foundation.compostable.FoundationCompostables;
 
 public final class CommonSetup {
     private CommonSetup() {
@@ -77,8 +77,6 @@ public final class CommonSetup {
 
     @SafeVarargs
     private static void addCompostable(float chance, RegistrySupplier<? extends ItemLike>... items) {
-        for (RegistrySupplier<? extends ItemLike> item : items) {
-            ComposterBlock.COMPOSTABLES.put(item.get().asItem(), chance);
-        }
+        FoundationCompostables.register(chance, items);
     }
 }

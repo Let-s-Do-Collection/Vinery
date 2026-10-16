@@ -18,7 +18,7 @@ public class VineryNeoForge {
         PlatformHelperImpl.ENTITY_TYPES.register();
         Vinery.init();
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, VineryNeoForgeConfig.COMMON_CONFIG, "vinery.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, VineryNeoForgeConfig.COMMON_CONFIG);
 
         modEventBus.register(VineryNeoForgeConfig.class);
 

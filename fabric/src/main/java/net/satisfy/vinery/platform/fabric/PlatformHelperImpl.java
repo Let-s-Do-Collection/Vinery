@@ -14,7 +14,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.Block;
 import net.satisfy.vinery.core.Vinery;
-import net.satisfy.vinery.core.util.InfoOverlayMode;
 import net.satisfy.vinery.fabric.config.VineryFabricConfig;
 import net.satisfy.vinery.platform.PlatformHelper;
 
@@ -49,17 +48,17 @@ public class PlatformHelperImpl extends PlatformHelper {
 
     public static double getCherryGrowthChance() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.blocks.cherryGrowthChance;
+        return config.blocks.cherryGrowthChance / 100.0;
     }
 
     public static double getAppleGrowthChance() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.blocks.appleGrowthChance;
+        return config.blocks.appleGrowthChance / 100.0;
     }
 
     public static double getGrapeGrowthChance() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.blocks.grapeGrowthChance;
+        return config.blocks.grapeGrowthChance / 100.0;
     }
 
     public static double getGrapeGrowthMultiplier() {
@@ -69,7 +68,7 @@ public class PlatformHelperImpl extends PlatformHelper {
 
     public static double getCellarAgingMultiplier() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.cellarAgingMultiplier;
+        return config.wine.cellarAgingMultiplier;
     }
 
     public static int getGrapevinePotStomps() {
@@ -84,82 +83,103 @@ public class PlatformHelperImpl extends PlatformHelper {
 
     public static boolean shouldShowGrapevinePotSplash() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.blocks.grapevinePotSplashParticles;
+        return config.blocks.enableGrapevinePotSplash;
     }
 
     public static boolean shouldGrapevineLeavesGrow() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.blocks.grapevineLeavesEnabled;
+        return config.blocks.enableGrapevineLeaves;
     }
 
     public static int getWineMaxLevel() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.maxLevel;
+        return config.wine.maxLevel;
     }
 
     public static List<? extends String> getWineEffects() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.effects;
+        return config.wine.effects;
     }
 
     public static boolean isWineAgingEnabled() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.agingEnabled;
+        return config.wine.enableWineAging;
     }
 
     public static boolean shouldWineAgeOnlyInStorage() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.ageOnlyInStorage;
+        return config.wine.ageOnlyInStorage;
     }
 
-    public static InfoOverlayMode getInfoOverlayMode() {
+    public static boolean infoTooltipsNeedStrawHat() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.infoOverlay.mode;
+        return config.infoTooltips.needStrawHat;
+    }
+
+    public static boolean showGrapevinePotInfo() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.infoTooltips.showGrapevinePotInfo;
+    }
+
+    public static boolean showStorageInfo() {
+        VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
+        return config.infoTooltips.showStorageInfo;
+    }
+
+    public static List<? extends String> getVillagerTrades(int level) {
+        VineryFabricConfig.VillagerTradesSettings trades = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig().villagerTrades;
+        return switch (level) {
+            case 1 -> trades.level1Trades;
+            case 2 -> trades.level2Trades;
+            case 3 -> trades.level3Trades;
+            case 4 -> trades.level4Trades;
+            default -> trades.level5Trades;
+        };
     }
 
     public static int getWineDurationPerYear() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.durationPerYear;
+        return config.wine.durationPerYear;
     }
 
     public static int getWineDaysPerYear() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.daysPerYear;
+        return config.wine.daysPerYear;
     }
 
     public static int getWineYearsPerEffectLevel() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.yearsPerEffectLevel;
+        return config.wine.yearsPerEffectLevel;
     }
 
     public static int getWineMaxDuration() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.wine.maxDuration;
+        return config.wine.maxDuration;
     }
 
     public static boolean shouldGiveEffect() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.banner.giveEffect;
+        return config.effects.completionistBannerEffect.bannerGiveEffect;
     }
 
     public static boolean shouldShowTooltip() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.items.banner.isShowTooltipEnabled();
+        return config.effects.completionistBannerEffect.bannerGiveEffect && config.effects.completionistBannerEffect.bannerShowTooltip;
     }
 
     public static double getTraderSpawnChance() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.trader.spawnChance;
+        return config.wanderingTrader.spawnChance / 100.0;
     }
 
     public static boolean shouldSpawnWithMules() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.trader.spawnWithMules;
+        return config.wanderingTrader.spawnWithMules;
     }
 
     public static int getTraderSpawnDelay() {
         VineryFabricConfig config = AutoConfig.getConfigHolder(VineryFabricConfig.class).getConfig();
-        return config.trader.spawnDelay;
+        return config.wanderingTrader.spawnDelay;
     }
 
     public static <T extends Entity> Supplier<EntityType<T>> registerBoatType(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int clientTrackingRange) {

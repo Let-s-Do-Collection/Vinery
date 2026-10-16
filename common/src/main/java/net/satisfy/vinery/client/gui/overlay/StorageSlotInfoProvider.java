@@ -39,7 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import net.satisfy.vinery.core.util.InfoOverlayMode;
+import net.satisfy.vinery.core.util.InfoTooltips;
+import net.satisfy.vinery.platform.PlatformHelper;
 import net.minecraft.client.Minecraft;
 
 public class StorageSlotInfoProvider implements BlockInfoProvider {
@@ -51,7 +52,7 @@ public class StorageSlotInfoProvider implements BlockInfoProvider {
 
     @Override
     public List<InfoSection> describe(Level level, BlockPos pos, BlockState state, @Nullable BlockHitResult hit) {
-        if (!InfoOverlayMode.isVisible(Minecraft.getInstance().player)) {
+        if (!PlatformHelper.showStorageInfo() || !InfoTooltips.canSee(Minecraft.getInstance().player)) {
             return List.of();
         }
         if (!(state.getBlock() instanceof WineBoxBlock || state.getBlock() instanceof BigBottleStorageBlock)) {

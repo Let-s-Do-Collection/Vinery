@@ -3,60 +3,73 @@ package net.satisfy.vinery.fabric.config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-
-import net.satisfy.vinery.core.util.InfoOverlayMode;
+import net.satisfy.vinery.core.util.VineryTrades;
 import net.satisfy.vinery.core.wine.WineEffects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Config(name = "vinery")
-@Config.Gui.Background("vinery:textures/block/dark_cherry_planks.png")
+@Config.Gui.Background("vinery:textures/block/dark_cherry_beam_side.png")
 public class VineryFabricConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public BlocksSettings blocks = new BlocksSettings();
 
     @ConfigEntry.Gui.CollapsibleObject
-    public ItemsSettings items = new ItemsSettings();
+    public WineSettings wine = new WineSettings();
 
     @ConfigEntry.Gui.CollapsibleObject
-    public VillagerSettings villager = new VillagerSettings();
+    public WanderingTraderSettings wanderingTrader = new WanderingTraderSettings();
 
     @ConfigEntry.Gui.CollapsibleObject
-    public TraderSettings trader = new TraderSettings();
+    public VillagerTradesSettings villagerTrades = new VillagerTradesSettings();
 
     @ConfigEntry.Gui.CollapsibleObject
-    public InfoOverlaySettings infoOverlay = new InfoOverlaySettings();
+    public InfoTooltipSettings infoTooltips = new InfoTooltipSettings();
+
+    @ConfigEntry.Gui.CollapsibleObject
+    public EffectsSettings effects = new EffectsSettings();
 
     public static class BlocksSettings {
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 10000)
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 72000)
         public int totalFermentationTime = 6000;
 
-        @ConfigEntry.BoundedDiscrete(min = 100, max = 10000)
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 10, max = 1000)
         public int maxFluidLevel = 100;
 
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 10000)
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 1000)
         public int maxFluidIncrease = 25;
 
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 10000)
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 72000)
         public int applePressMashingTime = 600;
 
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 10000)
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 72000)
         public int applePressFermentationTime = 800;
 
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 1)
-        public double cherryGrowthChance = 0.4;
-
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 1)
-        public double appleGrowthChance = 0.4;
-
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 1)
-        public double grapeGrowthChance = 0.5;
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int cherryGrowthChance = 40;
 
         @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int appleGrowthChance = 40;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int grapeGrowthChance = 50;
+
+        @ConfigEntry.Gui.Tooltip
         public double grapeGrowthMultiplier = 1.0;
 
+        @ConfigEntry.Gui.Tooltip
+        public boolean enableGrapevineLeaves = true;
+
+        @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
         public int grapevinePotStomps = 12;
 
@@ -64,155 +77,107 @@ public class VineryFabricConfig implements ConfigData {
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
         public int grapevinePotHeavyArmorBonus = 10;
 
-        public boolean grapevinePotSplashParticles = true;
-
-        public boolean grapevineLeavesEnabled = true;
-    }
-
-    public static class ItemsSettings {
-        @ConfigEntry.Gui.CollapsibleObject
-        public WineSettings wine = new WineSettings();
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public BannerSettings banner = new BannerSettings();
-
-        public static class WineSettings {
-            @ConfigEntry.Gui.Tooltip
-            public boolean agingEnabled = true;
-
-            @ConfigEntry.Gui.Tooltip
-            public boolean ageOnlyInStorage = false;
-
-            @ConfigEntry.Gui.Tooltip
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 100000)
-            public int maxDuration = 15000;
-
-            @ConfigEntry.Gui.Tooltip
-            @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
-            public int maxLevel = 5;
-
-            @ConfigEntry.Gui.Tooltip
-            @ConfigEntry.BoundedDiscrete(min = 0, max = 10000)
-            public int durationPerYear = 200;
-
-            @ConfigEntry.Gui.Tooltip
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 5)
-            public double cellarAgingMultiplier = 1.5;
-
-            @ConfigEntry.Gui.Tooltip
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
-            public int daysPerYear = 24;
-
-            @ConfigEntry.Gui.Tooltip
-            @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
-            public int yearsPerEffectLevel = 6;
-
-            @ConfigEntry.Gui.Tooltip
-            public List<String> effects = new ArrayList<>(WineEffects.DEFAULTS);
-        }
-    }
-
-    public static class BannerSettings {
-        public boolean giveEffect = true;
-        public boolean showTooltip = true;
-
-        public boolean isShowTooltipEnabled() {
-            return giveEffect && showTooltip;
-        }
-    }
-
-    public static class InfoOverlaySettings {
         @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public InfoOverlayMode mode = InfoOverlayMode.ON;
+        public boolean enableGrapevinePotSplash = true;
     }
 
-    public static class TraderSettings {
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 1)
-        public double spawnChance = 0.5;
+    public static class WineSettings {
+        @ConfigEntry.Gui.Tooltip
+        public boolean enableWineAging = true;
 
+        @ConfigEntry.Gui.Tooltip
+        public boolean ageOnlyInStorage = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public double cellarAgingMultiplier = 1.5;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
+        public int daysPerYear = 24;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
+        public int yearsPerEffectLevel = 6;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 10)
+        public int maxLevel = 5;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 10000)
+        public int durationPerYear = 200;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 100000)
+        public int maxDuration = 15000;
+
+        @ConfigEntry.Gui.Tooltip
+        public List<String> effects = new ArrayList<>(WineEffects.DEFAULTS);
+    }
+
+    public static class WanderingTraderSettings {
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
+        public int spawnChance = 50;
+
+        @ConfigEntry.Gui.Tooltip
         public boolean spawnWithMules = true;
 
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 72000)
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 168000)
         public int spawnDelay = 48000;
     }
 
-    public static class VillagerSettings {
+    public static class VillagerTradesSettings {
+        @ConfigEntry.Gui.Tooltip
+        public List<String> level1Trades = new ArrayList<>(VineryTrades.LEVEL_1);
+
+        @ConfigEntry.Gui.Tooltip
+        public List<String> level2Trades = new ArrayList<>(VineryTrades.LEVEL_2);
+
+        @ConfigEntry.Gui.Tooltip
+        public List<String> level3Trades = new ArrayList<>(VineryTrades.LEVEL_3);
+
+        @ConfigEntry.Gui.Tooltip
+        public List<String> level4Trades = new ArrayList<>(VineryTrades.LEVEL_4);
+
+        @ConfigEntry.Gui.Tooltip
+        public List<String> level5Trades = new ArrayList<>(VineryTrades.LEVEL_5);
+    }
+
+    public static class InfoTooltipSettings {
+        @ConfigEntry.Gui.Tooltip
+        public boolean needStrawHat = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean showGrapevinePotInfo = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean showStorageInfo = true;
+    }
+
+    public static class EffectsSettings {
         @ConfigEntry.Gui.CollapsibleObject
-        public TradeLevelSettings level1 = new TradeLevelSettings(1);
+        public CompletionistBannerEffectSettings completionistBannerEffect = new CompletionistBannerEffectSettings();
 
-        @ConfigEntry.Gui.CollapsibleObject
-        public TradeLevelSettings level2 = new TradeLevelSettings(2);
+        public static class CompletionistBannerEffectSettings {
+            @ConfigEntry.Gui.Tooltip
+            public boolean bannerGiveEffect = true;
 
-        @ConfigEntry.Gui.CollapsibleObject
-        public TradeLevelSettings level3 = new TradeLevelSettings(3);
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public TradeLevelSettings level4 = new TradeLevelSettings(4);
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public TradeLevelSettings level5 = new TradeLevelSettings(5);
-
-        public static class TradeLevelSettings {
-            public int level;
-            public List<TradeEntry> trades;
-
-            public TradeLevelSettings(int level) {
-                this.level = level;
-                this.trades = new ArrayList<>();
-
-                if (level == 1) {
-                    trades.add(new TradeEntry("vinery:red_grape", TradeType.BUY, 15, 1, 4, 5));
-                    trades.add(new TradeEntry("vinery:white_grape", TradeType.BUY, 15, 1, 4, 5));
-                    trades.add(new TradeEntry("vinery:red_grape_seeds", TradeType.SELL, 2, 1, 1, 5));
-                    trades.add(new TradeEntry("vinery:white_grape_seeds", TradeType.SELL, 2, 1, 1, 5));
-                } else if (level == 2) {
-                    trades.add(new TradeEntry("vinery:wine_bottle", TradeType.SELL, 1, 1, 4, 7));
-                    trades.add(new TradeEntry("vinery:cherry", TradeType.BUY, 12, 1, 4, 6));
-                    trades.add(new TradeEntry("vinery:apple_mash", TradeType.SELL, 1, 1, 4, 6));
-                } else if (level == 3) {
-                    trades.add(new TradeEntry("vinery:white_grape_bag", TradeType.SELL, 7, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:red_grape_bag", TradeType.SELL, 7, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:cherry_bag", TradeType.SELL, 7, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:apple_bag", TradeType.SELL, 7, 1, 2, 10));
-                } else if (level == 4) {
-                    trades.add(new TradeEntry("vinery:window", TradeType.SELL, 12, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:dark_cherry_beam", TradeType.SELL, 6, 4, 2, 10));
-                    trades.add(new TradeEntry("vinery:grapevine_pot", TradeType.SELL, 6, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:taiga_grape_seeds_red", TradeType.SELL, 2, 1, 2, 5));
-                    trades.add(new TradeEntry("vinery:taiga_grape_seeds_white", TradeType.SELL, 2, 1, 2, 5));
-                } else if (level == 5) {
-                    trades.add(new TradeEntry("vinery:wine_box", TradeType.SELL, 10, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:lilitu_wine", TradeType.SELL, 4, 1, 2, 10));
-                    trades.add(new TradeEntry("vinery:winemaker_apron", TradeType.SELL, 18, 1, 1, 15));
-                    trades.add(new TradeEntry("vinery:straw_hat", TradeType.SELL, 12, 1, 1, 12));
-                }
-            }
+            @ConfigEntry.Gui.Tooltip
+            public boolean bannerShowTooltip = true;
         }
+    }
 
-        public static class TradeEntry {
-            public String item = "vinery:white_grape";
-            public TradeType type = TradeType.BUY;
-            public int price = 1;
-            public int count = 1;
-            public int maxUses = 1;
-            public int experience = 1;
-
-            public TradeEntry() {
-            }
-
-            public TradeEntry(String item, TradeType type, int price, int count, int maxUses, int experience) {
-                this.item = item;
-                this.type = type;
-                this.price = price;
-                this.count = count;
-                this.maxUses = maxUses;
-                this.experience = experience;
-            }
-        }
-
-        public enum TradeType {
-            BUY, SELL
-        }
+    @Override
+    public void validatePostLoad() {
+        blocks.grapeGrowthMultiplier = Math.clamp(blocks.grapeGrowthMultiplier, 0.0, 10.0);
+        wine.cellarAgingMultiplier = Math.clamp(wine.cellarAgingMultiplier, 1.0, 5.0);
+        if (wine.effects == null) wine.effects = new ArrayList<>(WineEffects.DEFAULTS);
+        if (villagerTrades.level1Trades == null) villagerTrades.level1Trades = new ArrayList<>(VineryTrades.LEVEL_1);
+        if (villagerTrades.level2Trades == null) villagerTrades.level2Trades = new ArrayList<>(VineryTrades.LEVEL_2);
+        if (villagerTrades.level3Trades == null) villagerTrades.level3Trades = new ArrayList<>(VineryTrades.LEVEL_3);
+        if (villagerTrades.level4Trades == null) villagerTrades.level4Trades = new ArrayList<>(VineryTrades.LEVEL_4);
+        if (villagerTrades.level5Trades == null) villagerTrades.level5Trades = new ArrayList<>(VineryTrades.LEVEL_5);
     }
 }

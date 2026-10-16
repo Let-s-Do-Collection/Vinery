@@ -4,7 +4,6 @@ import dev.architectury.registry.registries.DeferredRegister;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.ModFileScanData;
 import net.satisfy.vinery.api.VineryPlugin;
-import net.satisfy.vinery.core.util.InfoOverlayMode;
 import org.objectweb.asm.Type;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
@@ -22,115 +21,133 @@ public class PlatformHelperImpl extends PlatformHelper {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Vinery.MOD_ID, Registries.ENTITY_TYPE);
 
     public static int getTotalFermentationTime() {
-        return VineryNeoForgeConfig.totalFermentationTimeCache;
+        return VineryNeoForgeConfig.totalFermentationTime;
     }
 
     public static int getMaxFluidLevel() {
-        return VineryNeoForgeConfig.maxFluidLevelCache;
+        return VineryNeoForgeConfig.maxFluidLevel;
     }
 
     public static int getMaxFluidIncrease() {
-        return VineryNeoForgeConfig.maxFluidIncreaseCache;
+        return VineryNeoForgeConfig.maxFluidIncrease;
     }
 
     public static int getApplePressMashingTime() {
-        return VineryNeoForgeConfig.applePressMashingTimeCache;
+        return VineryNeoForgeConfig.applePressMashingTime;
     }
 
     public static int getApplePressFermentationTime() {
-        return VineryNeoForgeConfig.applePressFerentingTimeCache;
+        return VineryNeoForgeConfig.applePressFermentationTime;
     }
 
     public static double getCherryGrowthChance() {
-        return VineryNeoForgeConfig.cherryGrowthChanceCache;
+        return VineryNeoForgeConfig.cherryGrowthChance / 100.0;
     }
 
     public static double getAppleGrowthChance() {
-        return VineryNeoForgeConfig.appleGrowthChanceCache;
+        return VineryNeoForgeConfig.appleGrowthChance / 100.0;
     }
 
     public static double getGrapeGrowthChance() {
-        return VineryNeoForgeConfig.grapeGrowthChanceCache;
+        return VineryNeoForgeConfig.grapeGrowthChance / 100.0;
     }
 
     public static double getGrapeGrowthMultiplier() {
-        return VineryNeoForgeConfig.grapeGrowthMultiplierCache;
+        return VineryNeoForgeConfig.grapeGrowthMultiplier;
     }
 
     public static double getCellarAgingMultiplier() {
-        return VineryNeoForgeConfig.cellarAgingMultiplierCache;
+        return VineryNeoForgeConfig.cellarAgingMultiplier;
     }
 
     public static int getGrapevinePotStomps() {
-        return VineryNeoForgeConfig.grapevinePotStompsCache;
+        return VineryNeoForgeConfig.grapevinePotStomps;
     }
 
     public static int getGrapevinePotHeavyArmorBonus() {
-        return VineryNeoForgeConfig.grapevinePotHeavyArmorBonusCache;
+        return VineryNeoForgeConfig.grapevinePotHeavyArmorBonus;
     }
 
     public static boolean shouldShowGrapevinePotSplash() {
-        return VineryNeoForgeConfig.grapevinePotSplashCache;
+        return VineryNeoForgeConfig.enableGrapevinePotSplash;
     }
 
     public static boolean shouldGrapevineLeavesGrow() {
-        return VineryNeoForgeConfig.grapevineLeavesEnabledCache;
+        return VineryNeoForgeConfig.enableGrapevineLeaves;
     }
 
     public static int getWineMaxLevel() {
-        return VineryNeoForgeConfig.maxLevelCache;
+        return VineryNeoForgeConfig.maxLevel;
     }
 
     public static List<? extends String> getWineEffects() {
-        return VineryNeoForgeConfig.wineEffectsCache;
+        return VineryNeoForgeConfig.wineEffects;
     }
 
     public static boolean isWineAgingEnabled() {
-        return VineryNeoForgeConfig.agingEnabledCache;
+        return VineryNeoForgeConfig.enableWineAging;
     }
 
     public static boolean shouldWineAgeOnlyInStorage() {
-        return VineryNeoForgeConfig.ageOnlyInStorageCache;
+        return VineryNeoForgeConfig.ageOnlyInStorage;
     }
 
-    public static InfoOverlayMode getInfoOverlayMode() {
-        return VineryNeoForgeConfig.infoOverlayModeCache;
+    public static boolean infoTooltipsNeedStrawHat() {
+        return VineryNeoForgeConfig.needStrawHat;
+    }
+
+    public static boolean showGrapevinePotInfo() {
+        return VineryNeoForgeConfig.showGrapevinePotInfo;
+    }
+
+    public static boolean showStorageInfo() {
+        return VineryNeoForgeConfig.showStorageInfo;
+    }
+
+    public static List<? extends String> getVillagerTrades(int level) {
+        return switch (level) {
+            case 1 -> VineryNeoForgeConfig.level1Trades;
+            case 2 -> VineryNeoForgeConfig.level2Trades;
+            case 3 -> VineryNeoForgeConfig.level3Trades;
+            case 4 -> VineryNeoForgeConfig.level4Trades;
+            default -> VineryNeoForgeConfig.level5Trades;
+        };
     }
 
     public static int getWineDurationPerYear() {
-        return VineryNeoForgeConfig.durationPerYearCache;
+        return VineryNeoForgeConfig.durationPerYear;
     }
 
     public static int getWineDaysPerYear() {
-        return VineryNeoForgeConfig.daysPerYearCache;
+        return VineryNeoForgeConfig.daysPerYear;
     }
 
     public static int getWineYearsPerEffectLevel() {
-        return VineryNeoForgeConfig.yearsPerEffectLevelCache;
+        return VineryNeoForgeConfig.yearsPerEffectLevel;
     }
 
     public static int getWineMaxDuration() {
-        return VineryNeoForgeConfig.maxDurationCache;
+        return VineryNeoForgeConfig.maxDuration;
     }
 
     public static boolean shouldGiveEffect() {
-        return VineryNeoForgeConfig.giveEffectCache;
+        return VineryNeoForgeConfig.bannerGiveEffect;
     }
 
     public static boolean shouldShowTooltip() {
-        return VineryNeoForgeConfig.giveEffectCache && VineryNeoForgeConfig.showTooltipCache;
+        return VineryNeoForgeConfig.bannerGiveEffect && VineryNeoForgeConfig.bannerShowTooltip;
     }
 
     public static double getTraderSpawnChance() {
-        return VineryNeoForgeConfig.traderSpawnChanceCache;
+        return VineryNeoForgeConfig.traderSpawnChance / 100.0;
     }
 
     public static boolean shouldSpawnWithMules() {
-        return VineryNeoForgeConfig.spawnWithMulesCache;
+        return VineryNeoForgeConfig.spawnWithMules;
     }
 
     public static int getTraderSpawnDelay() {
-        return VineryNeoForgeConfig.traderSpawnDelayCache;
+        return VineryNeoForgeConfig.traderSpawnDelay;
     }
 
     public static <T extends Entity> Supplier<EntityType<T>> registerBoatType(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int clientTrackingRange) {

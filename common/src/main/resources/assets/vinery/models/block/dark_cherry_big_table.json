@@ -1,6 +1,64 @@
 {
-  "parent": "foundation:block/template_big_table",
-  "textures": {
-    "table": "vinery:block/dark_cherry_big_table"
-  }
+	"format_version": "26.3",
+	"credit": "Made by Satisfy",
+	"textures": {
+		"particle": "vinery:block/dark_cherry_big_table",
+		"table": "vinery:block/dark_cherry_big_table"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 1],
+			"to": [15, 14, 15],
+			"faces": {
+				"north": {"uv": [16, 8, 8, 16], "texture": "#table"},
+				"east": {"uv": [4.5, 8, 11.5, 16], "texture": "#table"},
+				"south": {"uv": [8, 8, 0, 16], "texture": "#table"},
+				"west": {"uv": [0, 0, 0, 0], "texture": "#table"},
+				"down": {"uv": [0, 0, 16, 8], "rotation": 180, "texture": "#table"}
+			}
+		},
+		{
+			"from": [0, 15, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"up": {"uv": [0, 8, 8, 0], "rotation": 180, "texture": "#table"}
+			}
+		},
+		{
+			"from": [0, 14, 0],
+			"to": [16, 16, 1],
+			"faces": {
+				"north": {"uv": [0, 7.5, 16, 8], "texture": "#table"},
+				"east": {"uv": [15.5, 7, 16, 8], "texture": "#table"},
+				"south": {"uv": [0, 7, 16, 8], "texture": "#table"},
+				"west": {"uv": [0.5, 7, 0, 8], "texture": "#table"},
+				"up": {"uv": [0, 7.5, 16, 8], "rotation": 180, "texture": "#table"},
+				"down": {"uv": [0, 0, 16, 0.5], "rotation": 180, "texture": "#table"}
+			}
+		},
+		{
+			"from": [0, 14, 15],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 7.5, 16, 8], "texture": "#table"},
+				"east": {"uv": [15.5, 7, 16, 8], "texture": "#table"},
+				"south": {"uv": [0, 7, 16, 8], "texture": "#table"},
+				"west": {"uv": [0.5, 7, 0, 8], "texture": "#table"},
+				"up": {"uv": [0, 7.5, 16, 8], "rotation": 180, "texture": "#table"},
+				"down": {"uv": [0, 0, 16, 0.5], "rotation": 180, "texture": "#table"}
+			}
+		},
+		{
+			"from": [15, 14, 1],
+			"to": [16, 16, 15],
+			"faces": {
+				"north": {"uv": [8.5, 7, 9, 8], "texture": "#table"},
+				"east": {"uv": [0, 7, 9, 8], "texture": "#table"},
+				"south": {"uv": [0.5, 7, 0, 8], "texture": "#table"},
+				"west": {"uv": [0, 7, 9, 8], "texture": "#table"},
+				"up": {"uv": [0, 7.5, 9, 8], "rotation": 90, "texture": "#table"},
+				"down": {"uv": [0, 0, 9, 0.5], "rotation": 270, "texture": "#table"}
+			}
+		}
+	]
 }

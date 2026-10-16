@@ -1,3 +1,17 @@
+[1.5.6]
+
+**Added**
+* New config options: Grapevine Pot and storage HUD panels can now be turned off separately, and a "Need Straw Hat" switch shows the HUD panels only while wearing the Straw Hat
+* Every config option now has a tooltip on Fabric and a comment on NeoForge, explaining what it does and in which unit
+
+**Changed**
+* The config was cleaned up and is now the same on Fabric and NeoForge
+
+**Fixed**
+* The Dark Cherry big table model and textures had visual errors
+
+*** 
+
 [1.5.5]
 
 **Added**

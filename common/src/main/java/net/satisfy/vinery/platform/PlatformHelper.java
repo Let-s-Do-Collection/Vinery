@@ -6,7 +6,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 import net.satisfy.vinery.api.VineryPlugin;
-import net.satisfy.vinery.core.util.InfoOverlayMode;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -103,7 +102,22 @@ public class PlatformHelper {
     }
 
     @ExpectPlatform
-    public static InfoOverlayMode getInfoOverlayMode() {
+    public static boolean infoTooltipsNeedStrawHat() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean showGrapevinePotInfo() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean showStorageInfo() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static List<? extends String> getVillagerTrades(int level) {
         throw new AssertionError();
     }
 

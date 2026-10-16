@@ -16,10 +16,10 @@
     "BaumeisterJO"
   ],
   "contact": {
-    "sources": "https://github.com/satisfyu/Vinery",
-    "issues": "https://github.com/satisfyu/Let-s-Do-Hub",
     "homepage": "https://www.lets-do.ch",
-    "wiki": "https://lets-do.ch/wiki/vinery/"
+    "wiki": "https://lets-do.ch/wiki/vinery/",
+    "sources": "https://github.com/Let-s-Do-Collection/Vinery",
+    "issues": "https://github.com/satisfyu/Let-s-Do-Hub"
   },
   "license": "Custom",
   "icon": "pack.png",
@@ -50,10 +50,10 @@
   "depends": {
     "fabricloader": ">=0.16.14",
     "fabric-api": "*",
-    "minecraft": ">=1.21.1 <1.22",
+    "minecraft": "~1.21.1",
     "architectury": ">=13.0.8",
-    "cloth-config": ">=15.0.140",
-    "foundation": ">=1.0.1"
+    "foundation": ">=1.0.7",
+    "cloth-config": "*"
   },
   "conflicts": {
     "copperative": "*",

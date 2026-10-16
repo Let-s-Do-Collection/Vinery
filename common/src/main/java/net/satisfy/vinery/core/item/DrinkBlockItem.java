@@ -1,46 +1,35 @@
 package net.satisfy.vinery.core.item;
 
-import net.satisfy.foundation.util.LibUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.satisfy.foundation.storage.StorageBlockEntity;
 import net.satisfy.vinery.core.registry.DataComponentRegistry;
 import net.satisfy.vinery.core.registry.ObjectRegistry;
 import net.satisfy.vinery.core.wine.WineEffects;
 import net.satisfy.vinery.core.wine.WineYears;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
+import net.satisfy.foundation.food.PlaceableDrinkItem;
 
-public class DrinkBlockItem extends BlockItem {
+public class DrinkBlockItem extends PlaceableDrinkItem {
     private final boolean scaleDurationWithAge;
     private final BottleSize bottleSize;
 
     public DrinkBlockItem(Block block, Properties settings, boolean scaleDurationWithAge, BottleSize bottleSize) {
         super(block, settings);
+        crouchToPlace().drinkAnytime().container(ObjectRegistry.WINE_BOTTLE);
         this.scaleDurationWithAge = scaleDurationWithAge;
         this.bottleSize = bottleSize;
     }
@@ -55,28 +44,6 @@ public class DrinkBlockItem extends BlockItem {
 
     private int amplifier(ItemStack stack, Level level, WineEffects.WineEffect wineEffect) {
         return wineEffect.amplifier() + (ages() ? WineYears.getEffectLevel(stack, level) : 0);
-    }
-
-    @Override
-    public @NotNull UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.DRINK;
-    }
-
-    @Override
-    protected BlockState getPlacementState(BlockPlaceContext context) {
-        if (!Objects.requireNonNull(context.getPlayer()).isCrouching()) {
-            return null;
-        }
-        BlockState blockState = this.getBlock().getStateForPlacement(context);
-        return blockState != null && this.canPlace(context, blockState) ? blockState : null;
-    }
-
-    @Override
-    protected boolean updateCustomBlockEntityTag(BlockPos blockPos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
-        if (level.getBlockEntity(blockPos) instanceof StorageBlockEntity wineEntity) {
-            wineEntity.setStack(0, itemStack.copyWithCount(1));
-        }
-        return super.updateCustomBlockEntityTag(blockPos, level, player, itemStack, blockState);
     }
 
     @Override
@@ -128,16 +95,15 @@ public class DrinkBlockItem extends BlockItem {
     }
 
     @Override
-    public @NotNull ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
+    protected void applyEffects(ItemStack itemStack, Level level, LivingEntity livingEntity) {
         WineEffects.WineEffect wineEffect = WineEffects.get(this);
-        if (!level.isClientSide && wineEffect != null) {
-            if (itemStack.get(DataComponentRegistry.WINE_YEAR.get()) == null) {
-                WineYears.setWineYear(itemStack, level);
-            }
-            livingEntity.addEffect(new MobEffectInstance(wineEffect.effect(), duration(itemStack, level, wineEffect), amplifier(itemStack, level, wineEffect)));
+        if (wineEffect == null) {
+            return;
         }
-        itemStack.shrink(1);
-        return LibUtil.convertStackAfterFinishUsing(livingEntity, itemStack, ObjectRegistry.WINE_BOTTLE.get(), this);
+        if (itemStack.get(DataComponentRegistry.WINE_YEAR.get()) == null) {
+            WineYears.setWineYear(itemStack, level);
+        }
+        livingEntity.addEffect(new MobEffectInstance(wineEffect.effect(), duration(itemStack, level, wineEffect), amplifier(itemStack, level, wineEffect)));
     }
 
     private String formatDuration(int ticks) {
@@ -145,11 +111,6 @@ public class DrinkBlockItem extends BlockItem {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
         return String.format("%d:%02d", minutes, seconds);
-    }
-
-    @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
-        return ItemUtils.startUsingInstantly(level, player, interactionHand);
     }
 
     @Override
