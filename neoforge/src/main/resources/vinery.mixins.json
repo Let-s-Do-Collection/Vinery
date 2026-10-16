@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "net.satisfy.vinery.neoforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+    "BootsItemMixin",
+    "ChestplateItemMixin",
+    "HelmetItemMixin",
+    "LeggingsItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
