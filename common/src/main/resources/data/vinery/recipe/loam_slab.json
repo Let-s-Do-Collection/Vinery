@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "slabs",
+    "pattern": [
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "vinery:loam"
+        }
+    },
+    "result": {
+        "count": 6,
+        "id": "vinery:loam_slab"
+    }
+}

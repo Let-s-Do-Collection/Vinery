@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vinery:loam"
+    ]
+  },
+  "criteria": {
+    "has_clay_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:clay_ball"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vinery:loam"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_clay_ball",
+      "has_the_recipe"
+    ]
+  ]
+}
