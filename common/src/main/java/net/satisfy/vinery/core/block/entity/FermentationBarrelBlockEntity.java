@@ -217,7 +217,7 @@ public class FermentationBarrelBlockEntity extends BlockEntity implements Implem
                 int actualJuicesConsumed = actualFluidIncrease / PlatformHelper.getMaxFluidIncrease();
 
                 if (actualJuicesConsumed > 0) {
-                    blockEntity.setFluidLevel(newFluidLevel);
+                    blockEntity.setFluidLevel(currentLevel + actualJuicesConsumed * PlatformHelper.getMaxFluidIncrease());
 
                     stack.shrink(actualJuicesConsumed);
                     if (stack.isEmpty()) {
