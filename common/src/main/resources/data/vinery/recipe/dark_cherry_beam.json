@@ -7,11 +7,11 @@
     ],
     "key": {
         "#": {
-            "tag": "vinery:dark_cherry_logs"
+            "item": "vinery:stripped_dark_cherry_log"
         }
     },
     "result": {
-        "count": 3,
+        "count": 2,
         "id": "vinery:dark_cherry_beam"
     }
 }
