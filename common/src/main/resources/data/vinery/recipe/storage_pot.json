@@ -6,7 +6,7 @@
     ],
     "key": {
         "S": {
-            "item": "minecraft:spruce_slab"
+            "tag": "minecraft:wooden_slabs"
         }
     },
     "result": {

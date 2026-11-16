@@ -3,6 +3,7 @@
     "group": "grapevine_stem",
     "pattern": [
         "#",
+        "#",
         "#"
     ],
     "key": {
@@ -11,7 +12,7 @@
         }
     },
     "result": {
-        "count": 4,
+        "count": 6,
         "id": "vinery:grapevine_stem"
     }
 }

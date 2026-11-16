@@ -3,7 +3,7 @@
     "group": "planks",
     "ingredients": [
         {
-            "item": "vinery:dark_cherry_log"
+            "tag": "vinery:dark_cherry_logs"
         }
     ],
     "result": {
